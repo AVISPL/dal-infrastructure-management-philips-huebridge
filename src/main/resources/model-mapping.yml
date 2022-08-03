@@ -1,0 +1,17 @@
+models:
+  - model:
+      name: Generic
+      vendor: PhilipsHue
+      filter: true
+      properties:
+        deviceModel: get("product_data").get("model_id")
+        deviceName: get("product_data").get("product_name")
+        deviceId: get("id")
+        manufacturer: get("product_data").get("manufacturer_name")
+        deviceType:  get("services").get(0)?.get("type")
+      mapping:
+        deviceType:  get("services").get(0)?.get("type")
+        deviceModel: get("product_data").get("model_id")
+        deviceName: get("product_data").get("product_name")
+        deviceId: get("id")
+        manufacturer: get("product_data").get("manufacturer_name")
