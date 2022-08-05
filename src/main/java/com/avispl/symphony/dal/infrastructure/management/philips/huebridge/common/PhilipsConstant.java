@@ -22,5 +22,18 @@ public class PhilipsConstant {
 	public static String DEVICE_CONNECTED = "DeviceConnected";
 	public static String NONE = "None";
 	public static String COMMA = ",";
-
+	public static String CREATE_ROOM = "CreateRoom";
+	public static String CREATE_ZONE = "CreateZone";
+	public static String DELETE = "Delete";
+	public static String CREATE = "Create";
+	public static String CREATING = "Creating";
+	public static String ADD = "Add";
+	public static String ADDING = "Adding";
+	public static String EDITED = "Edited";
+	public static String FALSE = "False";
+	public static String TRUE = "True";
+	public static String NAME = "Name";
+	public static String DEVICE_0 = "Device0";
+	public static String TYPE = "Type";
+	public static String DEVICE_ADD = "DeviceAdd";
 }

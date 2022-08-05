@@ -23,6 +23,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
 import com.avispl.symphony.api.dal.control.Controller;
+import com.avispl.symphony.api.dal.dto.control.AdvancedControllableProperty;
 import com.avispl.symphony.api.dal.dto.control.ControllableProperty;
 import com.avispl.symphony.api.dal.dto.monitor.ExtendedStatistics;
 import com.avispl.symphony.api.dal.dto.monitor.Statistics;
@@ -120,7 +121,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					if (!StringUtils.isNullOrEmpty(zoneName)) {
 						for (RoomAndZoneResponse response : zoneList) {
 							if (response.equals(zoneName)) {
-								zoneListFilter = Collections.singletonList(response);
+//								zoneListFilter = Collections.singletonList(response);
 								break;
 							}
 						}
@@ -132,9 +133,6 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				}
 				long currentTimestamp = System.currentTimeMillis();
 				retrieveInfo(currentTimestamp);
-				for (RoomAndZoneResponse roomAndZoneResponse : zoneList) {
-
-				}
 				if (validDeviceMetaDataRetrievalPeriodTimestamp <= currentTimestamp) {
 					validDeviceMetaDataRetrievalPeriodTimestamp = currentTimestamp + deviceMetaDataRetrievalTimeout;
 
@@ -169,11 +167,11 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					}
 				}
 
-				if (!aggregatedDeviceList.isEmpty()) {
-					if (logger.isDebugEnabled()) {
-						logger.debug("Applying filter options");
-					}
-
+//				if (!aggregatedDeviceList.isEmpty()) {
+//					if (logger.isDebugEnabled()) {
+//						logger.debug("Applying filter options");
+//					}
+//
 //					if (StringUtils.isNullOrEmpty(filterSystemName) || !systemResponseFilterList.isEmpty()) {
 //						getFilteredAggregatedDeviceList();
 //					} else {
@@ -182,7 +180,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 //					if (logger.isDebugEnabled()) {
 //						logger.debug("Aggregated devices after applying filter: " + aggregatedDeviceList);
 //					}
-				}
+//				}
 
 				// We don't want to fetch devices statuses too often, so by default it's currentTime + 30s
 				// otherwise - the variable is reset by the retrieveMultipleStatistics() call, which
@@ -209,14 +207,14 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	private String roomNames;
 	private String deviceTypes;
 	private String deviceNames;
-	private List<String> roomNamesList = new LinkedList<>();
-	private List<String> deviceTypesList = new LinkedList<>();
-	private List<String> deviceNamesList = new LinkedList<>();
-
-	/**
-	 * List of Zones Filter
-	 */
-	private List<RoomAndZoneResponse> zoneListFilter = Collections.synchronizedList(new ArrayList<>());
+//	private List<String> roomNamesList = new LinkedList<>();
+//	private List<String> deviceTypesList = new LinkedList<>();
+//	private List<String> deviceNamesList = new LinkedList<>();
+//
+//	/**
+//	 * List of Zones Filter
+//	 */
+//	private List<RoomAndZoneResponse> zoneListFilter = Collections.synchronizedList(new ArrayList<>());
 
 	/**
 	 * Retrieves {@code {@link #zoneName}}
@@ -342,11 +340,6 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	private Set<String> bridgeIdList = Collections.synchronizedSet(new LinkedHashSet<>());
 
 	/**
-	 * List of system information
-	 */
-	private Set<SystemResponse> systemInfoList = Collections.synchronizedSet(new LinkedHashSet<>());
-
-	/**
 	 * List of aggregated device
 	 */
 	private List<AggregatedDevice> aggregatedDeviceList = Collections.synchronizedList(new ArrayList<>());
@@ -427,10 +420,26 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		return headers;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void internalDestroy() {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Internal destroy is called.");
+		}
+
+		if (deviceDataLoader != null) {
+			deviceDataLoader.stop();
+			deviceDataLoader = null;
+		}
+	}
+
 	@Override
 	public List<Statistics> getMultipleStatistics() throws Exception {
 		ExtendedStatistics extendedStatistics = new ExtendedStatistics();
 		Map<String, String> stats = new HashMap<>();
+		List<AdvancedControllableProperty> advancedControllableProperties = new LinkedList<>();
 		retrieveNetworkInfo(stats);
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("New fetched network information"));
@@ -440,9 +449,70 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		if (logger.isDebugEnabled()) {
 			logger.debug("New fetched system information");
 		}
+		createRoom(stats, advancedControllableProperties);
+		createZone(stats, advancedControllableProperties);
+
 		extendedStatistics.setStatistics(stats);
+		extendedStatistics.setControllableProperties(advancedControllableProperties);
 
 		return Collections.singletonList(extendedStatistics);
+	}
+
+	/**
+	 * Create default a room
+	 *
+	 * @param stats the stats are list of statistics
+	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
+	 */
+	private void createRoom(Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties) {
+
+		stats.put(PhilipsConstant.CREATE_ROOM + PhilipsConstant.HASH + PhilipsConstant.CREATE, PhilipsConstant.EMPTY_STRING);
+		advancedControllableProperties.add(createButton(PhilipsConstant.CREATE_ROOM + PhilipsConstant.HASH + PhilipsConstant.CREATE, PhilipsConstant.CREATE, PhilipsConstant.CREATING, 0));
+
+		String[] deviceDropdown = { PhilipsConstant.NONE, "Light 1" };
+		AdvancedControllableProperty deviceControlProperty = controlDropdown(stats, deviceDropdown, PhilipsConstant.CREATE_ROOM + PhilipsConstant.HASH + PhilipsConstant.DEVICE_0, PhilipsConstant.NONE);
+		addOrUpdateAdvanceControlProperties(advancedControllableProperties, deviceControlProperty);
+
+		stats.put(PhilipsConstant.CREATE_ROOM + PhilipsConstant.HASH + PhilipsConstant.DEVICE_ADD, PhilipsConstant.EMPTY_STRING);
+		advancedControllableProperties.add(createButton(PhilipsConstant.CREATE_ROOM + PhilipsConstant.HASH + PhilipsConstant.DEVICE_ADD, PhilipsConstant.ADD, PhilipsConstant.ADDING, 0));
+
+		stats.put(PhilipsConstant.CREATE_ROOM + PhilipsConstant.HASH + PhilipsConstant.EDITED, PhilipsConstant.FALSE);
+
+		stats.put(PhilipsConstant.CREATE_ROOM + PhilipsConstant.HASH + PhilipsConstant.NAME, PhilipsConstant.EMPTY_STRING);
+		advancedControllableProperties.add(createText(PhilipsConstant.CREATE_ROOM + PhilipsConstant.HASH + PhilipsConstant.NAME, PhilipsConstant.EMPTY_STRING));
+
+		String[] dropdown = { "None", "Living Room" };
+		AdvancedControllableProperty roomTypeControlProperty = controlDropdown(stats, dropdown, PhilipsConstant.CREATE_ROOM + PhilipsConstant.HASH + PhilipsConstant.TYPE, PhilipsConstant.NONE);
+		addOrUpdateAdvanceControlProperties(advancedControllableProperties, roomTypeControlProperty);
+	}
+
+
+	/**
+	 * Create default a zone
+	 *
+	 * @param stats the stats are list of statistics
+	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
+	 */
+	private void createZone(Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties) {
+
+		stats.put(PhilipsConstant.CREATE_ZONE + PhilipsConstant.HASH + PhilipsConstant.CREATE, PhilipsConstant.EMPTY_STRING);
+		advancedControllableProperties.add(createButton(PhilipsConstant.CREATE_ZONE + PhilipsConstant.HASH + PhilipsConstant.CREATE, PhilipsConstant.CREATE, PhilipsConstant.CREATING, 0));
+
+		String[] deviceDropdown = { PhilipsConstant.NONE, "Light 1 -Living room A" };
+		AdvancedControllableProperty deviceControlProperty = controlDropdown(stats, deviceDropdown, PhilipsConstant.CREATE_ZONE + PhilipsConstant.HASH + PhilipsConstant.DEVICE_0, PhilipsConstant.NONE);
+		addOrUpdateAdvanceControlProperties(advancedControllableProperties, deviceControlProperty);
+
+		stats.put(PhilipsConstant.CREATE_ZONE + PhilipsConstant.HASH + PhilipsConstant.DEVICE_ADD, PhilipsConstant.EMPTY_STRING);
+		advancedControllableProperties.add(createButton(PhilipsConstant.CREATE_ZONE + PhilipsConstant.HASH + PhilipsConstant.DEVICE_ADD, PhilipsConstant.ADD, PhilipsConstant.ADDING, 0));
+
+		stats.put(PhilipsConstant.CREATE_ZONE + PhilipsConstant.HASH + PhilipsConstant.EDITED, PhilipsConstant.FALSE);
+
+		stats.put(PhilipsConstant.CREATE_ZONE + PhilipsConstant.HASH + PhilipsConstant.NAME, PhilipsConstant.EMPTY_STRING);
+		advancedControllableProperties.add(createText(PhilipsConstant.CREATE_ZONE + PhilipsConstant.HASH + PhilipsConstant.NAME, PhilipsConstant.EMPTY_STRING));
+
+		String[] dropdown = { "None", "Upstairs" };
+		AdvancedControllableProperty roomTypeControlProperty = controlDropdown(stats, dropdown, PhilipsConstant.CREATE_ZONE + PhilipsConstant.HASH + PhilipsConstant.TYPE, PhilipsConstant.NONE);
+		addOrUpdateAdvanceControlProperties(advancedControllableProperties, roomTypeControlProperty);
 	}
 
 	@Override
@@ -522,7 +592,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 */
 	private void retrieveZones() {
 		try {
-			RoomAndZoneWrapper zoneWrapper = this.doGet("clip/v2/resource/zone", RoomAndZoneWrapper.class);
+			RoomAndZoneWrapper zoneWrapper = this.doGet(PhilipsUtil.getMonitorURL(PhilipsURL.ZONES), RoomAndZoneWrapper.class);
 			if (zoneWrapper != null && zoneWrapper.getData() != null) {
 				Collections.addAll(zoneList, zoneWrapper.getData());
 			}
@@ -533,9 +603,12 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		}
 	}
 
+	/**
+	 * Retrieve all rooms
+	 */
 	private synchronized void retrieveRooms() {
 		try {
-			RoomAndZoneWrapper roomWrapper = this.doGet("clip/v2/resource/room", RoomAndZoneWrapper.class);
+			RoomAndZoneWrapper roomWrapper = this.doGet(PhilipsUtil.getMonitorURL(PhilipsURL.ROOMS), RoomAndZoneWrapper.class);
 			if (roomWrapper != null && roomWrapper.getData() != null) {
 				Collections.addAll(roomList, roomWrapper.getData());
 			} else {
@@ -548,12 +621,15 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		}
 	}
 
+	/**
+	 * Retrieve all Aggregated deivce
+	 */
 	private void retrieveDevices() {
 		try {
-			AggregatorWrapper systemResponse = this.doGet("/clip/v2/resource/device", AggregatorWrapper.class);
+			AggregatorWrapper systemResponse = this.doGet(PhilipsUtil.getMonitorURL(PhilipsURL.DEVICE), AggregatorWrapper.class);
 			nameAndIdDevice.clear();
 			for (AggregatorDeviceResponse aggregatorDeviceResponse : systemResponse.getData()) {
-				if (!"bridge".equalsIgnoreCase(aggregatorDeviceResponse.getServices()[0].getType())) {
+				if (!PhilipsConstant.BRIDGE.equalsIgnoreCase(aggregatorDeviceResponse.getServices()[0].getType())) {
 					nameAndIdDevice.put(aggregatorDeviceResponse.getMetaData().getName(), aggregatorDeviceResponse.getServices()[0].getId());
 				}
 			}
@@ -724,5 +800,78 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			return PhilipsConstant.NONE;
 		}
 		return value;
+	}
+
+	// control ------------------------------------------------------------------------------------------------------------
+
+	/**
+	 * Add dropdown is control property for metric
+	 *
+	 * @param stats list statistic
+	 * @param options list select
+	 * @param name String name of metric
+	 * @return AdvancedControllableProperty dropdown instance if add dropdown success else will is null
+	 */
+	private AdvancedControllableProperty controlDropdown(Map<String, String> stats, String[] options, String name, String value) {
+		stats.put(name, value);
+		return createDropdown(name, options, value);
+	}
+
+	/***
+	 * Create dropdown advanced controllable property
+	 *
+	 * @param name the name of the control
+	 * @param initialValue initial value of the control
+	 * @return AdvancedControllableProperty dropdown instance
+	 */
+	private AdvancedControllableProperty createDropdown(String name, String[] values, String initialValue) {
+		AdvancedControllableProperty.DropDown dropDown = new AdvancedControllableProperty.DropDown();
+		dropDown.setOptions(values);
+		dropDown.setLabels(values);
+
+		return new AdvancedControllableProperty(name, new Date(), dropDown, initialValue);
+	}
+
+	/**
+	 * Add/Update advancedControllableProperties if  advancedControllableProperties different empty
+	 *
+	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
+	 * @param property the property is item advancedControllableProperties
+	 */
+	private void addOrUpdateAdvanceControlProperties(List<AdvancedControllableProperty> advancedControllableProperties, AdvancedControllableProperty property) {
+		if (property != null) {
+			advancedControllableProperties.removeIf(item -> item.getName().equals(property.getName()));
+			advancedControllableProperties.add(property);
+		}
+	}
+
+	/**
+	 * Create text is control property for metric
+	 *
+	 * @param name the name of the property
+	 * @param stringValue character string
+	 * @return AdvancedControllableProperty Text instance
+	 */
+	private AdvancedControllableProperty createText(String name, String stringValue) {
+		AdvancedControllableProperty.Text text = new AdvancedControllableProperty.Text();
+
+		return new AdvancedControllableProperty(name, new Date(), text, stringValue);
+	}
+
+	/**
+	 * Create a button.
+	 *
+	 * @param name name of the button
+	 * @param label label of the button
+	 * @param labelPressed label of the button after pressing it
+	 * @param gracePeriod grace period of button
+	 * @return This returns the instance of {@link AdvancedControllableProperty} type Button.
+	 */
+	private AdvancedControllableProperty createButton(String name, String label, String labelPressed, long gracePeriod) {
+		AdvancedControllableProperty.Button button = new AdvancedControllableProperty.Button();
+		button.setLabel(label);
+		button.setLabelPressed(labelPressed);
+		button.setGracePeriod(gracePeriod);
+		return new AdvancedControllableProperty(name, new Date(), button, PhilipsConstant.EMPTY_STRING);
 	}
 }

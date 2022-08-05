@@ -47,7 +47,7 @@ class PhilipsHueDeviceCommunicatorTest {
 	@Test
 	void testGetMultipleStatistics() throws Exception {
 		philipsHueDeviceCommunicator.retrieveMultipleStatistics();
-//		Thread.sleep(30000);
+		Thread.sleep(30000);
 		List<AggregatedDevice> aggregatedDeviceList = philipsHueDeviceCommunicator.retrieveMultipleStatistics();
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();

@@ -12,12 +12,12 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.comm
  */
 public enum NetworkInfoEnum {
 
-	MAC_ADDRESS("MacAddress"),
-	NETMASK("Netmask"),
+	MAC_ADDRESS("MACAddress"),
+	NETMASK("SubNetmask"),
 	LOCATION_TIME("LocationTime"),
 	TIMEZONE("Timezone"),
 	UTC("UTC"),
-	ADDRESS("IpAddress");
+	ADDRESS("IPAddress");
 
 	NetworkInfoEnum(String name) {
 		this.name = name;
