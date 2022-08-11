@@ -16,11 +16,32 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupLightResponse {
 
+	private String id;
 	private BrightnessLight dimming;
-	private StatusLight on;
+
+	@JsonAlias("on")
+	private StatusLight statusLight;
 
 	@JsonAlias("color_temperature")
 	private ColorTemperature temperature;
+
+	/**
+	 * Retrieves {@code {@link #id}}
+	 *
+	 * @return value of {@link #id}
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * Sets {@code id}
+	 *
+	 * @param id the {@code java.lang.String} field
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	/**
 	 * Retrieves {@code {@link #dimming}}
@@ -41,21 +62,21 @@ public class GroupLightResponse {
 	}
 
 	/**
-	 * Retrieves {@code {@link #on}}
+	 * Retrieves {@code {@link #statusLight }}
 	 *
-	 * @return value of {@link #on}
+	 * @return value of {@link #statusLight}
 	 */
-	public StatusLight getOn() {
-		return on;
+	public StatusLight getStatusLight() {
+		return statusLight;
 	}
 
 	/**
 	 * Sets {@code on}
 	 *
-	 * @param on the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.StatusLight} field
+	 * @param statusLight the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.StatusLight} field
 	 */
-	public void setOn(StatusLight on) {
-		this.on = on;
+	public void setStatusLight(StatusLight statusLight) {
+		this.statusLight = statusLight;
 	}
 
 	/**

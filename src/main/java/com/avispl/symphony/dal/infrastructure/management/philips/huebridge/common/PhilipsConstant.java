@@ -25,6 +25,7 @@ public class PhilipsConstant {
 	public static String CREATE_ROOM = "CreateRoom";
 	public static String CREATE_ZONE = "CreateZone";
 	public static String DELETE = "Delete";
+	public static String DELETING = "Deleting";
 	public static String CREATE = "Create";
 	public static String CREATING = "Creating";
 	public static String ADD = "Add";
@@ -36,4 +37,12 @@ public class PhilipsConstant {
 	public static String DEVICE_0 = "Device0";
 	public static String TYPE = "Type";
 	public static String DEVICE_ADD = "DeviceAdd";
+	public static String ZONE = "Zone";
+	public static String ROOM = "Room";
+	public static String OFFLINE = "Offline";
+	public static String ONLINE = "Online";
+
+
+	public static int NUMBER_ONE = 1;
+	public static int ZERO = 0;
 }

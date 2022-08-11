@@ -19,6 +19,7 @@ public enum PhilipsURL {
 	ZIGBEE_CONNECTIVITY("ZigbeeConnectivity", true, "clip/v2/resource/zigbee_connectivity/"),
 	ROOMS("Rooms", true, "clip/v2/resource/room"),
 	ZONES("Zones", true, "clip/v2/resource/zone"),
+	GROUP_LIGHT("GroupLight", true, "clip/v2/resource/grouped_light"),
 	;
 
 	private final String name;

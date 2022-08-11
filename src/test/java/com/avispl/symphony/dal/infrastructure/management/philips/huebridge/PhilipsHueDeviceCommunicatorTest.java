@@ -1,16 +1,10 @@
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge;
 
 
-import java.util.List;
-import java.util.Map;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
-import com.avispl.symphony.api.dal.dto.monitor.ExtendedStatistics;
-import com.avispl.symphony.api.dal.dto.monitor.aggregator.AggregatedDevice;
 
 class PhilipsHueDeviceCommunicatorTest {
 
@@ -34,11 +28,6 @@ class PhilipsHueDeviceCommunicatorTest {
 		philipsHueDeviceCommunicator.authenticate();
 	}
 
-	@AfterEach
-	void stopWireMockRule() {
-		philipsHueDeviceCommunicator.destroy();
-	}
-
 	/**
 	 * Test getMultipleStatistics get all current system
 	 * Expect getMultipleStatistics successfully with three systems
@@ -46,10 +35,5 @@ class PhilipsHueDeviceCommunicatorTest {
 	@Tag("Mock")
 	@Test
 	void testGetMultipleStatistics() throws Exception {
-		philipsHueDeviceCommunicator.retrieveMultipleStatistics();
-		Thread.sleep(30000);
-		List<AggregatedDevice> aggregatedDeviceList = philipsHueDeviceCommunicator.retrieveMultipleStatistics();
-		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
-		Map<String, String> stats = extendedStatistics.getStatistics();
 	}
 }

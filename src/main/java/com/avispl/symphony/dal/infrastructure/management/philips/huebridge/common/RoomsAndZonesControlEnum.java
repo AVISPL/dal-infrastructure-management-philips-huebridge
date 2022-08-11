@@ -1,21 +1,22 @@
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common;
 
 /**
- * CreateRoomEum  class defined the enum for monitoring and controlling process
+ * RoomsAndZonesControlEnum class defined the enum for monitoring and controlling process
  *
  * @author Harry / Symphony Dev Team<br>
- * Created on 8/4/2022
+ * Created on 8/11/2022
  * @since 1.0.0
  */
-public enum CreateRoomEum {
+public enum RoomsAndZonesControlEnum {
 
 	NAME("Name"),
 	DEVICE_0("Device0"),
 	TYPE("Type"),
-	EDITED("Edited"),
+	DEVICE_STATUS("DeviceStatus"),
+	ACTION("Action"),
 	DEVICE_ADD("DeviceAdd");
 
-	CreateRoomEum(String name) {
+	RoomsAndZonesControlEnum(String name) {
 		this.name = name;
 	}
 

@@ -12,6 +12,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.util.CollectionUtils;
 
 import com.avispl.symphony.api.dal.control.Controller;
 import com.avispl.symphony.api.dal.dto.control.AdvancedControllableProperty;
@@ -35,9 +37,11 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.commo
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.PhilipsConstant;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.PhilipsURL;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.PhilipsUtil;
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.RoomsAndZonesControlEnum;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.SystemInfoEnum;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.AggregatorWrapper;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.BridgeWrapper;
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.GroupLightWrapper;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.NetworkInfoResponse;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.RoomAndZoneWrapper;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.SystemWrapper;
@@ -45,6 +49,7 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.Z
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.aggregateddevice.AggregatorDeviceResponse;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.aggregateddevice.ProductData;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.bridge.BridgeListResponse;
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.GroupLightResponse;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.romandzone.RoomAndZoneResponse;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.system.ServicesResponse;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.system.SystemResponse;
@@ -109,23 +114,10 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					break mainloop;
 				}
 
-				// next line will determine whether QSys monitoring was paused
+				// next line will determine whether Philips monitoring was paused
 				updateAggregatorStatus();
 				if (devicePaused) {
 					continue mainloop;
-				}
-				retrieveZones();
-				if (zoneList.isEmpty()) {
-					retrieveRooms();
-				} else {
-					if (!StringUtils.isNullOrEmpty(zoneName)) {
-						for (RoomAndZoneResponse response : zoneList) {
-							if (response.equals(zoneName)) {
-//								zoneListFilter = Collections.singletonList(response);
-								break;
-							}
-						}
-					}
 				}
 
 				if (logger.isDebugEnabled()) {
@@ -136,7 +128,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				if (validDeviceMetaDataRetrievalPeriodTimestamp <= currentTimestamp) {
 					validDeviceMetaDataRetrievalPeriodTimestamp = currentTimestamp + deviceMetaDataRetrievalTimeout;
 
-					retrieveRooms();
+//					retrieveRooms();
 
 					do {
 						try {
@@ -202,6 +194,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		}
 	}
 
+	private ExtendedStatistics localExtendedStatistics;
 	//The properties adapter
 	private String zoneName;
 	private String roomNames;
@@ -355,6 +348,17 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	private List<RoomAndZoneResponse> zoneList = Collections.synchronizedList(new ArrayList<>());
 
 	/**
+	 * List of Group Light
+	 */
+	private List<GroupLightResponse> groupLightList = Collections.synchronizedList(new ArrayList<>());
+
+
+	/**
+	 * Map of name and grouped light
+	 */
+	private Map<String, GroupLightResponse> groupLightMap = new HashMap<>();
+
+	/**
 	 * List of Name and ID device
 	 */
 	private Map<String, String> nameAndIdDevice = Collections.synchronizedMap(new HashMap<>());
@@ -441,25 +445,115 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		Map<String, String> stats = new HashMap<>();
 		List<AdvancedControllableProperty> advancedControllableProperties = new LinkedList<>();
 		retrieveNetworkInfo(stats);
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("New fetched network information"));
-		}
+		retrieveZones();
+		retrieveRooms();
+		retrieveGroupLight();
+		retrieveDevices();
 		retrieveListBridgeId();
 		retrieveSystemInfoByBridgeIdList(stats);
-		if (logger.isDebugEnabled()) {
-			logger.debug("New fetched system information");
-		}
+
+		populateControl(stats, advancedControllableProperties);
 		createRoom(stats, advancedControllableProperties);
 		createZone(stats, advancedControllableProperties);
 
 		extendedStatistics.setStatistics(stats);
 		extendedStatistics.setControllableProperties(advancedControllableProperties);
 
-		return Collections.singletonList(extendedStatistics);
+		localExtendedStatistics = extendedStatistics;
+		return Collections.singletonList(localExtendedStatistics);
 	}
 
 	/**
-	 * Create default a room
+	 * Populate control
+	 *
+	 * @param stats the stats are list of statistics
+	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
+	 */
+	private void populateControl(Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties) {
+		populateRoomAndZones(stats, advancedControllableProperties, true);
+		populateRoomAndZones(stats, advancedControllableProperties, false);
+	}
+
+	/**
+	 * Populate rooms and zones control
+	 *
+	 * @param stats the stats are list of statistics
+	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
+	 */
+	private void populateRoomAndZones(Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties, boolean isRoomType) {
+		if (isRoomType) {
+			for (RoomAndZoneResponse roomItem : roomList) {
+				String groupName = PhilipsConstant.ROOM + roomItem.getMetaData().getName();
+				populateDetailsRoomAndZone(stats, advancedControllableProperties, roomItem, groupName);
+			}
+		} else {
+			for (RoomAndZoneResponse zoneItem : zoneList) {
+				String groupName = PhilipsConstant.ZONE + zoneItem.getMetaData().getName();
+				populateDetailsRoomAndZone(stats, advancedControllableProperties, zoneItem, groupName);
+			}
+		}
+	}
+
+	/**
+	 * Populate room and zones control details
+	 *
+	 * @param stats the stats are list of statistics
+	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
+	 * @param roomAndZoneResponse the roomAndZoneResponse is roomAndZoneResponse DTO instance
+	 * @param groupName the groupName is String with format Zone{ZoneName} or Room{RoomName}
+	 */
+	private void populateDetailsRoomAndZone(Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties, RoomAndZoneResponse roomAndZoneResponse, String groupName) {
+		for (RoomsAndZonesControlEnum zonesControlEnum : RoomsAndZonesControlEnum.values()) {
+			String property = groupName + zonesControlEnum.getName();
+			String value;
+			switch (zonesControlEnum) {
+				case NAME:
+					value = roomAndZoneResponse.getMetaData().getName();
+					AdvancedControllableProperty nameControllableProperty = controlTextOrNumeric(stats, property, value, false);
+					addOrUpdateAdvanceControlProperties(advancedControllableProperties, nameControllableProperty);
+					break;
+				case ACTION:
+					stats.put(property, PhilipsConstant.EMPTY_STRING);
+					advancedControllableProperties.add(createButton(property, PhilipsConstant.DELETE, PhilipsConstant.DELETING, 0));
+					break;
+				case DEVICE_0:
+					populateDeviceForZone(stats, advancedControllableProperties);
+					break;
+				case DEVICE_ADD:
+					stats.put(property, PhilipsConstant.EMPTY_STRING);
+					advancedControllableProperties.add(createButton(property, PhilipsConstant.ADD, PhilipsConstant.ADDING, 0));
+					break;
+				case TYPE:
+					stats.put(property, PhilipsConstant.ZONE);
+					break;
+				case DEVICE_STATUS:
+					value = groupLightMap.get(roomAndZoneResponse.getId()).getStatusLight().isOn() ? String.valueOf(PhilipsConstant.NUMBER_ONE) : String.valueOf(PhilipsConstant.ZERO);
+					AdvancedControllableProperty statusControllableProperty = controlSwitch(stats, property, value, PhilipsConstant.OFFLINE, PhilipsConstant.ONLINE);
+					addOrUpdateAdvanceControlProperties(advancedControllableProperties, statusControllableProperty);
+					break;
+				default:
+					if (logger.isDebugEnabled()) {
+						logger.debug(String.format("Controlling zones with property %s is not supported.", zonesControlEnum.getName()));
+					}
+					break;
+			}
+			stats.put(groupName + PhilipsConstant.EDITED, PhilipsConstant.FALSE);
+		}
+	}
+
+	/**
+	 * populate device for rooms and zones
+	 *
+	 * @param stats the stats are list of statistics
+	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
+	 */
+	private void populateDeviceForZone(Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties) {
+		Objects.requireNonNull(stats);
+		Objects.requireNonNull(advancedControllableProperties);
+	}
+
+	/**
+	 * Create default room
 	 *
 	 * @param stats the stats are list of statistics
 	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
@@ -515,16 +609,30 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		addOrUpdateAdvanceControlProperties(advancedControllableProperties, roomTypeControlProperty);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void controlProperty(ControllableProperty controllableProperty) {
 //TODO
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void controlProperties(List<ControllableProperty> list) {
-//TODO
+		if (CollectionUtils.isEmpty(list)) {
+			throw new IllegalArgumentException("Controllable properties cannot be null or empty");
+		}
+		for (ControllableProperty controllableProperty : list) {
+			controlProperty(controllableProperty);
+		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public List<AggregatedDevice> retrieveMultipleStatistics() {
 		if (checkValidApiToken()) {
@@ -547,14 +655,20 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		return aggregatedDeviceList;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public List<AggregatedDevice> retrieveMultipleStatistics(List<String> list) throws Exception {
 		return retrieveMultipleStatistics().stream().filter(aggregatedDevice -> list.contains(aggregatedDevice.getDeviceId())).collect(Collectors.toList());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void authenticate() throws Exception {
-
+// The aggregator have its own authorization method
 	}
 
 	/**
@@ -606,11 +720,14 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	/**
 	 * Retrieve all rooms
 	 */
-	private synchronized void retrieveRooms() {
+	private synchronized void retrieveGroupLight() {
 		try {
-			RoomAndZoneWrapper roomWrapper = this.doGet(PhilipsUtil.getMonitorURL(PhilipsURL.ROOMS), RoomAndZoneWrapper.class);
-			if (roomWrapper != null && roomWrapper.getData() != null) {
-				Collections.addAll(roomList, roomWrapper.getData());
+			GroupLightWrapper groupLightWrapper = this.doGet(PhilipsUtil.getMonitorURL(PhilipsURL.GROUP_LIGHT), GroupLightWrapper.class);
+			if (groupLightWrapper != null && groupLightWrapper.getData() != null) {
+				Collections.addAll(groupLightList, groupLightWrapper.getData());
+				for (GroupLightResponse groupLightResponse : groupLightWrapper.getData()) {
+					groupLightMap.put(groupLightResponse.getId(), groupLightResponse);
+				}
 			} else {
 				systemErrorMessagesList.add("Retrieve rooms list error");
 			}
@@ -622,15 +739,41 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	}
 
 	/**
-	 * Retrieve all Aggregated deivce
+	 * Retrieve all group_light
+	 */
+	private synchronized void retrieveRooms() {
+		try {
+			RoomAndZoneWrapper roomAndZoneWrapper = this.doGet(PhilipsUtil.getMonitorURL(PhilipsURL.ROOMS), RoomAndZoneWrapper.class);
+			if (roomAndZoneWrapper != null && roomAndZoneWrapper.getData() != null) {
+				Collections.addAll(roomList, roomAndZoneWrapper.getData());
+			} else {
+				systemErrorMessagesList.add("Retrieve rooms list error");
+			}
+		} catch (Exception e) {
+			String errorMessage = String.format("List Rooms Data Retrieval-Error: %s with cause: %s", e.getMessage(), e.getCause().getMessage());
+			systemErrorMessagesList.add(errorMessage);
+			logger.error(errorMessage, e);
+		}
+	}
+
+	/**
+	 * Retrieve all Aggregated device
 	 */
 	private void retrieveDevices() {
 		try {
 			AggregatorWrapper systemResponse = this.doGet(PhilipsUtil.getMonitorURL(PhilipsURL.DEVICE), AggregatorWrapper.class);
 			nameAndIdDevice.clear();
 			for (AggregatorDeviceResponse aggregatorDeviceResponse : systemResponse.getData()) {
+				AggregatedDevice aggregatedDevice = new AggregatedDevice();
+				Map<String, String> properties = new HashMap<>();
 				if (!PhilipsConstant.BRIDGE.equalsIgnoreCase(aggregatorDeviceResponse.getServices()[0].getType())) {
 					nameAndIdDevice.put(aggregatorDeviceResponse.getMetaData().getName(), aggregatorDeviceResponse.getServices()[0].getId());
+					aggregatedDevice.setDeviceId(aggregatorDeviceResponse.getId());
+					aggregatedDevice.setDeviceModel(aggregatorDeviceResponse.getProductData().getModel());
+					aggregatedDevice.setDeviceName(aggregatorDeviceResponse.getProductData().getName());
+					aggregatedDevice.setDeviceType(aggregatorDeviceResponse.getServices()[0].getType());
+					aggregatedDevice.setProperties(properties);
+					aggregatedDeviceList.add(aggregatedDevice);
 				}
 			}
 		} catch (Exception e) {
@@ -846,6 +989,32 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	}
 
 	/**
+	 * Add text or numeric is control property for metric
+	 *
+	 * @param stats list statistic
+	 * @param name String name of metric
+	 * @return AdvancedControllableProperty text and numeric instance
+	 */
+	private AdvancedControllableProperty controlTextOrNumeric(Map<String, String> stats, String name, String value, boolean isNumeric) {
+		stats.put(name, value);
+
+		return isNumeric ? createNumeric(name, value) : createText(name, value);
+	}
+
+	/**
+	 * Create Numeric is control property for metric
+	 *
+	 * @param name the name of the property
+	 * @param initialValue the initialValue is number
+	 * @return AdvancedControllableProperty Numeric instance
+	 */
+	private AdvancedControllableProperty createNumeric(String name, String initialValue) {
+		AdvancedControllableProperty.Numeric numeric = new AdvancedControllableProperty.Numeric();
+
+		return new AdvancedControllableProperty(name, new Date(), numeric, initialValue);
+	}
+
+	/**
 	 * Create text is control property for metric
 	 *
 	 * @param name the name of the property
@@ -856,6 +1025,46 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		AdvancedControllableProperty.Text text = new AdvancedControllableProperty.Text();
 
 		return new AdvancedControllableProperty(name, new Date(), text, stringValue);
+	}
+
+	/**
+	 * Add switch is control property for metric
+	 *
+	 * @param stats list statistic
+	 * @param name String name of metric
+	 * @return AdvancedControllableProperty switch instance
+	 */
+	private AdvancedControllableProperty controlSwitch(Map<String, String> stats, String name, String value, String labelOff, String labelOn) {
+		if (StringUtils.isNullOrEmpty(value)) {
+			value = PhilipsConstant.NONE;
+		}
+		stats.put(name, value);
+		if (!PhilipsConstant.NONE.equals(value) && !StringUtils.isNullOrEmpty(value)) {
+			return createSwitch(name, Integer.parseInt(value), labelOff, labelOn);
+		}
+		// if response data is null or none. Only display monitoring data not display controlling data
+		return null;
+	}
+
+	/**
+	 * Create switch is control property for metric
+	 *
+	 * @param name the name of property
+	 * @param status initial status (0|1)
+	 * @return AdvancedControllableProperty switch instance
+	 */
+	private AdvancedControllableProperty createSwitch(String name, int status, String labelOff, String labelOn) {
+		AdvancedControllableProperty.Switch toggle = new AdvancedControllableProperty.Switch();
+		toggle.setLabelOff(labelOff);
+		toggle.setLabelOn(labelOn);
+
+		AdvancedControllableProperty advancedControllableProperty = new AdvancedControllableProperty();
+		advancedControllableProperty.setName(name);
+		advancedControllableProperty.setValue(status);
+		advancedControllableProperty.setType(toggle);
+		advancedControllableProperty.setTimestamp(new Date());
+
+		return advancedControllableProperty;
 	}
 
 	/**
