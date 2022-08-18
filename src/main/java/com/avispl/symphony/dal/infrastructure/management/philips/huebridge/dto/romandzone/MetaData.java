@@ -5,6 +5,8 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.EnumTypeHandler;
+
 /**
  * MetaData class provides during the monitoring and controlling process
  *
@@ -16,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class MetaData {
 
 	private String name;
+	private String archetype;
 
 	/**
 	 * Retrieves {@code {@link #name}}
@@ -33,5 +36,36 @@ public class MetaData {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * Retrieves {@code {@link #archetype}}
+	 *
+	 * @return value of {@link #archetype}
+	 */
+	public String getArchetype() {
+		return archetype;
+	}
+
+	/**
+	 * Sets {@code archetype}
+	 *
+	 * @param archetype the {@code java.lang.String} field
+	 */
+	public void setArchetype(String archetype) {
+		this.archetype = archetype;
+	}
+
+	/**
+	 * Get To String of Children
+	 *
+	 * @return String is full param of Children
+	 */
+	@Override
+	public String toString() {
+		String archetypeDataValue = EnumTypeHandler.getFormatNameByColonValue(archetype, "archetype");
+		String nameValue = EnumTypeHandler.getFormatNameByColonValue(name, "name");
+
+		return String.format("{%s,%s}", nameValue, archetypeDataValue);
 	}
 }

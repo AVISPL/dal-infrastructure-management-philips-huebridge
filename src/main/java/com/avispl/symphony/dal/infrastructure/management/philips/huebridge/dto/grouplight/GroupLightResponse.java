@@ -6,6 +6,8 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.bridge.OwnerResponse;
+
 /**
  * GroupLightResponse class provides during the monitoring and controlling process
  *
@@ -24,6 +26,26 @@ public class GroupLightResponse {
 
 	@JsonAlias("color_temperature")
 	private ColorTemperature temperature;
+
+	private OwnerResponse owner;
+
+	/**
+	 * Retrieves {@code {@link #owner}}
+	 *
+	 * @return value of {@link #owner}
+	 */
+	public OwnerResponse getOwner() {
+		return owner;
+	}
+
+	/**
+	 * Sets {@code owner}
+	 *
+	 * @param owner the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.bridge.OwnerResponse} field
+	 */
+	public void setOwner(OwnerResponse owner) {
+		this.owner = owner;
+	}
 
 	/**
 	 * Retrieves {@code {@link #id}}

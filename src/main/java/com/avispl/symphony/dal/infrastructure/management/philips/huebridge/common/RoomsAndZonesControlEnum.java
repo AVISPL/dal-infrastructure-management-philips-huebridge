@@ -10,10 +10,11 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.comm
 public enum RoomsAndZonesControlEnum {
 
 	NAME("Name"),
-	DEVICE_0("Device0"),
 	TYPE("Type"),
 	DEVICE_STATUS("DeviceStatus"),
 	ACTION("Action"),
+	CANCEL("CancelChange"),
+	DEVICE("Device"),
 	DEVICE_ADD("DeviceAdd");
 
 	RoomsAndZonesControlEnum(String name) {

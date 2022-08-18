@@ -6,7 +6,10 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.EnumTypeHandler;
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.PhilipsConstant;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.system.ServicesResponse;
+import com.avispl.symphony.dal.util.StringUtils;
 
 /**
  * RoomResponse class provides during the monitoring and controlling process
@@ -25,7 +28,6 @@ public class RoomAndZoneResponse {
 
 	@JsonAlias("metadata")
 	private MetaData metaData;
-
 
 
 	/**
@@ -116,5 +118,27 @@ public class RoomAndZoneResponse {
 	 */
 	public void setChildren(Children[] children) {
 		this.children = children;
+	}
+
+	/**
+	 * /**
+	 * Get To String of stream configs
+	 *
+	 * @return String is full param of stream config
+	 */
+	@Override
+	public String toString() {
+		String metaDataValue = EnumTypeHandler.getFormatNameByColonValueObject(metaData.toString(), "metadata");
+		String typeValue = EnumTypeHandler.getFormatNameByColonValue(type, "type");
+		String childrenValue;
+		String childrenItemValue = PhilipsConstant.EMPTY_STRING;
+		for (Children children : children) {
+			childrenItemValue = StringUtils.isNullOrEmpty(childrenItemValue) ? childrenItemValue : childrenItemValue + ",";
+			childrenItemValue = childrenItemValue + children.toString();
+		}
+		childrenItemValue = "[" + childrenItemValue + "]";
+		childrenValue = EnumTypeHandler.getFormatNameByColonValueObject(childrenItemValue, "children");
+
+		return String.format("{%s,%s,%s}", metaDataValue, childrenValue, typeValue);
 	}
 }

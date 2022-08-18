@@ -34,6 +34,12 @@ public class PhilipsUtil {
 				return PhilipsURL.CONFIG.getUrl();
 			case ZIGBEE_CONNECTIVITY:
 				return PhilipsURL.ZIGBEE_CONNECTIVITY.getUrl();
+			case ROOMS:
+				return PhilipsURL.ROOMS.getUrl();
+			case ZONES:
+				return PhilipsURL.ZONES.getUrl();
+			case GROUP_LIGHT:
+				return PhilipsURL.GROUP_LIGHT.getUrl();
 			default:
 				throw new IllegalArgumentException("Do not support Philips Hue metric: " + url.name());
 		}

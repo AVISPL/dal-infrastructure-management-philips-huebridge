@@ -12,7 +12,7 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.comm
  */
 public enum PhilipsURL {
 
-	DEVICE("Device", true, "clip/v2/resource/device/"),
+	DEVICE("Device", true, "clip/v2/resource/device"),
 	BRIDGE("bridge", true, "clip/v2/resource/bridge"),
 	API("API", false, "api/"),
 	CONFIG("Config", true, "/config"),

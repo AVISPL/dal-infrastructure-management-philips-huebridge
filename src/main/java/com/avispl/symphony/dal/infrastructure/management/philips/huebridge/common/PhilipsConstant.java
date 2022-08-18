@@ -35,13 +35,19 @@ public class PhilipsConstant {
 	public static String TRUE = "True";
 	public static String NAME = "Name";
 	public static String DEVICE_0 = "Device0";
+	public static String DEVICE= "Device";
 	public static String TYPE = "Type";
 	public static String DEVICE_ADD = "DeviceAdd";
 	public static String ZONE = "Zone";
 	public static String ROOM = "Room";
 	public static String OFFLINE = "Offline";
 	public static String ONLINE = "Online";
-
+	public static String CANCEL= "Cancel";
+	public static String CANCELING= "Canceling";
+	public static String CANCEL_CHANGE= "CancelChange";
+	public static String FORMAT_PERCENT= "\"%s\"";
+	public static String FORMAT_PERCENT_OBJECT= "%s";
+	public static String COLON= ":";
 
 	public static int NUMBER_ONE = 1;
 	public static int ZERO = 0;
