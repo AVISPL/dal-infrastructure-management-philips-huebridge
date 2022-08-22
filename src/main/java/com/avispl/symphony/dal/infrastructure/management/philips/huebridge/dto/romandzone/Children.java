@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.EnumTypeHandler;
 
 /**
- * Children class provides during the monitoring and controlling process
+ * Children class contains rid and type of the device
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/3/2022

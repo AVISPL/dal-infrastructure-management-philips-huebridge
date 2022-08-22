@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.EnumTypeHandler;
 
 /**
- * MetaData class provides during the monitoring and controlling process
+ * MetaData class contains name and type
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/2/2022

@@ -20,6 +20,11 @@ public enum RoomsAndZonesControlEnum {
 	APPLY_CHANGE("ApplyChange"),
 	DEVICE_ADD("DeviceAdd");
 
+	/**
+	 * RoomsAndZonesControlEnum instantiation
+	 *
+	 * @param name {@code {@link #name}}
+	 */
 	RoomsAndZonesControlEnum(String name) {
 		this.name = name;
 	}

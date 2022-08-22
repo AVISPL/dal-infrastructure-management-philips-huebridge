@@ -25,6 +25,7 @@ public class PhilipsConstant {
 	public static String COMMA = ",";
 	public static String CREATE_ROOM = "CreateRoom";
 	public static String CREATE_ZONE = "CreateZone";
+	public static String CREATE_AUTOMATION = "CreateAutomationBehaviorInstance";
 	public static String DELETE = "Delete";
 	public static String DELETING = "Deleting";
 	public static String CREATE = "Create";

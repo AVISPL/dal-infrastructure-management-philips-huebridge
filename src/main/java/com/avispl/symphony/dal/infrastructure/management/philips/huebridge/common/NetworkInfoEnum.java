@@ -19,6 +19,11 @@ public enum NetworkInfoEnum {
 	UTC("UTC"),
 	ADDRESS("IPAddress");
 
+	/**
+	 * NetworkInfoEnum instantiation
+	 *
+	 * @param name {@code {@link #name}}
+	 */
 	NetworkInfoEnum(String name) {
 		this.name = name;
 	}

@@ -937,7 +937,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 							roomValue.setId(roomAndZoneResponse.get().getId());
 							sendRequestToCreateOrEditRoomAndZone(roomValue, true, true);
 						} else {
-							roomValue = convertZoneByValue(stats, propertyGroup + PhilipsConstant.HASH, mapOfDeviceDropdown, deviceNameAndDeviceIdZoneMap);
+							roomValue = convertZoneByValue(stats, propertyGroup + PhilipsConstant.HASH, mapOfDeviceDropdown, deviceNameAndDeviceIdZoneMap, true);
 							roomValue.setId(roomAndZoneResponse.get().getId());
 							sendRequestToCreateOrEditRoomAndZone(roomValue, false, true);
 						}
@@ -1023,7 +1023,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					updateValueForTheControllableProperty(property, value, stats, advancedControllableProperties);
 					break;
 				case CREATE:
-					RoomAndZoneResponse roomConvertData = convertZoneByValue(stats, PhilipsConstant.CREATE_ZONE + PhilipsConstant.HASH, deviceZoneMap, deviceNameAndDeviceIdZoneMap);
+					RoomAndZoneResponse roomConvertData = convertZoneByValue(stats, PhilipsConstant.CREATE_ZONE + PhilipsConstant.HASH, deviceZoneMap, deviceNameAndDeviceIdZoneMap, false);
 					sendRequestToCreateOrEditRoomAndZone(roomConvertData, false, false);
 					isCreateZone = false;
 					break;
@@ -1112,10 +1112,10 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 * @param property the property is property name
 	 * @param deviceDropdown is map of device name
 	 * @param mapOfNameAndId is map of name and id device
-	 * @param isEdited is boolean value
+	 * @param isEditRoom is boolean value if isEditRoom =true then edit the room, isEditRoom = false then create the room
 	 * @return RoomAndZoneResponse is instance in RoomAndZoneResponseDTO
 	 */
-	private RoomAndZoneResponse convertRoomByValue(Map<String, String> stats, String property, Map<String, String> deviceDropdown, Map<String, Map<String, String>> mapOfNameAndId, boolean isEdited) {
+	private RoomAndZoneResponse convertRoomByValue(Map<String, String> stats, String property, Map<String, String> deviceDropdown, Map<String, Map<String, String>> mapOfNameAndId, boolean isEditRoom) {
 		String name = stats.get(property + RoomsAndZonesControlEnum.NAME.getName());
 		String type = stats.get(property + RoomsAndZonesControlEnum.TYPE.getName());
 
@@ -1140,7 +1140,9 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		if (PhilipsConstant.NONE.equals(type)) {
 			throw new ResourceNotReachableException("Error while creating Room, Room type can't empty");
 		}
-		checkNameOfRoomAndZoneIsPercent(name, isEdited);
+		if (isEditRoom) {
+			checkNameOfRoomAndZoneIsPercent(name, true);
+		}
 		type = RoomTypeEnum.getValueOfRoomTypeEnumByName(type);
 		MetaData metaData = new MetaData();
 		metaData.setArchetype(type);
@@ -1156,18 +1158,20 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 * Check Name exits for room and zone
 	 *
 	 * @param name the name is name of room/zone
-	 * @param isEdited the is edited is boolean value with isEdited = true then edited room and zone
+	 * @param isRoomType the is isRoomType is boolean value
 	 */
-	private void checkNameOfRoomAndZoneIsPercent(String name, boolean isEdited) {
-		if (!isEdited) {
-			try {
-				RoomAndZoneWrapper zoneWrapper = this.doGet(PhilipsUtil.getMonitorURL(PhilipsURL.ROOMS), RoomAndZoneWrapper.class);
-				if (zoneWrapper != null && zoneWrapper.getData() != null && Arrays.stream(zoneWrapper.getData()).anyMatch(item -> item.getMetaData().getName().equals(name))) {
-					throw new ResourceNotReachableException(String.format("The name: %s already exists", name));
-				}
-			} catch (Exception e) {
-				throw new ResourceNotReachableException(String.format("Error when create Room/Zone: %s", e.getMessage()), e);
+	private void checkNameOfRoomAndZoneIsPercent(String name, boolean isRoomType) {
+		String request = PhilipsUtil.getMonitorURL(PhilipsURL.ROOMS);
+		if (!isRoomType) {
+			request = PhilipsUtil.getMonitorURL(PhilipsURL.ZONES);
+		}
+		try {
+			RoomAndZoneWrapper zoneWrapper = this.doGet(request, RoomAndZoneWrapper.class);
+			if (zoneWrapper != null && zoneWrapper.getData() != null && Arrays.stream(zoneWrapper.getData()).anyMatch(item -> item.getMetaData().getName().equals(name))) {
+				throw new ResourceNotReachableException(String.format("The name: %s already exists", name));
 			}
+		} catch (Exception e) {
+			throw new ResourceNotReachableException(String.format("Error when create Room/Zone: %s", e.getMessage()), e);
 		}
 	}
 
@@ -1178,9 +1182,10 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 * @param property the property is property name
 	 * @param mapOfDevice is map of device name
 	 * @param mapOfNameAndId is map of name and id device
+	 * @param isEditZone is boolean value if isEditZone =true then edit the zone, isEditZone = false then create the zone
 	 * @return RoomAndZoneResponse is instance in RoomAndZoneResponseDTO
 	 */
-	private RoomAndZoneResponse convertZoneByValue(Map<String, String> stats, String property, Map<String, String> mapOfDevice, Map<String, String> mapOfNameAndId) {
+	private RoomAndZoneResponse convertZoneByValue(Map<String, String> stats, String property, Map<String, String> mapOfDevice, Map<String, String> mapOfNameAndId, boolean isEditZone) {
 		String name = stats.get(property + RoomsAndZonesControlEnum.NAME.getName());
 		String type = stats.get(property + RoomsAndZonesControlEnum.TYPE.getName());
 		List<String> id = new LinkedList<>();
@@ -1205,7 +1210,9 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		if (PhilipsConstant.NONE.equals(type)) {
 			throw new ResourceNotReachableException("Error while creating Zone, Zone type can't empty");
 		}
-
+		if (isEditZone) {
+			checkNameOfRoomAndZoneIsPercent(name, false);
+		}
 		type = RoomTypeEnum.getValueOfRoomTypeEnumByName(type);
 		MetaData metaData = new MetaData();
 		metaData.setArchetype(type);

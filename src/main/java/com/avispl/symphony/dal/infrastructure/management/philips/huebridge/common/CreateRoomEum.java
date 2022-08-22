@@ -18,6 +18,11 @@ public enum CreateRoomEum {
 	EDITED("Edited"),
 	DEVICE_ADD("DeviceAdd");
 
+	/**
+	 * CreateRoomEum instantiation
+	 *
+	 * @param name {@code {@link #name}}
+	 */
 	CreateRoomEum(String name) {
 		this.name = name;
 	}

@@ -1,32 +1,35 @@
-/**
+/*
  * Copyright (c) 2022 AVI-SPL, Inc. All Rights Reserved.
  */
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common;
 
 /**
- * SystemInfoEnum class provides during the monitoring and controlling process
+ * AutomationEnum  class defined the enum for monitoring and controlling process
  *
  * @author Harry / Symphony Dev Team<br>
- * Created on 8/2/2022
+ * Created on 8/22/2022
  * @since 1.0.0
  */
-public enum SystemInfoEnum {
+public enum AutomationEnum {
 
-	ID("ID"),
-	MANUFACTURER("Manufacturer"),
-	MODEL("Model"),
-	ARCHETYPE("Archetype"),
+	ACTION("Action"),
+	FADE_DURATION("FadeDuration"),
 	NAME("Name"),
-	VERSION("SoftwareVersion"),
+	REPEAT("Repeat"),
+	STATUS("Status"),
+	TIME_CURRENT("TimeCurrent"),
+	TIME_HOUR("TimeHour"),
+	TIME_MINUTE("TimeMinute"),
 	TYPE("Type"),
+	TYPE_OF_AUTOMATION("TypeOfAutomation"),
 	;
 
 	/**
-	 * SystemInfoEnum instantiation
+	 * AutomationEnum instantiation
 	 *
 	 * @param name {@code {@link #name}}
 	 */
-	SystemInfoEnum(String name) {
+	AutomationEnum(String name) {
 		this.name = name;
 	}
 	private final String name;
