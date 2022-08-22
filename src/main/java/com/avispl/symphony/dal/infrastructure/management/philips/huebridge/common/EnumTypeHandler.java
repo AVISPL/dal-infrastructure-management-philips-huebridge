@@ -81,22 +81,16 @@ public class EnumTypeHandler {
 	/**
 	 * Get format name if value different null or empty
 	 *
-	 * @param value is value of StreamConfig instance
+	 * @param value is value of property
 	 * @param name is name of param request to send command
+	 * @param isObject is boolean type value
 	 * @return String is format name or empty string
 	 */
-	public static String getFormatNameByColonValue(String value, String name) {
-		return StringUtils.isNullOrEmpty(value) ? PhilipsConstant.EMPTY_STRING : String.format(PhilipsConstant.FORMAT_PERCENT + PhilipsConstant.COLON + PhilipsConstant.FORMAT_PERCENT, name, value);
-	}
-
-	/**
-	 * Get format name if value different null or empty
-	 *
-	 * @param value is value of StreamConfig instance
-	 * @param name is name of param request to send command
-	 * @return String is format name or empty string
-	 */
-	public static String getFormatNameByColonValueObject(String value, String name) {
-		return StringUtils.isNullOrEmpty(value) ? PhilipsConstant.EMPTY_STRING : String.format(PhilipsConstant.FORMAT_PERCENT + PhilipsConstant.COLON + PhilipsConstant.FORMAT_PERCENT_OBJECT, name, value);
+	public static String getFormatNameByColonValue(String value, String name,boolean isObject) {
+		String format = PhilipsConstant.FORMAT_PERCENT;
+		if(isObject){
+			format = PhilipsConstant.FORMAT_PERCENT_OBJECT;
+		}
+		return StringUtils.isNullOrEmpty(value) ? PhilipsConstant.EMPTY_STRING : String.format(PhilipsConstant.FORMAT_PERCENT + PhilipsConstant.COLON + format, name, value);
 	}
 }

@@ -127,16 +127,16 @@ public class RoomAndZoneResponse {
 	 */
 	@Override
 	public String toString() {
-		String metaDataValue = EnumTypeHandler.getFormatNameByColonValueObject(metaData.toString(), "metadata");
-		String typeValue = EnumTypeHandler.getFormatNameByColonValue(type, "type");
+		String metaDataValue = EnumTypeHandler.getFormatNameByColonValue(metaData.toString(), "metadata",true);
+		String typeValue = EnumTypeHandler.getFormatNameByColonValue(type, "type", false);
 		String childrenValue;
 		String childrenItemValue = PhilipsConstant.EMPTY_STRING;
 		for (Children children : children) {
-			childrenItemValue = StringUtils.isNullOrEmpty(childrenItemValue) ? childrenItemValue : childrenItemValue + ",";
+			childrenItemValue = StringUtils.isNullOrEmpty(childrenItemValue) ? childrenItemValue : childrenItemValue + PhilipsConstant.COMMA;
 			childrenItemValue = childrenItemValue + children.toString();
 		}
-		childrenItemValue = "[" + childrenItemValue + "]";
-		childrenValue = EnumTypeHandler.getFormatNameByColonValueObject(childrenItemValue, "children");
+		childrenItemValue = String.format("[%s]", childrenItemValue);
+		childrenValue = EnumTypeHandler.getFormatNameByColonValue(childrenItemValue, "children",true);
 
 		return String.format("{%s,%s,%s}", metaDataValue, childrenValue, typeValue);
 	}

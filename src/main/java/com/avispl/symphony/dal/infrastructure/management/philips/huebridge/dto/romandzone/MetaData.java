@@ -63,8 +63,8 @@ public class MetaData {
 	 */
 	@Override
 	public String toString() {
-		String archetypeDataValue = EnumTypeHandler.getFormatNameByColonValue(archetype, "archetype");
-		String nameValue = EnumTypeHandler.getFormatNameByColonValue(name, "name");
+		String archetypeDataValue = EnumTypeHandler.getFormatNameByColonValue(archetype, "archetype", false);
+		String nameValue = EnumTypeHandler.getFormatNameByColonValue(name, "name", false);
 
 		return String.format("{%s,%s}", nameValue, archetypeDataValue);
 	}

@@ -4,7 +4,7 @@
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common;
 
 /**
- * PhilipsUtils class defined the URL of the Philips Hue deivce
+ * PhilipsUtils class defined the URL of the Philips Hue device
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/3/2022
