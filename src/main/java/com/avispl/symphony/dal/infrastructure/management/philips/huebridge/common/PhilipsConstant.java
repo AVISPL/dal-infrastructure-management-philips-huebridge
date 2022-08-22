@@ -54,7 +54,12 @@ public class PhilipsConstant {
 	public static String APPLY = "Apply";
 	public static String PARAM_CHANGE_STATUS = "{\"on\": {\"on\": %s}}";
 	public static String ERROR_MESSAGE_STATUS = "device (grouped_light) is \"soft off\", command (.on) may not have effect";
+	public static String DISABLE = "Disable";
+	public static String ENABLE = "Enable";
+	public static String TIME_AM = "AM";
+	public static String TIME_PM = "PM";
 
 	public static int NUMBER_ONE = 1;
 	public static int ZERO = 0;
+	public static int DEFAULT_FADE_DURATION = 900;
 }

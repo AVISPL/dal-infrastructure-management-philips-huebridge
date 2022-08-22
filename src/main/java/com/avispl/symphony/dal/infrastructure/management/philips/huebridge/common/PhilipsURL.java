@@ -12,47 +12,24 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.comm
  */
 public enum PhilipsURL {
 
-	DEVICE("Device", true, "clip/v2/resource/device"),
-	BRIDGE("bridge", true, "clip/v2/resource/bridge"),
-	API("API", false, "api/"),
-	CONFIG("Config", true, "/config"),
-	ZIGBEE_CONNECTIVITY("ZigbeeConnectivity", true, "clip/v2/resource/zigbee_connectivity/"),
-	ROOMS("Rooms", true, "clip/v2/resource/room"),
-	ZONES("Zones", true, "clip/v2/resource/zone"),
-	GROUP_LIGHT("GroupLight", true, "clip/v2/resource/grouped_light"),
+	DEVICE("clip/v2/resource/device"),
+	BRIDGE("clip/v2/resource/bridge"),
+	API("api/"),
+	CONFIG("/config"),
+	ZIGBEE_CONNECTIVITY("clip/v2/resource/zigbee_connectivity/"),
+	ROOMS("clip/v2/resource/room"),
+	ZONES("clip/v2/resource/zone"),
+	GROUP_LIGHT("clip/v2/resource/grouped_light"),
 	;
-
-	private final String name;
-	private boolean isMonitor;
 	private String url;
 
 	/**
 	 * PhilipsURL instantiation
 	 *
-	 * @param name {@code {@link #name}}
+	 * @param url {@code {@link #url}}
 	 */
-	PhilipsURL(String name, boolean isMonitor, String url) {
-		this.name = name;
-		this.isMonitor = isMonitor;
+	PhilipsURL(String url) {
 		this.url = url;
-	}
-
-	/**
-	 * Retrieves {@code {@link #name}}
-	 *
-	 * @return value of {@link #name}
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Retrieves {@code {@link #isMonitor}}
-	 *
-	 * @return value of {@link #isMonitor}
-	 */
-	public boolean isMonitor() {
-		return isMonitor;
 	}
 
 	/**

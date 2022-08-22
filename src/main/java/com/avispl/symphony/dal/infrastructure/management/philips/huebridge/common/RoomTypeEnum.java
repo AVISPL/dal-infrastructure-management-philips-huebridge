@@ -95,14 +95,12 @@ public enum RoomTypeEnum {
 	 * @return String is protocol value
 	 */
 	public static String getValueOfRoomTypeEnumByName(String name) {
-		String defaultValue = name;
 		for (RoomTypeEnum protocolEnum : RoomTypeEnum.values()) {
 			if (protocolEnum.getName().equalsIgnoreCase(name)) {
-				defaultValue = protocolEnum.getValue();
-				break;
+				return protocolEnum.getValue();
 			}
 		}
-		return defaultValue;
+		return name;
 	}
 
 	/**
@@ -112,13 +110,11 @@ public enum RoomTypeEnum {
 	 * @return String is protocol value
 	 */
 	public static String getNameOfRoomTypeEnumByValue(String value) {
-		String defaultValue = value;
 		for (RoomTypeEnum protocolEnum : RoomTypeEnum.values()) {
 			if (protocolEnum.getValue().equalsIgnoreCase(value)) {
-				defaultValue = protocolEnum.getName();
-				break;
+				return protocolEnum.getName();
 			}
 		}
-		return defaultValue;
+		return value;
 	}
 }

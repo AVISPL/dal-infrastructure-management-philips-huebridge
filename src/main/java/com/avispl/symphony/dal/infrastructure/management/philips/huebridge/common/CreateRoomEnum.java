@@ -4,13 +4,13 @@
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common;
 
 /**
- * CreateRoomEum  class defined the enum for monitoring and controlling process
+ * CreateRoomEnum class provides property name for room
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/4/2022
  * @since 1.0.0
  */
-public enum CreateRoomEum {
+public enum CreateRoomEnum {
 
 	NAME("Name"),
 	DEVICE_0("Device0"),
@@ -21,20 +21,20 @@ public enum CreateRoomEum {
 	/**
 	 * CreateRoomEum instantiation
 	 *
-	 * @param name {@code {@link #name}}
+	 * @param name {@code {@link #roomName }}
 	 */
-	CreateRoomEum(String name) {
-		this.name = name;
+	CreateRoomEnum(String name) {
+		this.roomName = name;
 	}
 
-	private final String name;
+	private final String roomName;
 
 	/**
-	 * Retrieves {@code {@link #name}}
+	 * Retrieves {@code {@link #roomName }}
 	 *
-	 * @return value of {@link #name}
+	 * @return value of {@link #roomName}
 	 */
-	public String getName() {
-		return name;
+	public String getRoomName() {
+		return roomName;
 	}
 }

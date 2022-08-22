@@ -4,7 +4,7 @@
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common;
 
 /**
- * NetworkInfoEnum define an Enum for monitoring process
+ * NetworkInfoEnum class provides property name for NetworkInformation
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/2/2022

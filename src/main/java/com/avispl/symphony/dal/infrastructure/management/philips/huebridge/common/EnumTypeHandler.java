@@ -68,14 +68,13 @@ public class EnumTypeHandler {
 	 * @return String is all value of array
 	 */
 	public static String getValueByStringArray(String[] array) {
-		String result = PhilipsConstant.EMPTY_STRING;
+		StringBuilder result = new StringBuilder();
 		if (array != null) {
 			for (String value : array) {
-				result = result + value;
+				result.append(value);
 			}
-			return result;
 		}
-		return result;
+		return result.toString();
 	}
 
 	/**
@@ -83,12 +82,12 @@ public class EnumTypeHandler {
 	 *
 	 * @param value is value of property
 	 * @param name is name of param request to send command
-	 * @param isObject is boolean type value
+	 * @param isObjectFormat is boolean type value
 	 * @return String is format name or empty string
 	 */
-	public static String getFormatNameByColonValue(String value, String name,boolean isObject) {
+	public static String getFormatNameByColonValue(String value, String name, boolean isObjectFormat) {
 		String format = PhilipsConstant.FORMAT_PERCENT;
-		if(isObject){
+		if (isObjectFormat) {
 			format = PhilipsConstant.FORMAT_PERCENT_OBJECT;
 		}
 		return StringUtils.isNullOrEmpty(value) ? PhilipsConstant.EMPTY_STRING : String.format(PhilipsConstant.FORMAT_PERCENT + PhilipsConstant.COLON + format, name, value);
