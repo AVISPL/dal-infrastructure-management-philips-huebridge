@@ -290,7 +290,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	private final Map<String, String> deviceExitsInRoomMap = new HashMap<>();
 
 	/**
-	 * Map of all device and name of it
+	 * Map of all device ID and name of it
 	 */
 	private final Map<String, String> allDeviceIdAndNameMap = new HashMap<>();
 
@@ -1273,34 +1273,42 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			AggregatorWrapper systemResponse = this.doGet(PhilipsUtil.getMonitorURL(PhilipsURL.DEVICE), AggregatorWrapper.class);
 			for (AggregatorDeviceResponse aggregatorDeviceResponse : systemResponse.getData()) {
 				boolean isDeviceExitsInRoom = false;
+				String serviceID = PhilipsConstant.NONE;
+				String serviceType = PhilipsConstant.NONE;
+				ServicesResponse servicesData = aggregatorDeviceResponse.getServices()[0];
+				if (servicesData != null) {
+					serviceID = servicesData.getId();
+					serviceType = servicesData.getType();
+				}
+				String aggregatorDeviceID = aggregatorDeviceResponse.getId();
+				String aggregatorDeviceName = aggregatorDeviceResponse.getMetaData().getName();
 				for (RoomAndZoneResponse response : roomList) {
-					if (PhilipsConstant.LIGHT.equalsIgnoreCase(aggregatorDeviceResponse.getServices()[0].getType()) && Arrays.stream(response.getChildren()).map(Children::getRid).collect(Collectors.toList())
-							.contains(aggregatorDeviceResponse.getId())) {
-						deviceExitsInRoomMap.put(aggregatorDeviceResponse.getMetaData().getName(), PhilipsConstant.TRUE);
-						deviceNameAndDeviceIdZoneMap.put(aggregatorDeviceResponse.getMetaData().getName() + PhilipsConstant.DASH + response.getMetaData().getName(),
-								aggregatorDeviceResponse.getServices()[0].getId());
+					List<String> deviceList = Arrays.stream(response.getChildren()).map(Children::getRid).collect(Collectors.toList());
+					if (PhilipsConstant.LIGHT.equalsIgnoreCase(serviceType) && deviceList.contains(aggregatorDeviceID)) {
+						deviceExitsInRoomMap.put(aggregatorDeviceName, PhilipsConstant.TRUE);
+						deviceNameAndDeviceIdZoneMap.put(aggregatorDeviceName + PhilipsConstant.DASH + response.getMetaData().getName(), serviceID);
 						isDeviceExitsInRoom = true;
 						break;
 					}
 				}
-				if (!isDeviceExitsInRoom && PhilipsConstant.LIGHT.equalsIgnoreCase(aggregatorDeviceResponse.getServices()[0].getType())) {
-					deviceNameAndDeviceIdZoneMap.put(aggregatorDeviceResponse.getMetaData().getName(), aggregatorDeviceResponse.getServices()[0].getId());
-					deviceExitsInRoomMap.put(aggregatorDeviceResponse.getMetaData().getName(), PhilipsConstant.FALSE);
+				if (!isDeviceExitsInRoom && PhilipsConstant.LIGHT.equalsIgnoreCase(serviceType)) {
+					deviceNameAndDeviceIdZoneMap.put(aggregatorDeviceName, serviceID);
+					deviceExitsInRoomMap.put(aggregatorDeviceName, PhilipsConstant.FALSE);
 				}
 				AggregatedDevice aggregatedDevice = new AggregatedDevice();
 				Map<String, String> properties = new HashMap<>();
-				if (!PhilipsConstant.BRIDGE.equalsIgnoreCase(aggregatorDeviceResponse.getServices()[0].getType())) {
-					if (PhilipsConstant.LIGHT.equalsIgnoreCase(aggregatorDeviceResponse.getServices()[0].getType())) {
+				if (!PhilipsConstant.BRIDGE.equalsIgnoreCase(serviceType)) {
+					if (PhilipsConstant.LIGHT.equalsIgnoreCase(serviceType)) {
 						Map<String, String> idDeviceMap = new HashMap<>();
-						idDeviceMap.put(aggregatorDeviceResponse.getId(), aggregatorDeviceResponse.getServices()[0].getId());
-						deviceNameAndMapDeviceIdOfRoomMap.put(aggregatorDeviceResponse.getMetaData().getName(), idDeviceMap);
-						allDeviceIdAndNameMap.put(aggregatorDeviceResponse.getId(), aggregatorDeviceResponse.getMetaData().getName());
+						idDeviceMap.put(aggregatorDeviceID, serviceID);
+						deviceNameAndMapDeviceIdOfRoomMap.put(aggregatorDeviceName, idDeviceMap);
+						allDeviceIdAndNameMap.put(aggregatorDeviceID, aggregatorDeviceName);
 						if (roomList.isEmpty()) {
-							deviceExitsInRoomMap.put(aggregatorDeviceResponse.getMetaData().getName(), PhilipsConstant.FALSE);
-							deviceNameAndDeviceIdZoneMap.put(aggregatorDeviceResponse.getMetaData().getName(), aggregatorDeviceResponse.getServices()[0].getId());
+							deviceExitsInRoomMap.put(aggregatorDeviceName, PhilipsConstant.FALSE);
+							deviceNameAndDeviceIdZoneMap.put(aggregatorDeviceName, serviceID);
 						}
 					}
-					aggregatedDevice.setDeviceId(aggregatorDeviceResponse.getServices()[0].getId());
+					aggregatedDevice.setDeviceId(serviceID);
 					aggregatedDevice.setDeviceModel(aggregatorDeviceResponse.getProductData().getModel());
 					aggregatedDevice.setDeviceName(aggregatorDeviceResponse.getProductData().getName());
 					aggregatedDevice.setProperties(properties);
@@ -1312,7 +1320,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			allDeviceIdAndNameMap.put(PhilipsConstant.NONE, PhilipsConstant.NONE);
 			deviceExitsInRoomMap.put(PhilipsConstant.NONE, PhilipsConstant.FALSE);
 		} catch (Exception e) {
-			String errorMessage = String.format("Device lisst Data Retrieval-Error: %s with cause: %s", e.getMessage(), e.getCause().getMessage());
+			String errorMessage = String.format("Aggregated device Retrieval-Error: %s with cause: %s", e.getMessage(), e.getCause().getMessage());
 			systemErrorMessagesList.add(errorMessage);
 			logger.error(errorMessage, e);
 		}
@@ -1342,7 +1350,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	}
 
 	/**
-	 * Get network information every 30 seconds
+	 * Get network information
 	 * API Endpoint: /username/config
 	 * Success: return network information
 	 *
@@ -1461,7 +1469,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				}
 			}
 		} catch (Exception e) {
-			String errorMessage = String.format("Network Information Data Retrieval-Error: %s with cause: %s", e.getMessage(), e.getCause().getMessage());
+			String errorMessage = String.format("Status for the device Data Retrieval-Error: %s with cause: %s", e.getMessage(), e.getCause().getMessage());
 			systemErrorMessagesList.add(errorMessage);
 			logger.error(errorMessage, e);
 		}
