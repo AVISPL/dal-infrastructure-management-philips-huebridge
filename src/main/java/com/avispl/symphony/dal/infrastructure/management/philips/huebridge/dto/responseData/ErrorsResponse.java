@@ -13,23 +13,23 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.
  */
 public class ErrorsResponse {
 
-	private String[] description;
+	private String description;
 
 	/**
 	 * Retrieves {@code {@link #description}}
 	 *
 	 * @return value of {@link #description}
 	 */
-	public String[] getDescription() {
+	public String getDescription() {
 		return description;
 	}
 
 	/**
 	 * Sets {@code description}
 	 *
-	 * @param description the {@code java.lang.String[]} field
+	 * @param description the {@code java.lang.String} field
 	 */
-	public void setDescription(String[] description) {
+	public void setDescription(String description) {
 		this.description = description;
 	}
 }

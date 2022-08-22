@@ -29,7 +29,6 @@ public class RoomAndZoneResponse {
 	@JsonAlias("metadata")
 	private MetaData metaData;
 
-
 	/**
 	 * Retrieves {@code {@link #id}}
 	 *

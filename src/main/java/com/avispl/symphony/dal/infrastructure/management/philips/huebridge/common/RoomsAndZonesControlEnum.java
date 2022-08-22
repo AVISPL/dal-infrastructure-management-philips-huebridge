@@ -13,8 +13,11 @@ public enum RoomsAndZonesControlEnum {
 	TYPE("Type"),
 	DEVICE_STATUS("DeviceStatus"),
 	ACTION("Action"),
+	CREATE("Create"),
 	CANCEL("CancelChange"),
 	DEVICE("Device"),
+	DELETE("Delete"),
+	APPLY_CHANGE("ApplyChange"),
 	DEVICE_ADD("DeviceAdd");
 
 	RoomsAndZonesControlEnum(String name) {

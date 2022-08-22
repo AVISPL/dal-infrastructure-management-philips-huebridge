@@ -53,6 +53,7 @@ public enum RoomTypeEnum {
 	POOL("Pool", "pool"),
 	OTHER("Other", "other"),
 	READING("Reading", "reading"),
+	NONE("None", "None"),
 	;
 
 	private final String name;
@@ -88,6 +89,23 @@ public enum RoomTypeEnum {
 	}
 
 	/**
+	 * Get value of room type by name
+	 *
+	 * @param name the name is name of ProtocolEnum
+	 * @return String is protocol value
+	 */
+	public static String getValueOfRoomTypeEnumByName(String name) {
+		String defaultValue = name;
+		for (RoomTypeEnum protocolEnum : RoomTypeEnum.values()) {
+			if (protocolEnum.getName().equalsIgnoreCase(name)) {
+				defaultValue = protocolEnum.getValue();
+				break;
+			}
+		}
+		return defaultValue;
+	}
+
+	/**
 	 * Get name of Protocol by value
 	 *
 	 * @param value the value is value of ProtocolEnum
@@ -96,8 +114,8 @@ public enum RoomTypeEnum {
 	public static String getNameOfRoomTypeEnumByValue(String value) {
 		String defaultValue = value;
 		for (RoomTypeEnum protocolEnum : RoomTypeEnum.values()) {
-			if (protocolEnum.getName().equalsIgnoreCase(value)) {
-				defaultValue = protocolEnum.getValue();
+			if (protocolEnum.getValue().equalsIgnoreCase(value)) {
+				defaultValue = protocolEnum.getName();
 				break;
 			}
 		}

@@ -77,6 +77,213 @@
           "Content-Type": "application/json"
         }
       }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/clip/v2/resource/room"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"children\": [\n                {\n                    \"rid\": \"f510abdb-12b8-47e9-969a-7235a0a2128c\",\n                    \"rtype\": \"device\"\n                }\n            ],\n            \"id\": \"4e980d4a-9bb9-4197-8626-84c36a98cc6b\",\n            \"id_v1\": \"/groups/1\",\n            \"metadata\": {\n                \"archetype\": \"living_room\",\n                \"name\": \"Living Room 01\"\n            },\n            \"services\": [\n                {\n                    \"rid\": \"27e74725-5bfb-4ac1-850b-f62394edca63\",\n                    \"rtype\": \"grouped_light\"\n                }\n            ],\n            \"type\": \"room\"\n        },\n        {\n            \"children\": [\n                {\n                    \"rid\": \"677ecc8d-b277-4849-b5ab-2b6e30d8b531\",\n                    \"rtype\": \"device\"\n                }\n            ],\n            \"id\": \"9ee96d3b-1022-4aad-aa32-f4332552ec70\",\n            \"id_v1\": \"/groups/5\",\n            \"metadata\": {\n                \"archetype\": \"upstairs\",\n                \"name\": \"New room 3\"\n            },\n            \"services\": [\n                {\n                    \"rid\": \"8c908c80-125e-4c17-a6ef-1b1e4b71932c\",\n                    \"rtype\": \"grouped_light\"\n                }\n            ],\n            \"type\": \"room\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/clip/v2/resource/room"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"children\": [\n                {\n                    \"rid\": \"f510abdb-12b8-47e9-969a-7235a0a2128c\",\n                    \"rtype\": \"device\"\n                }\n            ],\n            \"id\": \"4e980d4a-9bb9-4197-8626-84c36a98cc6b\",\n            \"id_v1\": \"/groups/1\",\n            \"metadata\": {\n                \"archetype\": \"living_room\",\n                \"name\": \"Living Room 01\"\n            },\n            \"services\": [\n                {\n                    \"rid\": \"27e74725-5bfb-4ac1-850b-f62394edca63\",\n                    \"rtype\": \"grouped_light\"\n                }\n            ],\n            \"type\": \"room\"\n        },\n        {\n            \"children\": [\n                {\n                    \"rid\": \"677ecc8d-b277-4849-b5ab-2b6e30d8b531\",\n                    \"rtype\": \"device\"\n                }\n            ],\n            \"id\": \"9ee96d3b-1022-4aad-aa32-f4332552ec70\",\n            \"id_v1\": \"/groups/5\",\n            \"metadata\": {\n                \"archetype\": \"upstairs\",\n                \"name\": \"New room 3\"\n            },\n            \"services\": [\n                {\n                    \"rid\": \"8c908c80-125e-4c17-a6ef-1b1e4b71932c\",\n                    \"rtype\": \"grouped_light\"\n                }\n            ],\n            \"type\": \"room\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "PUT",
+        "url": "/clip/v2/resource/zone/11e95c9d-fdde-439d-a6af-ec383aa4ff81"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"children\": [\n                {\n                    \"rid\": \"f510abdb-12b8-47e9-969a-7235a0a2128c\",\n                    \"rtype\": \"device\"\n                }\n            ],\n            \"id\": \"4e980d4a-9bb9-4197-8626-84c36a98cc6b\",\n            \"id_v1\": \"/groups/1\",\n            \"metadata\": {\n                \"archetype\": \"living_room\",\n                \"name\": \"Living Room 01\"\n            },\n            \"services\": [\n                {\n                    \"rid\": \"27e74725-5bfb-4ac1-850b-f62394edca63\",\n                    \"rtype\": \"grouped_light\"\n                }\n            ],\n            \"type\": \"room\"\n        },\n        {\n            \"children\": [\n                {\n                    \"rid\": \"677ecc8d-b277-4849-b5ab-2b6e30d8b531\",\n                    \"rtype\": \"device\"\n                }\n            ],\n            \"id\": \"9ee96d3b-1022-4aad-aa32-f4332552ec70\",\n            \"id_v1\": \"/groups/5\",\n            \"metadata\": {\n                \"archetype\": \"upstairs\",\n                \"name\": \"New room 3\"\n            },\n            \"services\": [\n                {\n                    \"rid\": \"8c908c80-125e-4c17-a6ef-1b1e4b71932c\",\n                    \"rtype\": \"grouped_light\"\n                }\n            ],\n            \"type\": \"room\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/clip/v2/resource/zone"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"children\": [\n                {\n                    \"rid\": \"f510abdb-12b8-47e9-969a-7235a0a2128c\",\n                    \"rtype\": \"device\"\n                }\n            ],\n            \"id\": \"4e980d4a-9bb9-4197-8626-84c36a98cc6b\",\n            \"id_v1\": \"/groups/1\",\n            \"metadata\": {\n                \"archetype\": \"living_room\",\n                \"name\": \"Living Room 01\"\n            },\n            \"services\": [\n                {\n                    \"rid\": \"27e74725-5bfb-4ac1-850b-f62394edca63\",\n                    \"rtype\": \"grouped_light\"\n                }\n            ],\n            \"type\": \"room\"\n        },\n        {\n            \"children\": [\n                {\n                    \"rid\": \"677ecc8d-b277-4849-b5ab-2b6e30d8b531\",\n                    \"rtype\": \"device\"\n                }\n            ],\n            \"id\": \"9ee96d3b-1022-4aad-aa32-f4332552ec70\",\n            \"id_v1\": \"/groups/5\",\n            \"metadata\": {\n                \"archetype\": \"upstairs\",\n                \"name\": \"New room 3\"\n            },\n            \"services\": [\n                {\n                    \"rid\": \"8c908c80-125e-4c17-a6ef-1b1e4b71932c\",\n                    \"rtype\": \"grouped_light\"\n                }\n            ],\n            \"type\": \"room\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/clip/v2/resource/zone"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"children\": [\n                {\n                    \"rid\": \"c2af4ed0-bde1-45e4-b756-cb6535c65bed\",\n                    \"rtype\": \"light\"\n                }\n            ],\n            \"id\": \"11e95c9d-fdde-439d-a6af-ec383aa4ff81\",\n            \"id_v1\": \"/groups/4\",\n            \"metadata\": {\n                \"archetype\": \"living_room\",\n                \"name\": \"Zone 01\"\n            },\n            \"services\": [\n                {\n                    \"rid\": \"768ebd6e-7f92-4167-bccc-e1840a617552\",\n                    \"rtype\": \"grouped_light\"\n                }\n            ],\n            \"type\": \"zone\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/clip/v2/resource/room-add-device"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"children\": [\n                {\n                    \"rid\": \"677ecc8d-b277-4849-b5ab-2b6e30d8b531\",\n                    \"rtype\": \"device\"\n                }\n            ],\n            \"id\": \"9ee96d3b-1022-4aad-aa32-f4332552ec70\",\n            \"id_v1\": \"/groups/5\",\n            \"metadata\": {\n                \"archetype\": \"upstairs\",\n                \"name\": \"New room 3\"\n            },\n            \"services\": [\n                {\n                    \"rid\": \"8c908c80-125e-4c17-a6ef-1b1e4b71932c\",\n                    \"rtype\": \"grouped_light\"\n                }\n            ],\n            \"type\": \"room\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/clip/v2/resource/device"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"id\": \"541c699c-4876-494e-ae94-2e57b8f9bc81\",\n            \"id_v1\": \"\",\n            \"identify\": {},\n            \"metadata\": {\n                \"archetype\": \"bridge_v2\",\n                \"name\": \"Philips hue\"\n            },\n            \"product_data\": {\n                \"certified\": true,\n                \"manufacturer_name\": \"Signify Netherlands B.V.\",\n                \"model_id\": \"BSB002\",\n                \"product_archetype\": \"bridge_v2\",\n                \"product_name\": \"Philips hue\",\n                \"software_version\": \"1.52.1952154030\"\n            },\n            \"services\": [\n                {\n                    \"rid\": \"4fe00071-bb56-442c-9c32-7de591a83c32\",\n                    \"rtype\": \"bridge\"\n                },\n                {\n                    \"rid\": \"01691a89-6c0c-4c6b-bae7-080a906b41c5\",\n                    \"rtype\": \"zigbee_connectivity\"\n                },\n                {\n                    \"rid\": \"b5e5fcf6-88ec-45d9-9fb0-76c1113c1e38\",\n                    \"rtype\": \"entertainment\"\n                }\n            ],\n            \"type\": \"device\"\n        },\n        {\n            \"id\": \"f510abdb-12b8-47e9-969a-7235a0a2128c\",\n            \"id_v1\": \"/lights/4\",\n            \"identify\": {},\n            \"metadata\": {\n                \"archetype\": \"sultan_bulb\",\n                \"name\": \"Light 2\"\n            },\n            \"product_data\": {\n                \"certified\": true,\n                \"hardware_platform_type\": \"100b-112\",\n                \"manufacturer_name\": \"Signify Netherlands B.V.\",\n                \"model_id\": \"LTA001\",\n                \"product_archetype\": \"sultan_bulb\",\n                \"product_name\": \"Hue ambiance lamp\",\n                \"software_version\": \"1.93.11\"\n            },\n            \"services\": [\n                {\n                    \"rid\": \"c2af4ed0-bde1-45e4-b756-cb6535c65bed\",\n                    \"rtype\": \"light\"\n                },\n                {\n                    \"rid\": \"79ad0547-d34c-45fb-bcde-c62d47e91c77\",\n                    \"rtype\": \"zigbee_connectivity\"\n                }\n            ],\n            \"type\": \"device\"\n        },\n        {\n            \"id\": \"677ecc8d-b277-4849-b5ab-2b6e30d8b531\",\n            \"id_v1\": \"/lights/1\",\n            \"identify\": {},\n            \"metadata\": {\n                \"archetype\": \"sultan_bulb\",\n                \"name\": \"Light 1\"\n            },\n            \"product_data\": {\n                \"certified\": true,\n                \"hardware_platform_type\": \"100b-112\",\n                \"manufacturer_name\": \"Signify Netherlands B.V.\",\n                \"model_id\": \"LTA001\",\n                \"product_archetype\": \"sultan_bulb\",\n                \"product_name\": \"Hue ambiance lamp\",\n                \"software_version\": \"1.93.11\"\n            },\n            \"services\": [\n                {\n                    \"rid\": \"852eb47a-61c3-4345-8b69-c7af4f527a95\",\n                    \"rtype\": \"light\"\n                },\n                {\n                    \"rid\": \"55d22eb1-b2dc-40ee-9a45-7638e4c5f4b7\",\n                    \"rtype\": \"zigbee_connectivity\"\n                }\n            ],\n            \"type\": \"device\"\n        },\n        {\n            \"id\": \"fffb3918-7402-4bf8-ac29-65dc56cf5e14\",\n            \"id_v1\": \"/sensors/2\",\n            \"metadata\": {\n                \"archetype\": \"unknown_archetype\",\n                \"name\": \"Hue dimmer switch 1\"\n            },\n            \"product_data\": {\n                \"certified\": true,\n                \"hardware_platform_type\": \"100b-109\",\n                \"manufacturer_name\": \"Signify Netherlands B.V.\",\n                \"model_id\": \"RWL021\",\n                \"product_archetype\": \"unknown_archetype\",\n                \"product_name\": \"Hue dimmer switch\",\n                \"software_version\": \"1.1.28573\"\n            },\n            \"services\": [\n                {\n                    \"rid\": \"886d732e-8071-4931-9f2c-ff66ed59b309\",\n                    \"rtype\": \"button\"\n                },\n                {\n                    \"rid\": \"a25577ab-6dee-4347-8088-6b92c0d38f4a\",\n                    \"rtype\": \"button\"\n                },\n                {\n                    \"rid\": \"5819a792-ff6d-44ec-b48c-96a1ca967537\",\n                    \"rtype\": \"button\"\n                },\n                {\n                    \"rid\": \"4b87bdd0-68ed-44de-98d0-6629dfcaace9\",\n                    \"rtype\": \"button\"\n                },\n                {\n                    \"rid\": \"b8bf5187-486b-42f1-8a55-56c63258a924\",\n                    \"rtype\": \"device_power\"\n                },\n                {\n                    \"rid\": \"de3a2772-4844-4deb-ae80-b200cdc38933\",\n                    \"rtype\": \"zigbee_connectivity\"\n                }\n            ],\n            \"type\": \"device\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/clip/v2/resource/grouped_light"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"26639f8e-9e2a-4ea2-9d07-f6bdebb3d398\",\n            \"id_v1\": \"/groups/0\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"1bcccf4a-16f7-4325-8336-878bac632979\",\n                \"rtype\": \"bridge_home\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"d429ab44-9564-44c2-86ed-d74c56f16524\",\n            \"id_v1\": \"/groups/3\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"4d842565-687b-4130-9fc6-886846ed64c4\",\n                \"rtype\": \"zone\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"27e74725-5bfb-4ac1-850b-f62394edca63\",\n            \"id_v1\": \"/groups/1\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"4e980d4a-9bb9-4197-8626-84c36a98cc6b\",\n                \"rtype\": \"room\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"768ebd6e-7f92-4167-bccc-e1840a617552\",\n            \"id_v1\": \"/groups/4\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"11e95c9d-fdde-439d-a6af-ec383aa4ff81\",\n                \"rtype\": \"zone\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"8c908c80-125e-4c17-a6ef-1b1e4b71932c\",\n            \"id_v1\": \"/groups/5\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"9ee96d3b-1022-4aad-aa32-f4332552ec70\",\n                \"rtype\": \"room\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "DELETE",
+        "url": "/clip/v2/resource/room/9ee96d3b-1022-4aad-aa32-f4332552ec70"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"children\": [\n                {\n                    \"rid\": \"f510abdb-12b8-47e9-969a-7235a0a2128c\",\n                    \"rtype\": \"device\"\n                }\n            ],\n            \"id\": \"4e980d4a-9bb9-4197-8626-84c36a98cc6b\",\n            \"id_v1\": \"/groups/1\",\n            \"metadata\": {\n                \"archetype\": \"living_room\",\n                \"name\": \"Living Room 01\"\n            },\n            \"services\": [\n                {\n                    \"rid\": \"27e74725-5bfb-4ac1-850b-f62394edca63\",\n                    \"rtype\": \"grouped_light\"\n                }\n            ],\n            \"type\": \"room\"\n        }\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "DELETE",
+        "url": "/clip/v2/resource/zone/11e95c9d-fdde-439d-a6af-ec383aa4ff81"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"children\": [\n                {\n                    \"rid\": \"f510abdb-12b8-47e9-969a-7235a0a2128c\",\n                    \"rtype\": \"device\"\n                }\n            ],\n            \"id\": \"4e980d4a-9bb9-4197-8626-84c36a98cc6b\",\n            \"id_v1\": \"/groups/1\",\n            \"metadata\": {\n                \"archetype\": \"living_room\",\n                \"name\": \"Living Room 01\"\n            },\n            \"services\": [\n                {\n                    \"rid\": \"27e74725-5bfb-4ac1-850b-f62394edca63\",\n                    \"rtype\": \"grouped_light\"\n                }\n            ],\n            \"type\": \"room\"\n        }\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/clip/v2/resource/room-delete-room"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"children\": [\n                {\n                    \"rid\": \"f510abdb-12b8-47e9-969a-7235a0a2128c\",\n                    \"rtype\": \"device\"\n                }\n            ],\n            \"id\": \"4e980d4a-9bb9-4197-8626-84c36a98cc6b\",\n            \"id_v1\": \"/groups/1\",\n            \"metadata\": {\n                \"archetype\": \"living_room\",\n                \"name\": \"Living Room 01\"\n            },\n            \"services\": [\n                {\n                    \"rid\": \"27e74725-5bfb-4ac1-850b-f62394edca63\",\n                    \"rtype\": \"grouped_light\"\n                }\n            ],\n            \"type\": \"room\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "PUT",
+        "url": "/clip/v2/resource/grouped_light/8c908c80-125e-4c17-a6ef-1b1e4b71932c"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"26639f8e-9e2a-4ea2-9d07-f6bdebb3d398\",\n            \"id_v1\": \"/groups/0\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"1bcccf4a-16f7-4325-8336-878bac632979\",\n                \"rtype\": \"bridge_home\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"d429ab44-9564-44c2-86ed-d74c56f16524\",\n            \"id_v1\": \"/groups/3\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"4d842565-687b-4130-9fc6-886846ed64c4\",\n                \"rtype\": \"zone\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"27e74725-5bfb-4ac1-850b-f62394edca63\",\n            \"id_v1\": \"/groups/1\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"4e980d4a-9bb9-4197-8626-84c36a98cc6b\",\n                \"rtype\": \"room\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"768ebd6e-7f92-4167-bccc-e1840a617552\",\n            \"id_v1\": \"/groups/4\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"11e95c9d-fdde-439d-a6af-ec383aa4ff81\",\n                \"rtype\": \"zone\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"8c908c80-125e-4c17-a6ef-1b1e4b71932c\",\n            \"id_v1\": \"/groups/5\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"9ee96d3b-1022-4aad-aa32-f4332552ec70\",\n                \"rtype\": \"room\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "PUT",
+        "url": "/clip/v2/resource/grouped_light/768ebd6e-7f92-4167-bccc-e1840a617552"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"26639f8e-9e2a-4ea2-9d07-f6bdebb3d398\",\n            \"id_v1\": \"/groups/0\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"1bcccf4a-16f7-4325-8336-878bac632979\",\n                \"rtype\": \"bridge_home\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"d429ab44-9564-44c2-86ed-d74c56f16524\",\n            \"id_v1\": \"/groups/3\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"4d842565-687b-4130-9fc6-886846ed64c4\",\n                \"rtype\": \"zone\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"27e74725-5bfb-4ac1-850b-f62394edca63\",\n            \"id_v1\": \"/groups/1\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"4e980d4a-9bb9-4197-8626-84c36a98cc6b\",\n                \"rtype\": \"room\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"768ebd6e-7f92-4167-bccc-e1840a617552\",\n            \"id_v1\": \"/groups/4\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"11e95c9d-fdde-439d-a6af-ec383aa4ff81\",\n                \"rtype\": \"zone\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"8c908c80-125e-4c17-a6ef-1b1e4b71932c\",\n            \"id_v1\": \"/groups/5\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"9ee96d3b-1022-4aad-aa32-f4332552ec70\",\n                \"rtype\": \"room\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/clip/v2/resource/grouped_light-status-online"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 40.94\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"26639f8e-9e2a-4ea2-9d07-f6bdebb3d398\",\n            \"id_v1\": \"/groups/0\",\n            \"on\": {\n                \"on\": true\n            },\n            \"owner\": {\n                \"rid\": \"1bcccf4a-16f7-4325-8336-878bac632979\",\n                \"rtype\": \"bridge_home\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"27e74725-5bfb-4ac1-850b-f62394edca63\",\n            \"id_v1\": \"/groups/1\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"4e980d4a-9bb9-4197-8626-84c36a98cc6b\",\n                \"rtype\": \"room\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"768ebd6e-7f92-4167-bccc-e1840a617552\",\n            \"id_v1\": \"/groups/4\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"11e95c9d-fdde-439d-a6af-ec383aa4ff81\",\n                \"rtype\": \"zone\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 40.94\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"8c908c80-125e-4c17-a6ef-1b1e4b71932c\",\n            \"id_v1\": \"/groups/5\",\n            \"on\": {\n                \"on\": true\n            },\n            \"owner\": {\n                \"rid\": \"9ee96d3b-1022-4aad-aa32-f4332552ec70\",\n                \"rtype\": \"room\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "PUT",
+        "url": "/clip/v2/resource/room/9ee96d3b-1022-4aad-aa32-f4332552ec70"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 40.94\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"26639f8e-9e2a-4ea2-9d07-f6bdebb3d398\",\n            \"id_v1\": \"/groups/0\",\n            \"on\": {\n                \"on\": true\n            },\n            \"owner\": {\n                \"rid\": \"1bcccf4a-16f7-4325-8336-878bac632979\",\n                \"rtype\": \"bridge_home\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"27e74725-5bfb-4ac1-850b-f62394edca63\",\n            \"id_v1\": \"/groups/1\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"4e980d4a-9bb9-4197-8626-84c36a98cc6b\",\n                \"rtype\": \"room\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"768ebd6e-7f92-4167-bccc-e1840a617552\",\n            \"id_v1\": \"/groups/4\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"11e95c9d-fdde-439d-a6af-ec383aa4ff81\",\n                \"rtype\": \"zone\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 40.94\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"8c908c80-125e-4c17-a6ef-1b1e4b71932c\",\n            \"id_v1\": \"/groups/5\",\n            \"on\": {\n                \"on\": true\n            },\n            \"owner\": {\n                \"rid\": \"9ee96d3b-1022-4aad-aa32-f4332552ec70\",\n                \"rtype\": \"room\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },{
+      "request": {
+        "method": "GET",
+        "url": "/clip/v2/resource/grouped_light-status-online-zone"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 40.94\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"26639f8e-9e2a-4ea2-9d07-f6bdebb3d398\",\n            \"id_v1\": \"/groups/0\",\n            \"on\": {\n                \"on\": true\n            },\n            \"owner\": {\n                \"rid\": \"1bcccf4a-16f7-4325-8336-878bac632979\",\n                \"rtype\": \"bridge_home\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"27e74725-5bfb-4ac1-850b-f62394edca63\",\n            \"id_v1\": \"/groups/1\",\n            \"on\": {\n                \"on\": false\n            },\n            \"owner\": {\n                \"rid\": \"4e980d4a-9bb9-4197-8626-84c36a98cc6b\",\n                \"rtype\": \"room\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 0.0\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"768ebd6e-7f92-4167-bccc-e1840a617552\",\n            \"id_v1\": \"/groups/4\",\n            \"on\": {\n                \"on\": true\n            },\n            \"owner\": {\n                \"rid\": \"11e95c9d-fdde-439d-a6af-ec383aa4ff81\",\n                \"rtype\": \"zone\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        },\n        {\n            \"alert\": {\n                \"action_values\": [\n                    \"breathe\"\n                ]\n            },\n            \"color_temperature\": {},\n            \"color_temperature_delta\": {},\n            \"dimming\": {\n                \"brightness\": 40.94\n            },\n            \"dimming_delta\": {},\n            \"dynamics\": {},\n            \"id\": \"8c908c80-125e-4c17-a6ef-1b1e4b71932c\",\n            \"id_v1\": \"/groups/5\",\n            \"on\": {\n                \"on\": true\n            },\n            \"owner\": {\n                \"rid\": \"9ee96d3b-1022-4aad-aa32-f4332552ec70\",\n                \"rtype\": \"room\"\n            },\n            \"signaling\": {},\n            \"type\": \"grouped_light\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
     }
   ]
 }
