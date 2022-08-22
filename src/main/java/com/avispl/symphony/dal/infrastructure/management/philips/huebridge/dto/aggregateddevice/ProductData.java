@@ -6,6 +6,7 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.PhilipsConstant;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.SystemInfoEnum;
 
 /**
@@ -144,7 +145,7 @@ public class ProductData {
 			case TYPE:
 			case ID:
 			default:
-				return "None";
+				return PhilipsConstant.NONE;
 		}
 	}
 }

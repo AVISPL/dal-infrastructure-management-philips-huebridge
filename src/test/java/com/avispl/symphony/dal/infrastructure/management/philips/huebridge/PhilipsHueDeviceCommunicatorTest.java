@@ -704,16 +704,21 @@ public class PhilipsHueDeviceCommunicatorTest {
 		Assert.assertEquals("None", stats.get("CreateZone#Device0"));
 
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "CreateZone#DeviceAdd";
-		String value = "1";
+		String property = "CreateZone#Device0";
+		String value = "Light 2-Living Room 01";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 
+		property = "CreateZone#DeviceAdd";
+		value = "1";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
 		Assert.assertEquals("True", stats.get("CreateZone#Edited"));
-		Assert.assertEquals("Light 2-Living Room 01", stats.get("CreateZone#Device1"));
+		Assert.assertEquals("Light 1-New room 3", stats.get("CreateZone#Device1"));
 	}
 
 	/**
@@ -934,8 +939,15 @@ public class PhilipsHueDeviceCommunicatorTest {
 		Assert.assertEquals(null, stats.get("Zone-Zone 01#Device1"));
 
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "Zone-Zone 01#DeviceAdd";
-		String value = "1";
+
+		String property = "Zone-Zone 01#Device0";
+		String value = "Light 1-New room 3";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+
+		property = "Zone-Zone 01#DeviceAdd";
+		value = "1";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 
@@ -943,7 +955,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		Assert.assertEquals("True", stats.get("Zone-Zone 01#Edited"));
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
-		Assert.assertEquals("Light 1-New room 3", stats.get("Zone-Zone 01#Device1"));
+		Assert.assertEquals("Light 2-Living Room 01", stats.get("Zone-Zone 01#Device1"));
 	}
 
 	/**

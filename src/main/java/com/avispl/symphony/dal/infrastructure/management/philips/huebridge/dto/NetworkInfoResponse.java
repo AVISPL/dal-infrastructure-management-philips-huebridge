@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.NetworkInfoEnum;
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.PhilipsConstant;
 
 /**
  * NetworkInfoResponse class provides during the monitoring and controlling process
@@ -200,7 +201,7 @@ public class NetworkInfoResponse {
 			case UTC:
 				return getUtc();
 			default:
-				return "None";
+				return PhilipsConstant.NONE;
 		}
 	}
 }

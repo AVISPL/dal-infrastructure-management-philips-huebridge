@@ -3,7 +3,7 @@
  */
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto;
 
-import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.aggregateddevice.AggregatorDeviceResponse;
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.aggregateddevice.AggregatedDeviceResponse;
 
 /**
  * AggregatorWrapper class provides during the monitoring and controlling process
@@ -14,14 +14,14 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.a
  */
 public class AggregatorWrapper {
 	
-	private AggregatorDeviceResponse[] data;
+	private AggregatedDeviceResponse[] data;
 
 	/**
 	 * Retrieves {@code {@link #data}}
 	 *
 	 * @return value of {@link #data}
 	 */
-	public AggregatorDeviceResponse[] getData() {
+	public AggregatedDeviceResponse[] getData() {
 		return data;
 	}
 
@@ -30,7 +30,7 @@ public class AggregatorWrapper {
 	 *
 	 * @param data the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.aggregateddevice.AggregatorDeviceResponse[]} field
 	 */
-	public void setData(AggregatorDeviceResponse[] data) {
+	public void setData(AggregatedDeviceResponse[] data) {
 		this.data = data;
 	}
 }

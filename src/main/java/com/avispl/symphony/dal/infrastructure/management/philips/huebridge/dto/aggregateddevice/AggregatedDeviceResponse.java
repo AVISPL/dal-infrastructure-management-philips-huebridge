@@ -10,14 +10,14 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.r
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.system.ServicesResponse;
 
 /**
- * AggregatorDeviceResponse class provides during the monitoring and controlling process
+ * AggregatedDeviceResponse class provides during the monitoring and controlling process
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/2/2022
  * @since 1.0.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AggregatorDeviceResponse {
+public class AggregatedDeviceResponse {
 
 	private String id;
 	private ServicesResponse[] services;
