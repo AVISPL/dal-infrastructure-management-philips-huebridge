@@ -1080,4 +1080,174 @@ public class PhilipsHueDeviceCommunicatorTest {
 		stats = extendedStatistics.getStatistics();
 		Assert.assertEquals("False", stats.get("Zone-Zone 01#Edited"));
 	}
+
+	//Create Automation------------------------------------------------------------------------------------------------------------
+
+	/**
+	 * Test create automation with property is Name
+	 *
+	 * Expect create automation with property is Name successfully
+	 */
+	@Tag("Mock")
+	@Test
+	void testCreateAutomationWithName() throws Exception {
+		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		Map<String, String> stats = extendedStatistics.getStatistics();
+		Assert.assertEquals("False", stats.get("CreateAutomationBehaviorInstance#Edited"));
+		ControllableProperty controllableProperty = new ControllableProperty();
+		String property = "CreateAutomationBehaviorInstance#Name";
+		String value = "New Auto";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+
+		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		stats = extendedStatistics.getStatistics();
+		Assert.assertEquals(value, stats.get(property));
+		Assert.assertEquals("True", stats.get("CreateAutomationBehaviorInstance#Edited"));
+	}
+
+	/**
+	 * Test create automation with property is Repeat Enable
+	 *
+	 * Expect create automation with property is Repeat Enable successfully
+	 */
+	@Tag("Mock")
+	@Test
+	void testCreateAutomationWithRepeatEnable() throws Exception {
+		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		Map<String, String> stats = extendedStatistics.getStatistics();
+		Assert.assertEquals("False", stats.get("CreateAutomationBehaviorInstance#Edited"));
+		ControllableProperty controllableProperty = new ControllableProperty();
+		String property = "CreateAutomationBehaviorInstance#Repeat";
+		String value = "1";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+
+		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		stats = extendedStatistics.getStatistics();
+		Assert.assertEquals(value, stats.get(property));
+		Assert.assertEquals("True", stats.get("CreateAutomationBehaviorInstance#Edited"));
+	}
+
+	/**
+	 * Test create automation with property is Repeat Disable
+	 *
+	 * Expect create automation with property is Repeat Disable successfully
+	 */
+	@Tag("Mock")
+	@Test
+	void testCreateAutomationWithRepeatDisable() throws Exception {
+		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		Map<String, String> stats = extendedStatistics.getStatistics();
+		Assert.assertEquals("False", stats.get("CreateAutomationBehaviorInstance#Edited"));
+		ControllableProperty controllableProperty = new ControllableProperty();
+		String property = "CreateAutomationBehaviorInstance#Repeat";
+		String value = "1";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+
+		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		stats = extendedStatistics.getStatistics();
+		Assert.assertEquals(value, stats.get(property));
+		Assert.assertEquals("True", stats.get("CreateAutomationBehaviorInstance#Edited"));
+
+		property = "CreateAutomationBehaviorInstance#Repeat";
+		value = "0";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+	}
+
+	/**
+	 * Test create automation with property is Repeat Enable add new repeat
+	 *
+	 * Expect create automation with property is Repeat Enable add new repeat successfully
+	 */
+	@Tag("Mock")
+	@Test
+	void testCreateAutomationWithRepeatEnableAddNewRepeat() throws Exception {
+		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		Map<String, String> stats = extendedStatistics.getStatistics();
+		Assert.assertEquals("False", stats.get("CreateAutomationBehaviorInstance#Edited"));
+		ControllableProperty controllableProperty = new ControllableProperty();
+		String property = "CreateAutomationBehaviorInstance#Repeat";
+		String value = "1";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+		property = "CreateAutomationBehaviorInstance#RepeatAdd";
+		value = "1";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+
+		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		stats = extendedStatistics.getStatistics();
+		Assert.assertEquals("Monday", stats.get("CreateAutomationBehaviorInstance#Repeat1"));
+		Assert.assertEquals("True", stats.get("CreateAutomationBehaviorInstance#Edited"));
+	}
+
+	/**
+	 * Test create automation with property Type is Device
+	 *
+	 * Expect create automation with property Type is Device successfully
+	 */
+	@Tag("Mock")
+	@Test
+	void testCreateAutomationWithTypeIsDevice() throws Exception {
+		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		Map<String, String> stats = extendedStatistics.getStatistics();
+		Assert.assertEquals("False", stats.get("CreateAutomationBehaviorInstance#Edited"));
+		ControllableProperty controllableProperty = new ControllableProperty();
+		String property = "CreateAutomationBehaviorInstance#Type";
+		String value = "Device";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+
+		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		stats = extendedStatistics.getStatistics();
+		Assert.assertEquals(value, stats.get(property));
+		Assert.assertEquals("True", stats.get("CreateAutomationBehaviorInstance#Edited"));
+	}
+
+
+
+	@Tag("Mock")
+	@Test
+	void testCreateAutomationWithRepeatEnableAddNewDevice() throws Exception {
+		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		Map<String, String> stats = extendedStatistics.getStatistics();
+		Assert.assertEquals("False", stats.get("CreateAutomationBehaviorInstance#Edited"));
+		ControllableProperty controllableProperty = new ControllableProperty();
+		String property = "CreateAutomationBehaviorInstance#Type";
+		String value = "Device";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+//		property = "CreateAutomationBehaviorInstance#DeviceAdd";
+//		value = "1";
+//		controllableProperty.setProperty(property);
+//		controllableProperty.setValue(value);
+//		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+//		property = "CreateAutomationBehaviorInstance#Device0";
+//		value = "None";
+//		controllableProperty.setProperty(property);
+//		controllableProperty.setValue(value);
+//		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		stats = extendedStatistics.getStatistics();
+		 property = "CreateAutomationBehaviorInstance#Type";
+		 value = "Zone";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+
+		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		stats = extendedStatistics.getStatistics();
+		Assert.assertEquals("True", stats.get("CreateAutomationBehaviorInstance#Edited"));
+	}
 }

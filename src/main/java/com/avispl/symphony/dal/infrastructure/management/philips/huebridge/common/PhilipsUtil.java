@@ -40,6 +40,10 @@ public class PhilipsUtil {
 				return PhilipsURL.ZONES.getUrl();
 			case GROUP_LIGHT:
 				return PhilipsURL.GROUP_LIGHT.getUrl();
+			case AUTOMATION:
+				return PhilipsURL.AUTOMATION.getUrl();
+			case SCRIPT_ID:
+				return PhilipsURL.SCRIPT_ID.getUrl();
 			default:
 				throw new IllegalArgumentException("Do not support Philips Hue metric: " + url.name());
 		}

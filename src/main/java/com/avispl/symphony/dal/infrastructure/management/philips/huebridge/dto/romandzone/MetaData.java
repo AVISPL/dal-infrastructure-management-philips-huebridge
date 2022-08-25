@@ -6,6 +6,7 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.EnumTypeHandler;
+import com.avispl.symphony.dal.util.StringUtils;
 
 /**
  * MetaData class contains name and type
@@ -65,7 +66,9 @@ public class MetaData {
 	public String toString() {
 		String archetypeDataValue = EnumTypeHandler.getFormatNameByColonValue(archetype, "archetype", false);
 		String nameValue = EnumTypeHandler.getFormatNameByColonValue(name, "name", false);
-
+		if (StringUtils.isNullOrEmpty(archetypeDataValue)) {
+			return String.format("{%s}", nameValue);
+		}
 		return String.format("{%s,%s}", nameValue, archetypeDataValue);
 	}
 }

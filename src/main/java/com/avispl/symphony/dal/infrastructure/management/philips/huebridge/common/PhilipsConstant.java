@@ -37,11 +37,16 @@ public class PhilipsConstant {
 	public static String TRUE = "True";
 	public static String NAME = "Name";
 	public static String DEVICE_0 = "Device0";
+	public static String ROOM_0 = "Room0";
+	public static String ZONE_0 = "Zone0";
+	public static String REPEAT_0 = "Repeat0";
+	public static String REPEAT = "Repeat";
 	public static String DEVICE = "Device";
 	public static String TYPE = "Type";
 	public static String DEVICE_ADD = "DeviceAdd";
 	public static String ZONE = "Zone";
 	public static String ROOM = "Room";
+	public static String AUTOMATION = "Automation";
 	public static String OFFLINE = "Offline";
 	public static String ONLINE = "Online";
 	public static String CANCEL = "Cancel";
@@ -58,8 +63,16 @@ public class PhilipsConstant {
 	public static String ENABLE = "Enable";
 	public static String TIME_AM = "AM";
 	public static String TIME_PM = "PM";
-
+	public static String ALL_DEVICE = "AllDeviceInRoom";
+	public static String GO_TO_SLEEPS = "Basic go to sleep routine";
+	public static String WAKE_UP_WITH_LIGHT = "Basic wake up routine";
+	public static String TIMERS = "Timers";
+	public static int MAXIMUM_REPEAT_DAY = 7;
 	public static int NUMBER_ONE = 1;
 	public static int ZERO = 0;
 	public static int DEFAULT_FADE_DURATION = 900;
+	public static int MIN_FADE_DURATION = 10;
+	public static int MAX_FADE_DURATION = 5400;
+	public static int MIN_END_BRIGHTNESS = 1;
+	public static int MAX_END_BRIGHTNESS = 100;
 }

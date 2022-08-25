@@ -36,7 +36,7 @@ public enum RoomTypeEnum {
 	UPSTAIRS("Upstairs", "upstairs"),
 	TOP_FLOOR("Top Floor", "top_floor"),
 	ATTIC("Attic", "attic"),
-	GUEST_ROOM("Guest_room", "guest_room"),
+	GUEST_ROOM("Guest Room", "guest_room"),
 	STAIRCASE("Staircase", "staircase"),
 	LOUNGE("Lounge", "lounge"),
 	MAN_CAVE("Man Cave", "man_cave"),
@@ -104,10 +104,10 @@ public enum RoomTypeEnum {
 	}
 
 	/**
-	 * Get name of Protocol by value
+	 * Get name of RoomTypeEnum by value
 	 *
-	 * @param value the value is value of ProtocolEnum
-	 * @return String is protocol value
+	 * @param value the value is value of RoomTypeEnum
+	 * @return String is RoomTypeEnum value
 	 */
 	public static String getNameOfRoomTypeEnumByValue(String value) {
 		for (RoomTypeEnum protocolEnum : RoomTypeEnum.values()) {

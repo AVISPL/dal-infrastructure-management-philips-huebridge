@@ -20,6 +20,8 @@ public enum PhilipsURL {
 	ROOMS("clip/v2/resource/room"),
 	ZONES("clip/v2/resource/zone"),
 	GROUP_LIGHT("clip/v2/resource/grouped_light"),
+	AUTOMATION("clip/v2/resource/behavior_instance"),
+	SCRIPT_ID("clip/v2/resource/behavior_script"),
 	;
 	private String url;
 
