@@ -3,6 +3,8 @@
  */
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight;
 
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.EnumTypeHandler;
+
 /**
  * BrightnessLight class provides during the monitoring and controlling process
  *
@@ -30,5 +32,11 @@ public class BrightnessLight {
 	 */
 	public void setBrightness(String brightness) {
 		this.brightness = brightness;
+	}
+
+	@Override
+	public String toString() {
+		String result = String.format("{%s}", EnumTypeHandler.getFormatNameByColonValue(brightness, "brightness", true));
+		return String.format("{%s}", EnumTypeHandler.getFormatNameByColonValue(result, "dimming", true));
 	}
 }

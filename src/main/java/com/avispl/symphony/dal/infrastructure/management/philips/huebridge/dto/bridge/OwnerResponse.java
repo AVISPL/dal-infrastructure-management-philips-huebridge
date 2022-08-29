@@ -3,6 +3,9 @@
  */
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.bridge;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * OwnerResponse class provides during the monitoring and controlling process
  *
@@ -10,9 +13,13 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.
  * Created on 8/2/2022
  * @since 1.0.0
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OwnerResponse {
 
 	private String rid;
+
+	@JsonAlias("rtype")
+	private String type;
 
 	/**
 	 * Retrieves {@code {@link #rid}}
@@ -30,5 +37,23 @@ public class OwnerResponse {
 	 */
 	public void setRid(String rid) {
 		this.rid = rid;
+	}
+
+	/**
+	 * Retrieves {@code {@link #type}}
+	 *
+	 * @return value of {@link #type}
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * Sets {@code type}
+	 *
+	 * @param type the {@code java.lang.String} field
+	 */
+	public void setType(String type) {
+		this.type = type;
 	}
 }

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.EnumTypeHandler;
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.PhilipsConstant;
 
 /**
  * TimeAndRepeat class provides during the monitoring and controlling process
@@ -65,15 +66,11 @@ public class TimeAndRepeat {
 	public String toString() {
 		String timePointValue = EnumTypeHandler.getFormatNameByColonValue(timePoint.toString(), "time_point", true);
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("[");
 		for (String day : days) {
-			if (days[days.length - 1].equals(day)) {
-				stringBuilder.append("\"" + day + "\"");
-			} else {
-				stringBuilder.append("\"" + day + "\"" + ",");
-			}
+			stringBuilder.append(String.format(PhilipsConstant.FORMAT_PERCENT, day));
 		}
-		stringBuilder.append("]");
-		return String.format("{%s,%s}", stringBuilder, timePointValue);
+		String value = days == null ? PhilipsConstant.EMPTY_STRING : EnumTypeHandler.getFormatNameByColonValue(String.format("[%s]", stringBuilder), "recurrence_days", true);
+		value = days == null || days.length == 0 ? PhilipsConstant.EMPTY_STRING : String.format(",%s", value);
+		return String.format("{%s %s", timePointValue, value);
 	}
 }

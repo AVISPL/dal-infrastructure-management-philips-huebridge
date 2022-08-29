@@ -38,6 +38,6 @@ public class FadeDuration {
 	@Override
 	public String
 	toString() {
-		return String.format("{%s}", EnumTypeHandler.getFormatNameByColonValue(seconds, "seconds", false));
+		return String.format("{%s}", EnumTypeHandler.getFormatNameByColonValue(seconds, "seconds", true));
 	}
 }

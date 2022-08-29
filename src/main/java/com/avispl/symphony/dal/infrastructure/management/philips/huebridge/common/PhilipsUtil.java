@@ -44,6 +44,10 @@ public class PhilipsUtil {
 				return PhilipsURL.AUTOMATION.getUrl();
 			case SCRIPT_ID:
 				return PhilipsURL.SCRIPT_ID.getUrl();
+			case LIGHT:
+				return PhilipsURL.LIGHT.getUrl();
+			case BUTTON_POWER:
+				return PhilipsURL.BUTTON_POWER.getUrl();
 			default:
 				throw new IllegalArgumentException("Do not support Philips Hue metric: " + url.name());
 		}

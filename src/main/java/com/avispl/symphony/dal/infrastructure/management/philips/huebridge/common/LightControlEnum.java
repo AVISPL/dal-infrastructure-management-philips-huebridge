@@ -1,31 +1,31 @@
-/**
+/*
  * Copyright (c) 2022 AVI-SPL, Inc. All Rights Reserved.
  */
+
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common;
 
 /**
- * TypeOfAutomation class provides type automation during the monitoring and controlling process
+ * LightControlEnum class provides properties light for controlling process
  *
  * @author Harry / Symphony Dev Team<br>
- * Created on 8/22/2022
+ * Created on 8/26/2022
  * @since 1.0.0
  */
-public enum TypeOfAutomation {
+public enum LightControlEnum {
 
-	TIMER("Timer"),
-	WAKE_UP_WITH_LIGHT("WakeUpWithLight"),
-	GO_TO_SLEEP("GoToSleep"),
+	BRIGHTNESS("brightness"),
+	COLOR_TEMPERATURE("colorTemperature(K)"),
+	STATUS("status"),
 	;
 
 	/**
-	 * TypeOfAutomation instantiation
+	 * LightControlEnum instantiation
 	 *
 	 * @param name {@code {@link #name}}
 	 */
-	TypeOfAutomation(String name) {
+	LightControlEnum(String name) {
 		this.name = name;
 	}
-
 	private final String name;
 
 	/**
@@ -36,4 +36,5 @@ public enum TypeOfAutomation {
 	public String getName() {
 		return name;
 	}
+
 }

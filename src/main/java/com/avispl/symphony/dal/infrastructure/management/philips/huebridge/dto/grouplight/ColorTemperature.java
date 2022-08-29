@@ -3,6 +3,8 @@
  */
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight;
 
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.EnumTypeHandler;
+
 /**
  * ColorTemperature class provides during the monitoring and controlling process
  *
@@ -30,5 +32,11 @@ public class ColorTemperature {
 	 */
 	public void setMirek(String mirek) {
 		this.mirek = mirek;
+	}
+
+	@Override
+	public String toString() {
+		String result = String.format("{%s}", EnumTypeHandler.getFormatNameByColonValue(mirek, "mirek", true));
+		return String.format("{%s}", EnumTypeHandler.getFormatNameByColonValue(result, "color_temperature", true));
 	}
 }

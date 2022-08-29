@@ -4,13 +4,13 @@
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common;
 
 /**
- * EndState class defined the enum for monitoring and controlling process
+ * EndStateEnum class defined the enum for monitoring and controlling process
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/23/2022
  * @since 1.0.0
  */
-public enum EndState {
+public enum EndStateEnum {
 
 	LIGHT_OFF("Light Off", "turn_off"),
 	WARM_NIGHT_LIGHT("Warm Night Light", "nightlight"),
@@ -23,7 +23,7 @@ public enum EndState {
 	 * @param name {@code {@link #name }}
 	 * @param value {@code {@link #value }}
 	 */
-	EndState(String name, String value) {
+	EndStateEnum(String name, String value) {
 		this.name = name;
 		this.value = value;
 	}
@@ -56,11 +56,26 @@ public enum EndState {
 	 * @return String is protocol value
 	 */
 	public static String getNameOfEnumByValue(String value) {
-		for (EndState endState : EndState.values()) {
+		for (EndStateEnum endState : EndStateEnum.values()) {
 			if (endState.getValue().equalsIgnoreCase(value)) {
 				return endState.getName();
 			}
 		}
 		return value;
+	}
+
+	/**
+	 * Get value of EndState by name
+	 *
+	 * @param name the name is name of EndState
+	 * @return String is protocol value
+	 */
+	public static String getValueOfEnumByName(String name) {
+		for (EndStateEnum endState : EndStateEnum.values()) {
+			if (endState.getName().equalsIgnoreCase(name)) {
+				return endState.getValue();
+			}
+		}
+		return name;
 	}
 }

@@ -59,8 +59,8 @@ public class CurrentTime {
 
 	@Override
 	public String toString() {
-		String hourValue = EnumTypeHandler.getFormatNameByColonValue(hour, "hour", false);
-		String minuteValue = EnumTypeHandler.getFormatNameByColonValue(minute, "minute", false);
+		String hourValue = EnumTypeHandler.getFormatNameByColonValue(hour, "hour", true);
+		String minuteValue = EnumTypeHandler.getFormatNameByColonValue(minute, "minute", true);
 
 		return String.format("{%s,%s}", hourValue, minuteValue);
 	}

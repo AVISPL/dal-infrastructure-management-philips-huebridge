@@ -22,6 +22,9 @@ public enum PhilipsURL {
 	GROUP_LIGHT("clip/v2/resource/grouped_light"),
 	AUTOMATION("clip/v2/resource/behavior_instance"),
 	SCRIPT_ID("clip/v2/resource/behavior_script"),
+	LIGHT("clip/v2/resource/light"),
+	BUTTON_POWER("/clip/v2/resource/device_power/"),
+	MOTION_SENSOR("/clip/v2/resource/motion/"),
 	;
 	private String url;
 

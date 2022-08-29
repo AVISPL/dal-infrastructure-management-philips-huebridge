@@ -15,12 +15,17 @@ public class PhilipsConstant {
 	public static String ZIGBEE_CONNECTIVITY = "zigbee_connectivity";
 	public static String BRIDGE = "bridge";
 	public static String LIGHT = "light";
+	public static String BUTTON = "Button";
+	public static String MOTION_SENSOR = "motion";
+	public static String DEVICE_POWER = "device_power";
+	public static String STATUS = "status";
 	public static String EMPTY_STRING = "";
 	public static String SPACE = " ";
 	public static String HASH = "#";
 	public static String DASH = "-";
 	public static String SLASH = "/";
 	public static String DEVICE_CONNECTED = "DeviceConnected";
+	public static String BRIDGE_HOME = "bridge_home";
 	public static String NONE = "None";
 	public static String COMMA = ",";
 	public static String CREATE_ROOM = "CreateRoom";
@@ -58,15 +63,27 @@ public class PhilipsConstant {
 	public static String APPLYING = "Applying";
 	public static String APPLY = "Apply";
 	public static String PARAM_CHANGE_STATUS = "{\"on\": {\"on\": %s}}";
+	public static String PARAM_CHANGE_STATUS_AUTOMATION = "{\"enabled\": %s}";
 	public static String ERROR_MESSAGE_STATUS = "device (grouped_light) is \"soft off\", command (.on) may not have effect";
 	public static String DISABLE = "Disable";
 	public static String ENABLE = "Enable";
 	public static String TIME_AM = "AM";
 	public static String TIME_PM = "PM";
-	public static String ALL_DEVICE = "AllDeviceInRoom";
+	public static String ALL_DEVICE_IN_ROOM = "AllDeviceInRoom";
+	public static String ALL_DEVICE_IN_ZONE = "AllDeviceInZone";
+	public static String ROOM_NO_ASSIGNED_DEVICE = "RoomNoAssignedDevice";
+	public static String ZONE_NO_ASSIGNED_DEVICE = "ZoneNoAssignedDevice";
 	public static String GO_TO_SLEEPS = "Basic go to sleep routine";
 	public static String WAKE_UP_WITH_LIGHT = "Basic wake up routine";
+	public static String MAC_ADDRESS = "macAddress";
 	public static String TIMERS = "Timers";
+	public static String TIME = "Time";
+	public static String DEVICE_TYPE = "deviceType";
+	public static String SOFTWARE_VERSION = "softwareVersion";
+	public static String BATTERY_LEVEL = "batteryLevel(%)";
+	public static String MOTION_DETECTED = "motionDetected";
+	public static String MIN_POLLING_INTERVAL_KEY = "MinPollingInterval";
+	public static String MAX_POLLING_INTERVAL_KEY = "MaxPollingInterval";
 	public static int MAXIMUM_REPEAT_DAY = 7;
 	public static int NUMBER_ONE = 1;
 	public static int ZERO = 0;
@@ -75,4 +92,15 @@ public class PhilipsConstant {
 	public static int MAX_FADE_DURATION = 5400;
 	public static int MIN_END_BRIGHTNESS = 1;
 	public static int MAX_END_BRIGHTNESS = 100;
+	public static int MIN_COLOR_TEMPERATURE = 153;
+	public static int MAX_COLOR_TEMPERATURE = 500;
+
+	// Data loader constants
+	public static int	MIN_POLLING_INTERVAL = 1;
+	public static int MAX_THREAD_QUANTITY = 8;
+	public static final int MIN_THREAD_QUANTITY = 1;
+	public static int MAX_DEVICE_QUANTITY_PER_THREAD = 8;
+	public static final int FIRST_MONITORING_CYCLE_OF_POLLING_INTERVAL = 0;
+	public static final int CONVERT_POSITION_TO_INDEX = 1;
+
 }

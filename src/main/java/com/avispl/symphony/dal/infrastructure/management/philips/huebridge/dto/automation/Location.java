@@ -4,10 +4,13 @@
 
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.EnumTypeHandler;
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.PhilipsConstant;
 
 /**
  * Location class provides during the monitoring and controlling process
@@ -64,7 +67,18 @@ public class Location {
 	@Override
 	public String toString() {
 		String groupValue = EnumTypeHandler.getFormatNameByColonValue(group.toString(), "group", true);
-		String itemsValue = EnumTypeHandler.getFormatNameByColonValue(items.toString(), "time_point", true);
-		return String.format("{%s,%s}", groupValue, itemsValue);
+		String itemsValue = PhilipsConstant.EMPTY_STRING;
+		if (items != null) {
+			StringBuilder stringBuilder = new StringBuilder();
+			for (Group item : items) {
+				String values = item.toString();
+				if (!Objects.equals(item, items[items.length - 1])) {
+					values = String.format("%s,", item.toString());
+				}
+				stringBuilder.append(values);
+			}
+			itemsValue = String.format(",%s", EnumTypeHandler.getFormatNameByColonValue(String.format("[%s]", stringBuilder), "items", true));
+		}
+		return String.format("{%s %s}", groupValue, itemsValue);
 	}
 }

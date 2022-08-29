@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.EnumTypeHandler;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.romandzone.MetaData;
+import com.avispl.symphony.dal.util.StringUtils;
 
 /**
  * AutomationResponse class provides during the monitoring and controlling process
@@ -142,8 +143,10 @@ public class AutomationResponse {
 	public String toString() {
 		String metaDataValue = EnumTypeHandler.getFormatNameByColonValue(metaData.toString(), "metadata", true);
 		String configurationValue = EnumTypeHandler.getFormatNameByColonValue(configurations.toString(), "configuration", true);
-		String script = EnumTypeHandler.getFormatNameByColonValue(scriptId, "script_id", false);
+		String script = StringUtils.isNotNullOrEmpty(scriptId) ? "" : String.format(",%s", EnumTypeHandler.getFormatNameByColonValue(scriptId, "script_id", false));
 		String enabledValue = EnumTypeHandler.getFormatNameByColonValue(enabled, "enabled", false);
-		return String.format("{%s, %s, %s ,%s}",configurationValue, metaDataValue, script, enabledValue);
+		enabledValue = enabledValue.replace("\"False\"", "false").replace("\"True\"", "true");
+
+		return String.format("{%s}, %s, %s %s}", configurationValue, metaDataValue, enabledValue, script);
 	}
 }

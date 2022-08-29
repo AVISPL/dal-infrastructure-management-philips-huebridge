@@ -1,5 +1,7 @@
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common;
 
+import com.avispl.symphony.dal.util.StringUtils;
+
 /**
  * StyleEnum  class defined the enum for monitoring and controlling process
  *
@@ -9,8 +11,9 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.comm
  */
 public enum StyleEnum {
 
-	SUNRISE("Sunrise","sunrise"),
-	FADE_TO_BRIGHT("Fade To Bright","fade_to_bright"),
+	SUNRISE("Sunrise", "sunrise"),
+	FADE_TO_BRIGHT("Fade To Bright", "fade_to_bright"),
+	NONE("None", "None"),
 	;
 
 	/**
@@ -19,7 +22,7 @@ public enum StyleEnum {
 	 * @param name {@code {@link #name }}
 	 * @param value {@code {@link #value }}
 	 */
-	StyleEnum(String name,String value) {
+	StyleEnum(String name, String value) {
 		this.name = name;
 		this.value = value;
 	}
@@ -52,6 +55,9 @@ public enum StyleEnum {
 	 * @return String is StyleEnum value
 	 */
 	public static String getNameOfEnumByValue(String value) {
+		if (StringUtils.isNullOrEmpty(value)) {
+			return PhilipsConstant.NONE;
+		}
 		for (StyleEnum style : StyleEnum.values()) {
 			if (style.getValue().equalsIgnoreCase(value)) {
 				return style.getName();

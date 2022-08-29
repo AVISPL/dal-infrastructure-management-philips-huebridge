@@ -187,23 +187,38 @@ public class AutoConfiguration {
 	@Override
 	public String toString() {
 		String durationValue = "";
-		String endBrightnessValue= "";
-		String endState= "";
-		String styleValue= "";
-		if (duration != null && StringUtils.isNullOrEmpty(duration.getSeconds())) {
+		String endBrightnessValue = "";
+		String endState = "";
+		String styleValue = "";
+		String whatTime = "";
+		if (duration != null && !StringUtils.isNullOrEmpty(duration.getSeconds())) {
 			durationValue = EnumTypeHandler.getFormatNameByColonValue(duration.toString(), "duration", true);
+			StringBuilder deviceGroup = new StringBuilder();
+			for (Location locationItem : location) {
+				deviceGroup.append(String.format("%s}", EnumTypeHandler.getFormatNameByColonValue(locationItem.getGroup().toString(), "group", true)));
+			}
+			whatTime = EnumTypeHandler.getFormatNameByColonValue(String.format("[{\"blink\":{},%s]", deviceGroup), "what", true);
+		} else {
+			whatTime = EnumTypeHandler.getFormatNameByColonValue(String.format("%s}", timeAndRepeats.toString()), "when", true);
 		}
-		if (fadeInDuration != null && StringUtils.isNullOrEmpty(fadeInDuration.getSeconds())) {
+		if (fadeInDuration != null && !StringUtils.isNullOrEmpty(fadeInDuration.getSeconds())) {
 			durationValue = EnumTypeHandler.getFormatNameByColonValue(fadeInDuration.toString(), "fade_in_duration", true);
-			endBrightnessValue = EnumTypeHandler.getFormatNameByColonValue(endBrightness, "end_brightness", false);
+			endBrightnessValue = EnumTypeHandler.getFormatNameByColonValue(endBrightness, "end_brightness", true);
 			styleValue = EnumTypeHandler.getFormatNameByColonValue(style, "style", false);
 		}
-		if (fadeOutDuration != null && StringUtils.isNullOrEmpty(fadeOutDuration.getSeconds())) {
+		if (fadeOutDuration != null && !StringUtils.isNullOrEmpty(fadeOutDuration.getSeconds())) {
 			durationValue = EnumTypeHandler.getFormatNameByColonValue(fadeOutDuration.toString(), "fade_out_duration", true);
-			endState = EnumTypeHandler.getFormatNameByColonValue(endWith, "end_state", false);
+			endState = String.format(",%s", EnumTypeHandler.getFormatNameByColonValue(endWith, "end_state", false));
 		}
-		String time = EnumTypeHandler.getFormatNameByColonValue(timeAndRepeats.toString(), "when", true);
-		String locationValue = EnumTypeHandler.getFormatNameByColonValue(location.toString(), "where", true);
-		return String.format("{%s,%s,%s,%s,%s}",durationValue,endBrightnessValue,endState,time,styleValue,locationValue);
+		StringBuilder stringBuilder = new StringBuilder();
+		for (Location locationItem : location) {
+			stringBuilder.append(locationItem.toString());
+		}
+		String locationValue = EnumTypeHandler.getFormatNameByColonValue(String.format("[%s],", stringBuilder), "where", true);
+		durationValue = StringUtils.isNullOrEmpty(durationValue) ? durationValue : String.format("%s,", durationValue);
+		endBrightnessValue = StringUtils.isNullOrEmpty(endBrightnessValue) ? endBrightnessValue : String.format(",%s", endBrightnessValue);
+		styleValue = StringUtils.isNullOrEmpty(styleValue) ? styleValue : String.format(",%s", styleValue);
+
+		return String.format("{%s %s %s %s %s %s", durationValue, locationValue, whatTime, endBrightnessValue, endState, styleValue);
 	}
 }
