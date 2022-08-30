@@ -661,7 +661,12 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		String deviceId = controllableProperty.getDeviceId();
 		reentrantLock.lock();
 		try {
-			if (localExtendedStatistics == null || (isConfigManagement && (localCreateRoom == null || localCreateZone == null))) {
+			if (localExtendedStatistics == null) {
+				if (logger.isDebugEnabled()) {
+					logger.debug(String.format("Error while controlling %s metric", property));
+				}
+				return;
+			} else if (isConfigManagement && (localCreateRoom == null || localCreateZone == null)) {
 				if (logger.isDebugEnabled()) {
 					logger.debug(String.format("Error while controlling %s metric", property));
 				}
@@ -1124,10 +1129,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		String[] propertyList = property.split(PhilipsConstant.HASH);
 		String propertyGroup = propertyList[0];
 		String key = propertyList[1];
-		boolean isCurrentEmergencyDelivery = false;
-		if (isEmergencyDelivery) {
-			isCurrentEmergencyDelivery = true;
-		}
+		boolean isCurrentEmergencyDelivery = isEmergencyDelivery;
 		isEmergencyDelivery = true;
 		Map<String, Map<String, String>> typeAndMapOfDevice = automationAndTypeMapOfDeviceAndValue.get(propertyGroup);
 		boolean isAddNewValue = handleControlIsAddNewDevice(property, value, typeAndMapOfDevice, stats, advancedControllableProperties);
@@ -2667,10 +2669,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			mapOfDeviceDropdown = zoneNameAndMapZoneDeviceControl.get(group);
 			deviceDropdown = deviceNameAndDeviceIdZoneMap.keySet().stream().collect(Collectors.toList());
 		}
-		boolean isCurrentEmergencyDelivery = false;
-		if (isEmergencyDelivery) {
-			isCurrentEmergencyDelivery = true;
-		}
+		boolean isCurrentEmergencyDelivery = isEmergencyDelivery;
 		isEmergencyDelivery = true;
 		if (key.contains(PhilipsConstant.DEVICE) && !CreateRoomEnum.DEVICE_ADD.getRoomName().equals(key) && !RoomsAndZonesControlEnum.DEVICE_STATUS.getName().equals(key)) {
 			updateDeviceRoomDropdownList(property, value, stats, advancedControllableProperties, deviceList, mapOfDeviceDropdown, PhilipsConstant.DEVICE_0);
