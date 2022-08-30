@@ -52,7 +52,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	@BeforeEach
 	public void init() throws Exception {
 		wireMockRule.start();
-
 		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.GROUP_LIGHT)).thenReturn(PhilipsURL.GROUP_LIGHT.getUrl());
 		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.CONFIG)).thenReturn(PhilipsURL.CONFIG.getUrl());
 		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.API)).thenReturn(PhilipsURL.API.getUrl());
@@ -71,6 +70,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		philipsHueDeviceCommunicator.setHost(HOST_NAME);
 		philipsHueDeviceCommunicator.setContentType("application/json");
 		philipsHueDeviceCommunicator.setPassword("admin");
+		philipsHueDeviceCommunicator.setConfigManagement("True");
 		philipsHueDeviceCommunicator.init();
 		philipsHueDeviceCommunicator.authenticate();
 	}
