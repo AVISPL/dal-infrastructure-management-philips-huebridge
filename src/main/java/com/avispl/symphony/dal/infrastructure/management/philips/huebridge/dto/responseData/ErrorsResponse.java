@@ -1,11 +1,10 @@
 /*
  * Copyright (c) 2022 AVI-SPL, Inc. All Rights Reserved.
  */
-
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.responseData;
 
 /**
- * ErrorsResponse class provides during the monitoring and controlling process
+ * ErrorsResponse class provides error message for response data
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/17/2022

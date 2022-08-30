@@ -1,7 +1,7 @@
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common;
 
 /**
- * RoomsAndZonesControlEnum class defined the enum for monitoring and controlling process
+ * RoomsAndZonesControlEnum enum provides metric name for room and zone
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/11/2022

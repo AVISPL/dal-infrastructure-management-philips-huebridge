@@ -10,7 +10,7 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.r
 import com.avispl.symphony.dal.util.StringUtils;
 
 /**
- * AutomationResponse class provides during the monitoring and controlling process
+ * AutomationResponse class provides information about automation
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/23/2022
@@ -142,10 +142,10 @@ public class AutomationResponse {
 	@Override
 	public String toString() {
 		String metaDataValue = EnumTypeHandler.getFormatNameByColonValue(metaData.toString(), "metadata", true);
-		String configurationValue = EnumTypeHandler.getFormatNameByColonValue(configurations.toString(), "configuration", true);
 		String script = StringUtils.isNullOrEmpty(scriptId) ? "" : String.format(",%s", EnumTypeHandler.getFormatNameByColonValue(scriptId, "script_id", false));
 		String enabledValue = EnumTypeHandler.getFormatNameByColonValue(enabled, "enabled", false);
 		enabledValue = enabledValue.replace("\"False\"", "false").replace("\"True\"", "true");
+		String configurationValue = EnumTypeHandler.getFormatNameByColonValue(configurations.toString(), "configuration", true);
 
 		return String.format("{%s}, %s, %s %s}", configurationValue, metaDataValue, enabledValue, script);
 	}

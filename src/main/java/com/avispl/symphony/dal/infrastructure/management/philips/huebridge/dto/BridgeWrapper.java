@@ -6,7 +6,7 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.bridge.BridgeListResponse;
 
 /**
- * BridgeWrapper class provides during the monitoring and controlling process
+ * BridgeWrapper class provides a wrapper for BridgeResponse
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/2/2022

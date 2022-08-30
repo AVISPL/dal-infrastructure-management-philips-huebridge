@@ -1,14 +1,13 @@
 /*
  * Copyright (c) 2022 AVI-SPL, Inc. All Rights Reserved.
  */
-
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.aggregateddevice;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * PowerState class provides during the monitoring and controlling process
+ * PowerState class provides the battery for the device
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/25/2022

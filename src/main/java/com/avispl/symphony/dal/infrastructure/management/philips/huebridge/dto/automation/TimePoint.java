@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2022 AVI-SPL, Inc. All Rights Reserved.
  */
-
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
@@ -9,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.EnumTypeHandler;
 
 /**
- * TimePoint class provides during the monitoring and controlling process
+ * TimePoint class provides TimePoint as time and type for automation
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/23/2022

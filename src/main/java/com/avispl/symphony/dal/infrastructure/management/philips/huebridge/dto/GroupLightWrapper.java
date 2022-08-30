@@ -3,7 +3,7 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.GroupLightResponse;
 
 /**
- * groupLightWrapper class provides during the monitoring and controlling process
+ *GroupLightWrapper class provides a wrapper for GroupLightResponse
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/3/2022

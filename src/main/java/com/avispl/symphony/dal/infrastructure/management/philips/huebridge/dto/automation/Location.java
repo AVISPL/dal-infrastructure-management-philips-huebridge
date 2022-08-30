@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2022 AVI-SPL, Inc. All Rights Reserved.
  */
-
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation;
 
 import java.util.Objects;
@@ -73,7 +72,7 @@ public class Location {
 			for (Group item : items) {
 				String values = item.toString();
 				if (!Objects.equals(item, items[items.length - 1])) {
-					values = String.format("%s,", item.toString());
+					values = String.format("%s,", item);
 				}
 				stringBuilder.append(values);
 			}

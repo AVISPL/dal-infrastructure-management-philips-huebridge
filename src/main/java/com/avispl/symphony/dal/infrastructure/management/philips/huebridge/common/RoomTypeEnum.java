@@ -1,11 +1,10 @@
 /*
  * Copyright (c) 2022 AVI-SPL, Inc. All Rights Reserved.
  */
-
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common;
 
 /**
- * RoomTypeEnum  class defined the enum for monitoring and controlling process
+ * RoomTypeEnum enum provides type information for room and zone
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/15/2022

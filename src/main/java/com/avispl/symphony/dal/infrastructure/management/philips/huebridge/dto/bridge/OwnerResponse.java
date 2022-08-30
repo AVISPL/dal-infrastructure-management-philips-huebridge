@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * OwnerResponse class provides during the monitoring and controlling process
+ * OwnerResponse class provides Owner as id and type for the device
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/2/2022

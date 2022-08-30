@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2022 AVI-SPL, Inc. All Rights Reserved.
  */
-
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.scriptautomation;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * MetaDataAutomation class contains name and category
+ * MetaDataAutomation class provides metadata as name and category for automation
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/2/2022

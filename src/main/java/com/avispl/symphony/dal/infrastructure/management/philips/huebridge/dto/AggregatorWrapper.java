@@ -6,7 +6,7 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.aggregateddevice.AggregatedDeviceResponse;
 
 /**
- * AggregatorWrapper class provides during the monitoring and controlling process
+ * AggregatorWrapper class provides a wrapper for AggregatorResponse
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/2/2022

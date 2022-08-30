@@ -4,7 +4,7 @@
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common;
 
 /**
- * TypeOfAutomation class provides type automation during the monitoring and controlling process
+ * TypeOfAutomation enum provides type automation during the monitoring and controlling process
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/22/2022

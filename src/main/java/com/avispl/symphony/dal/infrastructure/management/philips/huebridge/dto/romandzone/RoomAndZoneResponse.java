@@ -12,7 +12,7 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.s
 import com.avispl.symphony.dal.util.StringUtils;
 
 /**
- * RoomResponse class provides during the monitoring and controlling process
+ * RoomResponse class provides information for room and zone
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/3/2022

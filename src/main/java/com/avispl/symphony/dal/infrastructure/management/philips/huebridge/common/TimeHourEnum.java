@@ -4,7 +4,7 @@
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common;
 
 /**
- * TimeHourEnum class contains time of device
+ * TimeHourEnum enum contains time of device
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/22/2022

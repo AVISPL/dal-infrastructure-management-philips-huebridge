@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2022 AVI-SPL, Inc. All Rights Reserved.
  */
-
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
@@ -11,7 +10,7 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.commo
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.PhilipsConstant;
 
 /**
- * TimeAndRepeat class provides during the monitoring and controlling process
+ * TimeAndRepeat class provides time, day, and repeat for automation
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/23/2022

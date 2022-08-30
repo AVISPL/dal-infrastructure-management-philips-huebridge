@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2022 AVI-SPL, Inc. All Rights Reserved.
  */
-
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -10,7 +9,7 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.r
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.romandzone.Children;
 
 /**
- * ResponseData class provides during the monitoring and controlling process
+ * ResponseData class provides information for the response data request
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/17/2022

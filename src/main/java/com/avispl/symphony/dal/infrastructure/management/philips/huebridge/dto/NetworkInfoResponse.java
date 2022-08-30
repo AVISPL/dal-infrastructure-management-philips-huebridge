@@ -10,7 +10,7 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.commo
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.PhilipsConstant;
 
 /**
- * NetworkInfoResponse class provides during the monitoring and controlling process
+ * NetworkInfoResponse class provides information of Network
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/2/2022

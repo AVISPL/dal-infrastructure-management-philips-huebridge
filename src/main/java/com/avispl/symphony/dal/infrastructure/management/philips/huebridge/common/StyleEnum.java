@@ -3,7 +3,7 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.comm
 import com.avispl.symphony.dal.util.StringUtils;
 
 /**
- * StyleEnum  class defined the enum for monitoring and controlling process
+ * StyleEnum enum provides style information for the automation process
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/23/2022

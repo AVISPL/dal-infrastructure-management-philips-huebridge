@@ -9,7 +9,7 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.commo
 import com.avispl.symphony.dal.util.StringUtils;
 
 /**
- * MetaData class contains name and type
+ * MetaData class provides metadata as name and type for room and zone
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/2/2022

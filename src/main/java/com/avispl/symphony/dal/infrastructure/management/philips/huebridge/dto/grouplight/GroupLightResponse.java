@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.bridge.OwnerResponse;
 
 /**
- * GroupLightResponse class provides during the monitoring and controlling process
+ * GroupLightResponse class provides info about the group light
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/3/2022

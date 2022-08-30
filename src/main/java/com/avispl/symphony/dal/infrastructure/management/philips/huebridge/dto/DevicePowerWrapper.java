@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2022 AVI-SPL, Inc. All Rights Reserved.
  */
-
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto;
 
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.aggregateddevice.PowerDevice;
 
 /**
- * DevicePowerWrapper class provides during the monitoring and controlling process
+ * DevicePowerWrapper class provides a wrapper for DevicePower
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/25/2022

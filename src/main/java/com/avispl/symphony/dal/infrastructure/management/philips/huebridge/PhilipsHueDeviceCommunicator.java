@@ -461,8 +461,8 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				retrieveZones();
 				retrieveRooms();
 				retrieveGroupLight();
-				// retrieve device and filter devices in first monitoring cycle of polling interval
 				retrieveDropdownListDevices();
+				// retrieve device and filter devices in first monitoring cycle of polling interval
 				if (currentPhase.get() == localPollingInterval || currentPhase.get() == 0) {
 					retrieveDevices();
 					//Add filter device IDs
@@ -883,7 +883,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			}
 
 		} catch (Exception e) {
-			logger.error(String.format("Error while retrieve %s device detail  info: %s ", aggregatedDeviceList.get(deviceID).getDeviceName(), e.getMessage()), e);
+			logger.error(String.format("Error while retrieve %s device detail info: %s ", aggregatedDeviceList.get(deviceID).getDeviceName(), e.getMessage()), e);
 		}
 	}
 
@@ -1177,7 +1177,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 							break;
 						default:
 							if (logger.isDebugEnabled()) {
-								logger.debug(String.format("Creating automation with  device type %s is not supported.", automationEnum.getName()));
+								logger.debug(String.format("Creating automation with device type %s is not supported.", automationEnum.getName()));
 							}
 					}
 					break;
@@ -1186,8 +1186,8 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					break;
 				case APPLY_CHANGE:
 					Map<String, Map<String, String>> typeAndMapOfDeviceValues = automationAndTypeMapOfDeviceAndValue.get(propertyGroup);
-					AutomationResponse auto = convertAutomationByValue(propertyGroup, stats, typeAndMapOfDeviceValues);
-					sendRequestToCreateAutomation(auto, true);
+					AutomationResponse automationRequest = convertAutomationByValue(propertyGroup, stats, typeAndMapOfDeviceValues);
+					sendRequestToCreateAutomation(automationRequest, true);
 					isEmergencyDelivery = false;
 					break;
 				case STATUS:
@@ -1634,7 +1634,9 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				if (PhilipsConstant.ROOM.equalsIgnoreCase(locationItem.getGroup().getType())) {
 					String roomId = locationItem.getGroup().getId();
 					Optional<Entry<String, String>> deviceNameInRoom = roomNameAndIdMap.entrySet().stream().filter(item -> item.getValue().equals(roomId)).findFirst();
-					initialDeviceDropdown(device, PhilipsConstant.ROOM, roomNameAndIdMap.values().size());
+					if (zoneIndex == 0) {
+						initialDeviceDropdown(device, PhilipsConstant.ROOM, roomNameAndIdMap.values().size());
+					}
 					if (deviceNameInRoom.isPresent()) {
 						device.put(PhilipsConstant.ROOM + zoneIndex, deviceNameInRoom.get().getKey());
 						zoneIndex++;
@@ -1663,7 +1665,9 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				if (PhilipsConstant.ZONE.equalsIgnoreCase(locationItem.getGroup().getType())) {
 					String zoneId = locationItem.getGroup().getId();
 					Optional<Entry<String, String>> deviceNameInZone = zoneNameAndIdMap.entrySet().stream().filter(item -> item.getValue().equals(zoneId)).findFirst();
-					initialDeviceDropdown(device, PhilipsConstant.ZONE, zoneNameAndIdMap.values().size());
+					if (zoneIndex == 0) {
+						initialDeviceDropdown(device, PhilipsConstant.ZONE, zoneNameAndIdMap.values().size());
+					}
 					if (deviceNameInZone.isPresent()) {
 						device.put(PhilipsConstant.ZONE + zoneIndex, deviceNameInZone.get().getKey());
 						zoneIndex++;
@@ -2081,7 +2085,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 							break;
 						default:
 							if (logger.isDebugEnabled()) {
-								logger.debug(String.format("Creating automation with  device type %s is not supported.", automationEnum.getName()));
+								logger.debug(String.format("Creating automation with device type %s is not supported.", automationEnum.getName()));
 							}
 					}
 					break;
@@ -2238,8 +2242,8 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					}
 					break;
 				case ACTION:
-					AutomationResponse auto = convertAutomationByValue(propertyGroup, stats, typeAndMapOfDeviceAndValue);
-					sendRequestToCreateAutomation(auto, false);
+					AutomationResponse automation = convertAutomationByValue(propertyGroup, stats, typeAndMapOfDeviceAndValue);
+					sendRequestToCreateAutomation(automation, false);
 					isCreateAutomation = false;
 					repeatNameOfCreateAutomationMap.clear();
 					typeAndMapOfDeviceAndValue.clear();
@@ -2671,7 +2675,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 * @param stats the stats are list of statistics
 	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
 	 * @param devicesName the nameList is list name device
-	 * @param mapOfNameDevice the map name and  id of device
+	 * @param mapOfNameDevice the map name and id of device
 	 */
 	private void addDeviceForRoomAndZone(String groupName, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties, List<String> devicesName,
 			Map<String, String> mapOfNameDevice) {
@@ -2817,12 +2821,12 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 * Convert Automation by value
 	 *
 	 * @param property is property name
-	 * @param stats are list of statictis
+	 * @param stats are list of statistics
 	 * @param typeAndMapOfDeviceAndValues are map with key is type and value is map of device and value
 	 * @return AutomationResponse DTO
 	 */
 	private AutomationResponse convertAutomationByValue(String property, Map<String, String> stats, Map<String, Map<String, String>> typeAndMapOfDeviceAndValues) {
-		AutomationResponse auto = new AutomationResponse();
+		AutomationResponse automationRequest = new AutomationResponse();
 		String name = stats.get(property + PhilipsConstant.HASH + AutomationEnum.NAME.getName());
 		String fadeDuration = stats.get(property + PhilipsConstant.HASH + AutomationEnum.FADE_DURATION.getName());
 		String fadeDurationHour = stats.get(property + PhilipsConstant.HASH + AutomationEnum.FADE_DURATION_HOUR.getName());
@@ -2843,7 +2847,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		}
 		MetaData metaData = new MetaData();
 		metaData.setName(name);
-		auto.setMetaData(metaData);
+		automationRequest.setMetaData(metaData);
 		AutoConfiguration config = new AutoConfiguration();
 		FadeDuration fadeDurationDTO = new FadeDuration();
 		config.setEndBrightness(endBrightness);
@@ -2860,12 +2864,12 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				}
 			}
 		}
-		auto.setEnabled(PhilipsConstant.FALSE);
+		automationRequest.setEnabled(PhilipsConstant.FALSE);
 		if (String.valueOf(PhilipsConstant.NUMBER_ONE).equals(status)) {
-			auto.setEnabled(PhilipsConstant.TRUE);
+			automationRequest.setEnabled(PhilipsConstant.TRUE);
 		}
 		convertDeviceForRoomAndZone(typeAndMapOfDeviceAndValues, type, config);
-		auto.setConfigurations(config);
+		automationRequest.setConfigurations(config);
 
 		if (TypeOfAutomation.TIMER.getName().equals(typeOfAutomation)) {
 			int durationHour = Integer.parseInt(fadeDurationHour);
@@ -2921,20 +2925,20 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		}
 		String finalScriptName = scriptName;
 		Optional<ScriptAutomationResponse> timer = scriptAutomationList.stream().filter(item -> item.getMetadata().getName().equalsIgnoreCase(finalScriptName)).findFirst();
-		timer.ifPresent(scriptAutomationResponse -> auto.setScriptId(scriptAutomationResponse.getId()));
+		timer.ifPresent(scriptAutomationResponse -> automationRequest.setScriptId(scriptAutomationResponse.getId()));
 
 		// check name automation exits
 		if (!PhilipsConstant.CREATE_AUTOMATION.equals(property)) {
 			String nameValue = property.substring(PhilipsConstant.AUTOMATION.length() + 1);
 			Optional<AutomationResponse> automationResponse = automationList.stream().filter(item -> item.getMetaData().getName().equals(nameValue)).findFirst();
-			automationResponse.ifPresent(response -> auto.setId(response.getId()));
+			automationResponse.ifPresent(response -> automationRequest.setId(response.getId()));
 			if (!name.equals(nameValue)) {
 				isAutomationNameExisting(name);
 			}
 		} else {
 			isAutomationNameExisting(name);
 		}
-		return auto;
+		return automationRequest;
 	}
 
 	/**
@@ -2945,7 +2949,6 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 * @param autoConfiguration is AutoConfiguration DTO instance
 	 */
 	private void convertDeviceForRoomAndZone(Map<String, Map<String, String>> typeAndMapOfDeviceAndValues, String type, AutoConfiguration autoConfiguration) {
-		Location location = new Location();
 		List<Location> locationList = new LinkedList<>();
 		//Extract device list by type is device
 		if (TypeOfDeviceEnum.DEVICE.getName().equals(type)) {
@@ -3036,6 +3039,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				}
 				for (Entry<String, Map<Group, List<Group>>> deviceList : nameOfGroupMap.entrySet()) {
 					for (Entry<Group, List<Group>> deviceDetail : deviceList.getValue().entrySet()) {
+						Location location = new Location();
 						location.setGroup(deviceDetail.getKey());
 						location.setItems(deviceDetail.getValue().toArray(new Group[0]));
 						locationList.add(location);
@@ -3075,8 +3079,9 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					}
 				}
 				for (Entry<String, Group> deviceList : nameOfGroupMap.entrySet()) {
-					location.setGroup(deviceList.getValue());
-					locationList.add(location);
+					Location locationItem = new Location();
+					locationItem.setGroup(deviceList.getValue());
+					locationList.add(locationItem);
 				}
 				if (locationList.isEmpty()) {
 					throw new ResourceNotReachableException("Error creating room for automation cannot be empty. Please select the room to create automation");
@@ -3113,6 +3118,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					}
 				}
 				for (Entry<String, Group> deviceList : nameOfGroupMap.entrySet()) {
+					Location location = new Location();
 					location.setGroup(deviceList.getValue());
 					locationList.add(location);
 				}
@@ -3834,7 +3840,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			}
 			return initial;
 		} catch (Exception e) {
-			//example value  1xxxxxxx, return max value
+			//example value 1xxxxxxx, return max value
 			//example value -1xxxxxxx, return min value
 			if (!value.contains(PhilipsConstant.DASH)) {
 				initial = max;

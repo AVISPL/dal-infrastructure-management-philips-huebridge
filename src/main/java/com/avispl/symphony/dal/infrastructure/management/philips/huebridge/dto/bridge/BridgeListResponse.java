@@ -4,7 +4,7 @@
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.bridge;
 
 /**
- * BridgeListResponse class provides during the monitoring and controlling process
+ * BridgeListResponse class provides bridge information
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/2/2022

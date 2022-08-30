@@ -4,7 +4,7 @@
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common;
 
 /**
- * NUTEMinuteEnum class provides time for automation during the monitoring and controlling process
+ * NUTEMinuteEnum enum provides time minute for automation during the monitoring and controlling process
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/22/2022

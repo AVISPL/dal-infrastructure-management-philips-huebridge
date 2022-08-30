@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * Services class contains id and type of device
+ * Services class provides id and type for service device
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/2/2022

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2022 AVI-SPL, Inc. All Rights Reserved.
  */
-
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation;
 
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.EnumTypeHandler;
 
 /**
- * FadeDuration class provides during the monitoring and controlling process
+ * FadeDuration class provides fade duration for automation
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/24/2022

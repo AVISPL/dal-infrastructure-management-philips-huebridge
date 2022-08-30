@@ -9,7 +9,7 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.commo
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.PhilipsConstant;
 
 /**
- * StatusLight class provides during the monitoring and controlling process
+ * StatusLight class provides info about the status of the light device
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/3/2022

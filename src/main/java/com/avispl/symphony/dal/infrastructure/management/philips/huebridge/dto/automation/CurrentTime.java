@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2022 AVI-SPL, Inc. All Rights Reserved.
  */
-
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -9,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.EnumTypeHandler;
 
 /**
- * CurrentTime class provides during the monitoring and controlling process
+ * CurrentTime class provides current time as hour and minute for automation
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/24/2022

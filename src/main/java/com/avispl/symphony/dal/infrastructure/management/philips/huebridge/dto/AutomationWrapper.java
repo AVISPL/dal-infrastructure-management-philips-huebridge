@@ -6,7 +6,7 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation.AutomationResponse;
 
 /**
- * AutomationWrapper class provides during the monitoring and controlling process
+ * AutomationWrapper class provides a wrapper for AutomationResponse
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/23/2022

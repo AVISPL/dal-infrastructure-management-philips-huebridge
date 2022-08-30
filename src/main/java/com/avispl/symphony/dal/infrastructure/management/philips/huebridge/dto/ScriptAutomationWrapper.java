@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2022 AVI-SPL, Inc. All Rights Reserved.
  */
-
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto;
 
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.scriptautomation.ScriptAutomationResponse;
 
 /**
- * ScriptAutomation class provides during the monitoring and controlling process
+ * ScriptAutomationWrapper class provides a wrapper for ScriptAutomationResponse
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/23/2022

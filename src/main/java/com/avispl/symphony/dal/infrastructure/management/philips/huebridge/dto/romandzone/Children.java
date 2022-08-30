@@ -68,6 +68,6 @@ public class Children {
 	public String toString() {
 		String ridValue = EnumTypeHandler.getFormatNameByColonValue(rid, "rid",false);
 		String typeValue = EnumTypeHandler.getFormatNameByColonValue(type, "rtype",false);
-		return String.format("{%s,%s}", ridValue,  typeValue);
+		return String.format("{%s,%s}", ridValue, typeValue);
 	}
 }

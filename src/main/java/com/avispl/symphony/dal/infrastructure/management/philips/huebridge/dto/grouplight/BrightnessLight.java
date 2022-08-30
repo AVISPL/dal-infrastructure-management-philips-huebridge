@@ -6,7 +6,7 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.EnumTypeHandler;
 
 /**
- * BrightnessLight class provides during the monitoring and controlling process
+ * BrightnessLight class provides info about the brightness of the light device
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/3/2022

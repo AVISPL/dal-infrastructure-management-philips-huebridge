@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2022 AVI-SPL, Inc. All Rights Reserved.
  */
-
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation;
 
 import java.util.Objects;
@@ -13,7 +12,7 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.commo
 import com.avispl.symphony.dal.util.StringUtils;
 
 /**
- * AutoConfiguration class provides during the monitoring and controlling process
+ * AutoConfiguration class provides configuration information such as location time type, ... etc
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/24/2022
@@ -217,7 +216,7 @@ public class AutoConfiguration {
 		for (Location locationItem : location) {
 			String values = locationItem.toString();
 			if (!Objects.equals(locationItem, location[location.length - 1])) {
-				values = String.format("%s,", locationItem);
+				values = String.format("%s,", values);
 			}
 			stringBuilder.append(values);
 		}

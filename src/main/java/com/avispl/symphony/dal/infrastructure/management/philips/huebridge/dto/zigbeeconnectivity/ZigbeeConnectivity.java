@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * ZigbeeConnectivity class provides during the monitoring and controlling process
+ * ZigbeeConnectivity class provides info of MAC address and Status for the device
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/2/2022

@@ -6,7 +6,7 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.romandzone.RoomAndZoneResponse;
 
 /**
- * RoomWrapper class provides during the monitoring and controlling process
+ * RoomAndZoneWrapper class provides a wrapper for RoomAndZoneResponse
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/3/2022

@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2022 AVI-SPL, Inc. All Rights Reserved.
  */
-
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.aggregateddevice;
 
 import java.util.Locale;
@@ -14,7 +13,7 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.commo
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.bridge.OwnerResponse;
 
 /**
- * MotionDevice class provides during the monitoring and controlling process
+ * MotionDevice class provides information of the motion sensor device
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/26/2022

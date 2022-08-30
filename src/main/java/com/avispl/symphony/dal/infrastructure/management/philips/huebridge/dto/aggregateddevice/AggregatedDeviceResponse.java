@@ -10,7 +10,7 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.r
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.system.ServicesResponse;
 
 /**
- * AggregatedDeviceResponse class provides during the monitoring and controlling process
+ * AggregatedDeviceResponse class provides information of the aggregated device
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/2/2022
