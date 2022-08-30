@@ -29,6 +29,8 @@ public class GroupLightResponse {
 
 	private OwnerResponse owner;
 
+	private ColorLight color;
+
 	/**
 	 * Retrieves {@code {@link #owner}}
 	 *
@@ -117,5 +119,23 @@ public class GroupLightResponse {
 	 */
 	public void setTemperature(ColorTemperature temperature) {
 		this.temperature = temperature;
+	}
+
+	/**
+	 * Retrieves {@code {@link #color}}
+	 *
+	 * @return value of {@link #color}
+	 */
+	public ColorLight getColor() {
+		return color;
+	}
+
+	/**
+	 * Sets {@code color}
+	 *
+	 * @param color the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.ColorLight} field
+	 */
+	public void setColor(ColorLight color) {
+		this.color = color;
 	}
 }
