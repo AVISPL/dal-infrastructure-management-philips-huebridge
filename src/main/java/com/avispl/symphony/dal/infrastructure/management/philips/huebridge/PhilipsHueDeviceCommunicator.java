@@ -659,6 +659,9 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		String property = controllableProperty.getProperty();
 		String value = String.valueOf(controllableProperty.getValue());
 		String deviceId = controllableProperty.getDeviceId();
+		if (!StringUtils.isNullOrEmpty(value) && StringUtils.isNullOrEmpty(value.trim())) {
+			throw new ResourceNotReachableException("Value format is invalid: The value ' ' is invalid");
+		}
 		reentrantLock.lock();
 		try {
 			if (localExtendedStatistics == null) {
@@ -1130,7 +1133,10 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		String[] propertyList = property.split(PhilipsConstant.HASH);
 		String propertyGroup = propertyList[0];
 		String key = propertyList[1];
-		boolean isCurrentEmergencyDelivery = isEmergencyDelivery;
+		boolean isCurrentEmergencyDelivery = false;
+		if (isEmergencyDelivery) {
+			isCurrentEmergencyDelivery = true;
+		}
 		isEmergencyDelivery = true;
 		Map<String, Map<String, String>> typeAndMapOfDevice = automationAndTypeMapOfDeviceAndValue.get(propertyGroup);
 		boolean isAddNewValue = handleControlForAddingNewDevice(property, value, typeAndMapOfDevice, stats, advancedControllableProperties);
@@ -1428,28 +1434,28 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		}
 
 		for (AutomationResponse automationResponse : automationList) {
-			if (isConfigManagement) {
-				String name = idAndNameOfAutomationMap.get(automationResponse.getScriptId());
-				//Support three type are Timer, Go To Sleeps, and Wake up with light
-				if (PhilipsConstant.TIMERS.equals(name) || PhilipsConstant.WAKE_UP_WITH_LIGHT.equals(name) || PhilipsConstant.GO_TO_SLEEPS.equals(name)) {
-					TypeOfAutomation type = TypeOfAutomation.TIMER;
-					if (PhilipsConstant.WAKE_UP_WITH_LIGHT.equals(name)) {
-						type = TypeOfAutomation.WAKE_UP_WITH_LIGHT;
-					}
-					if (PhilipsConstant.GO_TO_SLEEPS.equals(name)) {
-						type = TypeOfAutomation.GO_TO_SLEEP;
-					}
+			String name = idAndNameOfAutomationMap.get(automationResponse.getScriptId());
+			//Support three type are Timer, Go To Sleeps, and Wake up with light
+			TypeOfAutomation type = TypeOfAutomation.TIMER;
+			if (PhilipsConstant.TIMERS.equals(name) || PhilipsConstant.WAKE_UP_WITH_LIGHT.equals(name) || PhilipsConstant.GO_TO_SLEEPS.equals(name)) {
+				if (PhilipsConstant.WAKE_UP_WITH_LIGHT.equals(name)) {
+					type = TypeOfAutomation.WAKE_UP_WITH_LIGHT;
+				}
+				if (PhilipsConstant.GO_TO_SLEEPS.equals(name)) {
+					type = TypeOfAutomation.GO_TO_SLEEP;
+				}
+				if (isConfigManagement) {
 					populatePropertiesForAutomation(stats, advancedControllableProperties, automationResponse, type);
+				} else {
+					int status = PhilipsConstant.ZERO;
+					String value = automationResponse.getEnabled();
+					if (PhilipsConstant.TRUE.equalsIgnoreCase(value)) {
+						status = PhilipsConstant.NUMBER_ONE;
+					}
+					String property = PhilipsConstant.AUTOMATION + type.getName() + PhilipsConstant.DASH + automationResponse.getMetaData().getName() + PhilipsConstant.HASH + AutomationEnum.STATUS.getName();
+					stats.put(property, String.valueOf(status));
+					advancedControllableProperties.add(controlSwitch(stats, property, String.valueOf(status), PhilipsConstant.OFFLINE, PhilipsConstant.ONLINE));
 				}
-			} else {
-				int status = PhilipsConstant.ZERO;
-				String value = automationResponse.getEnabled();
-				if (PhilipsConstant.TRUE.equalsIgnoreCase(value)) {
-					status = PhilipsConstant.NUMBER_ONE;
-				}
-				String property = PhilipsConstant.AUTOMATION + PhilipsConstant.DASH + automationResponse.getMetaData().getName() + PhilipsConstant.HASH + AutomationEnum.STATUS.getName();
-				stats.put(property, String.valueOf(status));
-				advancedControllableProperties.add(controlSwitch(stats, property, String.valueOf(status), PhilipsConstant.OFFLINE, PhilipsConstant.ONLINE));
 			}
 		}
 	}
@@ -1463,7 +1469,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 * @param type the type is type of the device instance in TypeOfDeviceEnum
 	 */
 	private void populatePropertiesForAutomation(Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties, AutomationResponse automationData, TypeOfAutomation type) {
-		String groupName = PhilipsConstant.AUTOMATION + PhilipsConstant.DASH + automationData.getMetaData().getName();
+		String groupName = PhilipsConstant.AUTOMATION + type.getName() + PhilipsConstant.DASH + automationData.getMetaData().getName();
 		for (AutomationEnum automation : AutomationEnum.values()) {
 			String value;
 			String autoName = automationData.getMetaData().getName();
@@ -1559,8 +1565,11 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 
 							String[] minuteDropdown = EnumTypeHandler.getEnumNames(TimeMinuteEnum.class);
 							value = automationData.getConfigurations().getTimeAndRepeats().getTimePoint().getTimes().getMinute();
+							if (Integer.parseInt(value) < 10) {
+								value = PhilipsConstant.ZERO + value;
+							}
 							String minuteKey = groupName + PhilipsConstant.HASH + AutomationEnum.TIME_MINUTE.getName();
-							AdvancedControllableProperty minuteControlProperty = controlDropdown(stats, minuteDropdown, minuteKey, convertTimeFormat(Integer.parseInt(value)));
+							AdvancedControllableProperty minuteControlProperty = controlDropdown(stats, minuteDropdown, minuteKey, value);
 							addOrUpdateAdvanceControlProperties(advancedControllableProperties, minuteControlProperty);
 							int currentTime = PhilipsConstant.ZERO;
 							if (Integer.parseInt(hourValue) > 12) {
@@ -2650,7 +2659,8 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
 	 * @param isEditRoom is a boolean if true is edit room otherwise edit zone
 	 */
-	private void populateControlPropertiesForRoomAndZone(String property, String value, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties, boolean isEditRoom) {
+	private void populateControlPropertiesForRoomAndZone(String property, String value, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties,
+			boolean isEditRoom) {
 		String[] propertyList = property.split(PhilipsConstant.HASH);
 		String propertyGroup = propertyList[0];
 		String key = propertyList[1];
@@ -2986,19 +2996,19 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			timeAndRepeat.setTimePoint(timePoint);
 			config.setTimeAndRepeats(timeAndRepeat);
 		}
-		String finalScriptName = scriptName;
-		Optional<ScriptAutomationResponse> timer = scriptAutomationList.stream().filter(item -> item.getMetadata().getName().equalsIgnoreCase(finalScriptName)).findFirst();
-		timer.ifPresent(scriptAutomationResponse -> automationRequest.setScriptId(scriptAutomationResponse.getId()));
 
 		// check name automation exits
 		if (!PhilipsConstant.CREATE_AUTOMATION.equals(property)) {
-			String nameValue = property.substring(PhilipsConstant.AUTOMATION.length() + 1);
+			String nameValue = property.substring(property.indexOf(PhilipsConstant.DASH) + 1);
 			Optional<AutomationResponse> automationResponse = automationList.stream().filter(item -> item.getMetaData().getName().equals(nameValue)).findFirst();
 			automationResponse.ifPresent(response -> automationRequest.setId(response.getId()));
 			if (!name.equals(nameValue)) {
 				isAutomationNameExisting(name);
 			}
 		} else {
+			String finalScriptName = scriptName;
+			Optional<ScriptAutomationResponse> timer = scriptAutomationList.stream().filter(item -> item.getMetadata().getName().equalsIgnoreCase(finalScriptName)).findFirst();
+			timer.ifPresent(scriptAutomationResponse -> automationRequest.setScriptId(scriptAutomationResponse.getId()));
 			isAutomationNameExisting(name);
 		}
 		return automationRequest;
