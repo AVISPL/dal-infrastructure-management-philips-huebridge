@@ -143,7 +143,7 @@ public class AutomationResponse {
 	public String toString() {
 		String metaDataValue = EnumTypeHandler.getFormatNameByColonValue(metaData.toString(), "metadata", true);
 		String configurationValue = EnumTypeHandler.getFormatNameByColonValue(configurations.toString(), "configuration", true);
-		String script = StringUtils.isNotNullOrEmpty(scriptId) ? "" : String.format(",%s", EnumTypeHandler.getFormatNameByColonValue(scriptId, "script_id", false));
+		String script = StringUtils.isNullOrEmpty(scriptId) ? "" : String.format(",%s", EnumTypeHandler.getFormatNameByColonValue(scriptId, "script_id", false));
 		String enabledValue = EnumTypeHandler.getFormatNameByColonValue(enabled, "enabled", false);
 		enabledValue = enabledValue.replace("\"False\"", "false").replace("\"True\"", "true");
 

@@ -19,6 +19,9 @@ public class PhilipsConstant {
 	public static String MOTION_SENSOR = "motion";
 	public static String DEVICE_POWER = "device_power";
 	public static String STATUS = "status";
+	public static String BRIGHTNESS = "brightness";
+	public static String CONNECTED = "connected";
+	public static String COLOR_TEMPERATURE = "colorTemperature(K)";
 	public static String EMPTY_STRING = "";
 	public static String SPACE = " ";
 	public static String HASH = "#";
@@ -96,7 +99,7 @@ public class PhilipsConstant {
 	public static int MAX_COLOR_TEMPERATURE = 500;
 
 	// Data loader constants
-	public static int	MIN_POLLING_INTERVAL = 1;
+	public static int MIN_POLLING_INTERVAL = 1;
 	public static int MAX_THREAD_QUANTITY = 8;
 	public static final int MIN_THREAD_QUANTITY = 1;
 	public static int MAX_DEVICE_QUANTITY_PER_THREAD = 8;

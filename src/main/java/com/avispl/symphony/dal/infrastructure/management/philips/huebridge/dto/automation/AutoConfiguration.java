@@ -4,9 +4,12 @@
 
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonAlias;
 
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.EnumTypeHandler;
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.PhilipsConstant;
 import com.avispl.symphony.dal.util.StringUtils;
 
 /**
@@ -186,11 +189,11 @@ public class AutoConfiguration {
 
 	@Override
 	public String toString() {
-		String durationValue = "";
-		String endBrightnessValue = "";
-		String endState = "";
-		String styleValue = "";
-		String whatTime = "";
+		String durationValue = PhilipsConstant.EMPTY_STRING;
+		String endBrightnessValue = PhilipsConstant.EMPTY_STRING;
+		String endState = PhilipsConstant.EMPTY_STRING;
+		String styleValue = PhilipsConstant.EMPTY_STRING;
+		String whatTime;
 		if (duration != null && !StringUtils.isNullOrEmpty(duration.getSeconds())) {
 			durationValue = EnumTypeHandler.getFormatNameByColonValue(duration.toString(), "duration", true);
 			StringBuilder deviceGroup = new StringBuilder();
@@ -212,7 +215,11 @@ public class AutoConfiguration {
 		}
 		StringBuilder stringBuilder = new StringBuilder();
 		for (Location locationItem : location) {
-			stringBuilder.append(locationItem.toString());
+			String values = locationItem.toString();
+			if (!Objects.equals(locationItem, location[location.length - 1])) {
+				values = String.format("%s,", locationItem);
+			}
+			stringBuilder.append(values);
 		}
 		String locationValue = EnumTypeHandler.getFormatNameByColonValue(String.format("[%s],", stringBuilder), "where", true);
 		durationValue = StringUtils.isNullOrEmpty(durationValue) ? durationValue : String.format("%s,", durationValue);

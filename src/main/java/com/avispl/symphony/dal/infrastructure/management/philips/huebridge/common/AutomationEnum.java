@@ -31,7 +31,7 @@ public enum AutomationEnum {
 	END_WITH("EndWith"),
 	STYLE("Style"),
 	END_BRIGHTNESS("EndBrightness"),
-	FADE_DURATION_HOUR("FadeDurationTime"),
+	FADE_DURATION_HOUR("FadeDurationHour"),
 	FADE_DURATION_MINUTE("FadeDurationMinute"),
 	DELETE("Delete"),
 	APPLY_CHANGE("ApplyChange"),
