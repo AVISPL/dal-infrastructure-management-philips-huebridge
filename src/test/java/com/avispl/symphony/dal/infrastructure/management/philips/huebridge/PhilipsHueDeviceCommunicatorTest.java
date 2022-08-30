@@ -1583,7 +1583,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "Automation-Go to sleep1#Name";
+		String property = "AutomationGoToSleep-Go to sleep1#Name";
 		String value = "New auto";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
@@ -1591,7 +1591,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
-		Assert.assertEquals("True", stats.get("Automation-Go to sleep1#Edited"));
+		Assert.assertEquals("True", stats.get("AutomationGoToSleep-Go to sleep1#Edited"));
 		Assert.assertEquals(value, stats.get(property));
 	}
 
@@ -1612,7 +1612,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "Automation-Go to sleep1#FadeDuration";
+		String property = "AutomationGoToSleep-Go to sleep1#FadeDuration";
 		String value = "0";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
@@ -1620,7 +1620,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
-		Assert.assertEquals("True", stats.get("Automation-Go to sleep1#Edited"));
+		Assert.assertEquals("True", stats.get("AutomationGoToSleep-Go to sleep1#Edited"));
 		Assert.assertEquals("10", stats.get(property));
 	}
 
@@ -1641,7 +1641,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "Automation-Go to sleep1#FadeDuration";
+		String property = "AutomationGoToSleep-Go to sleep1#FadeDuration";
 		String value = "5401";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
@@ -1649,7 +1649,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
-		Assert.assertEquals("True", stats.get("Automation-Go to sleep1#Edited"));
+		Assert.assertEquals("True", stats.get("AutomationGoToSleep-Go to sleep1#Edited"));
 		Assert.assertEquals("5400", stats.get(property));
 	}
 
@@ -1670,14 +1670,14 @@ public class PhilipsHueDeviceCommunicatorTest {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "Automation-Go to sleep1#TimeCurrent";
+		String property = "AutomationGoToSleep-Go to sleep1#TimeCurrent";
 		String value = "AM";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
-		Assert.assertEquals("True", stats.get("Automation-Go to sleep1#Edited"));
+		Assert.assertEquals("True", stats.get("AutomationGoToSleep-Go to sleep1#Edited"));
 		Assert.assertEquals(value, stats.get(property));
 	}
 
@@ -1698,14 +1698,14 @@ public class PhilipsHueDeviceCommunicatorTest {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "Automation-Go to sleep1#TimeHour";
+		String property = "AutomationGoToSleep-Go to sleep1#TimeHour";
 		String value = "08";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
-		Assert.assertEquals("True", stats.get("Automation-Go to sleep1#Edited"));
+		Assert.assertEquals("True", stats.get("AutomationGoToSleep-Go to sleep1#Edited"));
 		Assert.assertEquals(value, stats.get(property));
 	}
 
@@ -1726,14 +1726,14 @@ public class PhilipsHueDeviceCommunicatorTest {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "Automation-Go to sleep1#TimeMinute";
+		String property = "AutomationGoToSleep-Go to sleep1#TimeMinute";
 		String value = "08";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
-		Assert.assertEquals("True", stats.get("Automation-Go to sleep1#Edited"));
+		Assert.assertEquals("True", stats.get("AutomationGoToSleep-Go to sleep1#Edited"));
 		Assert.assertEquals(value, stats.get(property));
 	}
 
@@ -1754,14 +1754,14 @@ public class PhilipsHueDeviceCommunicatorTest {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "Automation-Go to sleep1#Type";
+		String property = "AutomationGoToSleep-Go to sleep1#Type";
 		String value = "Room";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
-		Assert.assertEquals("True", stats.get("Automation-Go to sleep1#Edited"));
+		Assert.assertEquals("True", stats.get("AutomationGoToSleep-Go to sleep1#Edited"));
 		Assert.assertEquals(value, stats.get(property));
 	}
 
@@ -1782,14 +1782,14 @@ public class PhilipsHueDeviceCommunicatorTest {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "Automation-Go to sleep1#Repeat";
+		String property = "AutomationGoToSleep-Go to sleep1#Repeat";
 		String value = "0";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
-		Assert.assertEquals("True", stats.get("Automation-Go to sleep1#Edited"));
+		Assert.assertEquals("True", stats.get("AutomationGoToSleep-Go to sleep1#Edited"));
 		Assert.assertEquals(value, stats.get(property));
 	}
 
@@ -1812,14 +1812,14 @@ public class PhilipsHueDeviceCommunicatorTest {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "Automation-Go to sleep1#Repeat";
+		String property = "AutomationGoToSleep-Go to sleep1#Repeat";
 		String value = "1";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
-		Assert.assertEquals("True", stats.get("Automation-Go to sleep1#Edited"));
+		Assert.assertEquals("True", stats.get("AutomationGoToSleep-Go to sleep1#Edited"));
 		Assert.assertEquals(value, stats.get(property));
 	}
 
@@ -1839,20 +1839,20 @@ public class PhilipsHueDeviceCommunicatorTest {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "Automation-Go to sleep1#Repeat6";
+		String property = "AutomationGoToSleep-Go to sleep1#Repeat6";
 		String value = "None";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
-		property = "Automation-Go to sleep1#RepeatAdd";
+		property = "AutomationGoToSleep-Go to sleep1#RepeatAdd";
 		value = "1";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
-		Assert.assertEquals("True", stats.get("Automation-Go to sleep1#Edited"));
-		Assert.assertNotNull(stats.get("Automation-Go to sleep1#Repeat6"));
+		Assert.assertEquals("True", stats.get("AutomationGoToSleep-Go to sleep1#Edited"));
+		Assert.assertNotNull(stats.get("AutomationGoToSleep-Go to sleep1#Repeat6"));
 	}
 
 	/**
@@ -1871,15 +1871,15 @@ public class PhilipsHueDeviceCommunicatorTest {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "Automation-Go to sleep1#ZoneAdd";
+		String property = "AutomationGoToSleep-Go to sleep1#ZoneAdd";
 		String value = "1";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
-		Assert.assertEquals("True", stats.get("Automation-Go to sleep1#Edited"));
-		Assert.assertNotNull(stats.get("Automation-Go to sleep1#Zone1"));
+		Assert.assertEquals("True", stats.get("AutomationGoToSleep-Go to sleep1#Edited"));
+		Assert.assertNotNull(stats.get("AutomationGoToSleep-Go to sleep1#Zone1"));
 	}
 
 	/**
@@ -1893,15 +1893,20 @@ public class PhilipsHueDeviceCommunicatorTest {
 		testEditAutomationWithZoneAdd();
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
-		String property = "Automation-Go to sleep1#ApplyChange";
-		String value = "1";
+		String property = "AutomationGoToSleep-Go to sleep1#Name";
+		String value = "Go to sleep11";
 		ControllableProperty controllableProperty = new ControllableProperty();
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+		 property = "AutomationGoToSleep-Go to sleep1#ApplyChange";
+		 value = "1";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
-		Assert.assertEquals("False", stats.get("Automation-Go to sleep1#Edited"));
+		Assert.assertEquals("False", stats.get("AutomationGoToSleep-Go to sleep1#Edited"));
 	}
 
 	//Filter----------------------------------------------------------------------------------------------------------------

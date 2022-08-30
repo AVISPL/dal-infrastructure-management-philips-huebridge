@@ -51,6 +51,10 @@ public enum ControllingMetric {
 				return metric;
 			}
 			if (name.contains(PhilipsConstant.DASH)) {
+				//Handle case property is Automation{AutomationType}
+				if (name.length() > PhilipsConstant.AUTOMATION.length() && PhilipsConstant.AUTOMATION.equalsIgnoreCase(name.substring(0, PhilipsConstant.AUTOMATION.length()))) {
+					return ControllingMetric.AUTOMATION;
+				}
 				String currentName = name.substring(0, name.indexOf(PhilipsConstant.DASH));
 				if (metric.getName().equalsIgnoreCase(currentName)) {
 					return metric;

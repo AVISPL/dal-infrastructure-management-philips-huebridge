@@ -14,7 +14,7 @@ public enum EndStateEnum {
 
 	LIGHT_OFF("Light Off", "turn_off"),
 	WARM_NIGHT_LIGHT("Warm Night Light", "nightlight"),
-	DIMMED_LIGHT("Dimmed Light", "dimmed_light"),
+	DIMMED_LIGHT("Dimmed Light", "minimum_brightness"),
 	;
 
 	/**
