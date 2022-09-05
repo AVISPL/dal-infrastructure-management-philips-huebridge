@@ -37,6 +37,7 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.commo
  * Created on 8/3/2022
  * @since 1.0.0
  */
+@Tag("Mock")
 public class PhilipsHueDeviceCommunicatorTest {
 	static PhilipsHueDeviceCommunicator philipsHueDeviceCommunicator;
 	private static final int HTTP_PORT = 8088;
@@ -87,7 +88,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect get monitoring data successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testSystemInfoMonitoring() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -106,7 +106,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect get Network info monitoring data successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testNetworkInfoMonitoring() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -125,7 +124,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect get Network info monitoring data successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testSystemMonitoringNoneValue() throws Exception {
 		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.BRIDGE)).thenReturn("/bridge-none");
@@ -146,7 +144,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect get Network info monitoring data successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testNetworkInfoMonitoringNoneValue() throws Exception {
 		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.CONFIG)).thenReturn("/config-none");
@@ -168,7 +165,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create room name successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateRoomName() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -194,7 +190,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create room type successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateRoomType() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -220,7 +215,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create room with device0 successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateRoomWithDevice0() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -246,7 +240,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create room add new successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateRoomAddNewDevice() throws Exception {
 		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.ROOMS)).thenReturn("/clip/v2/resource/room-add-device");
@@ -273,7 +266,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create room add new throw exception
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateRoomAddNewDeviceError() throws Exception {
 		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.ROOMS)).thenReturn(PhilipsURL.ROOMS.getUrl());
@@ -295,7 +287,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create room CancelChange successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateCancelChange() throws Exception {
 		testCreateRoomName();
@@ -319,7 +310,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create room successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateRoom() throws Exception {
 		testCreateRoomName();
@@ -369,7 +359,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect control room name successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testControlRoomName() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -395,7 +384,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect control room type successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testControlRoomType() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -421,7 +409,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect control room status successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testControlRoomStatus() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -448,7 +435,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect control room with device0 successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testControlRoomWithDevice0() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -474,7 +460,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect control room add new successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testControlRoomAddNewDevice() throws Exception {
 		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.ROOMS)).thenReturn("/clip/v2/resource/room-add-device");
@@ -501,7 +486,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect control room add new throw exception
 	 */
-	@Tag("Mock")
 	@Test
 	void testControlRoomAddNewDeviceError() throws Exception {
 		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.ROOMS)).thenReturn(PhilipsURL.ROOMS.getUrl());
@@ -523,7 +507,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect control delete room successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testControlDeleteRoom() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -549,7 +532,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect control room CancelChange successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testControlCancelChange() throws Exception {
 		testControlRoomName();
@@ -573,7 +555,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect control room ApplyChange edd=it room successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testControlApplyChange() throws Exception {
 		testControlRoomName();
@@ -624,7 +605,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create Zone name successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateZoneName() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -650,7 +630,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create Zone type successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateZoneType() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -676,7 +655,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create Zone with device0 successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateZoneWithDevice0() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -702,7 +680,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create Zone add new successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateZoneAddNewDevice() throws Exception {
 		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.ZONES)).thenReturn("/clip/v2/resource/Zone-add-device");
@@ -734,7 +711,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create Zone add new throw exception
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateZoneAddNewDeviceError() throws Exception {
 		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.ZONES)).thenReturn(PhilipsURL.ZONES.getUrl());
@@ -758,7 +734,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create Zone CancelChange successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateZoneCancelChange() throws Exception {
 		testCreateZoneName();
@@ -782,7 +757,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create Zone successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateZone() throws Exception {
 		testCreateZoneName();
@@ -832,7 +806,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect control Zone name successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testControlZoneName() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -858,7 +831,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect control Zone type successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testControlZoneType() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -884,7 +856,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect control Zone status successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testControlZoneStatus() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -911,7 +882,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect control Zone with device0 successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testControlZoneWithDevice0() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -937,7 +907,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect control Zone add new successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testControlZoneAddNewDevice() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -971,7 +940,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect control Zone add new throw exception
 	 */
-	@Tag("Mock")
 	@Test
 	void testControlZoneAddNewDeviceError() throws Exception {
 		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.ZONES)).thenReturn(PhilipsURL.ZONES.getUrl());
@@ -995,7 +963,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect control delete Zone successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testControlDeleteZone() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -1021,7 +988,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect control Zone CancelChange successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testControlZoneCancelChange() throws Exception {
 		testControlZoneName();
@@ -1045,7 +1011,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect control Zone ApplyChange edd=it Zone successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testControlZoneApplyChange() throws Exception {
 		testControlZoneName();
@@ -1096,7 +1061,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create automation with property is Name successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateAutomationWithName() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -1120,7 +1084,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create automation with property is Repeat Enable add new repeat successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateAutomationWithRepeatEnableAddNewRepeat() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -1149,7 +1112,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create automation with property Type is Device successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateAutomationWithTypeIsDevice() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -1173,7 +1135,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create automation with property Type is Device add new device successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateAutomationWithTypeIsDeviceAddNewDevice() throws Exception {
 		testCreateAutomationWithTypeIsDevice();
@@ -1198,7 +1159,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create automation with property Type is Device add new device throw exception
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateAutomationWithTypeIsDeviceAddNewDeviceThrowException() throws Exception {
 		testCreateAutomationWithTypeIsDevice();
@@ -1220,7 +1180,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create automation with property Type is Room successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateAutomationWithTypeIsRoom() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -1244,7 +1203,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create automation with property Type is Room add new Room successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateAutomationWithTypeIsRoomAddNewRoom() throws Exception {
 		testCreateAutomationWithTypeIsDevice();
@@ -1274,7 +1232,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create automation with property Type is Room add new Room throw exception
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateAutomationWithTypeIsRoomAddNewRoomThrowException() throws Exception {
 		testCreateAutomationWithTypeIsDevice();
@@ -1300,7 +1257,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create automation with property Zone is Room successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateAutomationWithTypeIsZone() throws Exception {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -1325,7 +1281,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create automation with property Type is Zone add new Zone successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateAutomationWithTypeIsZoneAddNewZone() throws Exception {
 		testCreateAutomationWithTypeIsDevice();
@@ -1356,7 +1311,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create automation with property Type is Zone add new Zone throw exception
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateAutomationWithTypeIsRoomAddNewDeviceThrowException() throws Exception {
 		testCreateAutomationWithTypeIsDevice();
@@ -1386,7 +1340,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create automation with type timer and device type successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateAutoWithApplyChangeTypeTimerDevice() throws Exception {
 		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.DEVICE)).thenReturn(PhilipsURL.DEVICE.getUrl() + "-automation");
@@ -1441,7 +1394,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create automation with type go to sleeps and room type successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateAutoWithApplyChangeTypeGoToSleepRoom() throws Exception {
 		mock.reset();
@@ -1505,7 +1457,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect create automation with type wake up with light and zone type successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testCreateAutoWithApplyChangeTypeWakeUpWithLightZone() throws Exception {
 		mock.reset();
@@ -1571,7 +1522,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect edit automation with property is Name successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testEditAutomationWithPropertyName() throws Exception {
 		mock.reset();
@@ -1600,7 +1550,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect edit automation with FadeDuration with min value is 10 successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testEditAutomationWithFadeDurationeMinValue() throws Exception {
 		mock.reset();
@@ -1629,7 +1578,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect edit automation with FadeDuratione with max value is 5400 successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testEditAutomationWithFadeDurationeMaxValue() throws Exception {
 		mock.reset();
@@ -1658,7 +1606,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect edit automation with TimeCurrent successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testEditAutomationWithTimeCurrent() throws Exception {
 		mock.reset();
@@ -1686,7 +1633,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect edit automation with TimeHour successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testEditAutomationWithTimeHour() throws Exception {
 		mock.reset();
@@ -1714,7 +1660,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect edit automation with TimeMinute successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testEditAutomationWithTimeMinute() throws Exception {
 		mock.reset();
@@ -1742,7 +1687,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect edit automation with type is room successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testEditAutomationWithIsRoom() throws Exception {
 		mock.reset();
@@ -1770,7 +1714,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect edit automation with Repeat Disable successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testEditAutomationWithRepeatDisable() throws Exception {
 		mock.reset();
@@ -1799,7 +1742,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect edit automation with Repeat Disable successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testEditAutomationWithRepeatEnable() throws Exception {
 		testEditAutomationWithRepeatDisable();
@@ -1828,7 +1770,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect edit automation with Repeat add successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testEditAutomationWithRepeatAdd() throws Exception {
 		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.DEVICE)).thenReturn(PhilipsURL.DEVICE.getUrl() + "-automation");
@@ -1860,7 +1801,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect edit automation with Repeat Disable successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testEditAutomationWithZoneAdd() throws Exception {
 		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.DEVICE)).thenReturn(PhilipsURL.DEVICE.getUrl() + "-automation");
@@ -1887,7 +1827,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect edit automation with ApplyChange successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testEditAutomationWithApplyChange() throws Exception {
 		testEditAutomationWithZoneAdd();
@@ -1899,8 +1838,8 @@ public class PhilipsHueDeviceCommunicatorTest {
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
-		 property = "AutomationGoToSleep-Go to sleep1#ApplyChange";
-		 value = "1";
+		property = "AutomationGoToSleep-Go to sleep1#ApplyChange";
+		value = "1";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
@@ -1916,7 +1855,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect filter successfully with first index of zoneList
 	 */
-	@Tag("Mock")
 	@Test
 	void testFilterDeviceByZoneCaseSuccessFilter() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
@@ -1933,7 +1871,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect filter successfully have device in zone
 	 */
-	@Tag("Mock")
 	@Test
 	void testFilterDeviceByZoneCaseNotSpecifyFilter() throws Exception {
 		// Test filter when zone is specified but its value is empty. In that case we will take first index of zoneList
@@ -1949,7 +1886,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect filter successfully have device in zone
 	 */
-	@Tag("Mock")
 	@Test
 	void testFilterDeviceByZoneCaseEmptyZoneName() throws Exception {
 		// Test filter when zone is specified but its value is empty. In that case we will take first index of zoneList
@@ -1966,7 +1902,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect filter successfully with device exits in room
 	 */
-	@Tag("Mock")
 	@Test
 	void testFilterDeviceByZoneCaseInvalidZoneName() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
@@ -1983,7 +1918,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect filter successfully with device exits in room
 	 */
-	@Tag("Mock")
 	@Test
 	void testFilterDeviceByRoomNameCaseSuccessFilter() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
@@ -2001,7 +1935,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect filter successfully with device exits in room
 	 */
-	@Tag("Mock")
 	@Test
 	void testFilterDeviceByRoomNameCaseSuccessFilterTwo() throws Exception {
 		philipsHueDeviceCommunicator.destroy();
@@ -2017,7 +1950,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect filter successfully list device exits in room
 	 */
-	@Tag("Mock")
 	@Test
 	void testFilterDeviceByRoomNameCaseSuccessFilterThree() throws Exception {
 		philipsHueDeviceCommunicator.destroy();
@@ -2033,7 +1965,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect filter successfully list device exits in room
 	 */
-	@Tag("Mock")
 	@Test
 	void testFilterDeviceByRoomNameCaseSuccessFilterFour() throws Exception {
 		philipsHueDeviceCommunicator.destroy();
@@ -2049,7 +1980,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect filter successfully list device in room not exit
 	 */
-	@Tag("Mock")
 	@Test
 	void testFilterDeviceByRoomNameCaseInvalidRoomName() throws Exception {
 		philipsHueDeviceCommunicator.destroy();
@@ -2065,7 +1995,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect filter successfully list device in room not exit
 	 */
-	@Tag("Mock")
 	@Test
 	void testFilterDeviceByRoomNameCaseInvalidFormat() throws Exception {
 		philipsHueDeviceCommunicator.destroy();
@@ -2081,7 +2010,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect filter successfully with device have type light
 	 */
-	@Tag("Mock")
 	@Test
 	void testFilterDeviceByDeviceTypeCaseSuccessFilter() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
@@ -2102,7 +2030,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect filter successfully with device
 	 */
-	@Tag("Mock")
 	@Test
 	void testFilterDeviceByDeviceTypeCaseSuccessFilterTwo() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
@@ -2123,7 +2050,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect filter successfully with device have type button
 	 */
-	@Tag("Mock")
 	@Test
 	void testFilterDeviceByDeviceTypeCaseSuccessFilterThree() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
@@ -2144,7 +2070,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect filter successfully with list device empty
 	 */
-	@Tag("Mock")
 	@Test
 	void testFilterDeviceByDeviceTypeFailCaseTypeNotExists() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
@@ -2162,7 +2087,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect filter successfully
 	 */
-	@Tag("Mock")
 	@Test
 	void testFilterDeviceByDeviceNameCaseSuccessFilter() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
@@ -2183,7 +2107,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect filter successfully with list device
 	 */
-	@Tag("Mock")
 	@Test
 	void testFilterDeviceByDeviceNameCaseSuccessFilterTwo() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
@@ -2204,7 +2127,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect filter successfully with device
 	 */
-	@Tag("Mock")
 	@Test
 	void testFilterDeviceByDeviceNameCaseSuccessFilterThree() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
@@ -2225,7 +2147,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect list device empty
 	 */
-	@Tag("Mock")
 	@Test
 	void testFilterDeviceByDeviceNameFailCaseNameNotExists() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
@@ -2243,7 +2164,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	 *
 	 * Expect filter successfully with list device
 	 */
-	@Tag("Mock")
 	@Test
 	void testFilterDeviceOverall() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
@@ -2259,6 +2179,116 @@ public class PhilipsHueDeviceCommunicatorTest {
 		for (AggregatedDevice device :
 				retrieveMultipleStatistics) {
 			Assertions.assertTrue(device.getDeviceName().equals("Hue ambiance lamp"));
+		}
+	}
+
+	//Aggregated device------------------------------------------------------------------------------------------------------
+
+	/**
+	 * Test control aggregated device with device is light
+	 *
+	 * Expect control successfully
+	 */
+	@Test
+	void testChangeBrightnessForLight() throws Exception {
+		mock.reset();
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.DEVICE)).thenReturn(PhilipsURL.DEVICE.getUrl() + "-color-light");
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.ZIGBEE_CONNECTIVITY)).thenReturn(PhilipsURL.ZIGBEE_CONNECTIVITY.getUrl() + "-color-light");
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.LIGHT)).thenReturn(PhilipsURL.LIGHT.getUrl());
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.ROOMS)).thenReturn(PhilipsURL.ROOMS.getUrl() + "-color-light");
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.ZONES)).thenReturn(PhilipsURL.ZONES.getUrl() + "-color-light");
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.AUTOMATION)).thenReturn(PhilipsURL.AUTOMATION.getUrl());
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.SCRIPT_ID)).thenReturn(PhilipsURL.SCRIPT_ID.getUrl() + "-automation");
+		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		Thread.sleep(30000);
+		philipsHueDeviceCommunicator.retrieveMultipleStatistics();
+		String property = "brightness";
+		String value = "100.0";
+		String deviceID = "677ecc8d-b277-4849-b5ab-2b6e30d8b531";
+		ControllableProperty controllableProperty = new ControllableProperty();
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(value);
+		controllableProperty.setDeviceId(deviceID);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+		philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		Thread.sleep(30000);
+		List<AggregatedDevice> deviceList = philipsHueDeviceCommunicator.retrieveMultipleStatistics();
+		for (AggregatedDevice aggregatedDevice : deviceList) {
+			if (aggregatedDevice.getDeviceId().equals(deviceID)) {
+				Assertions.assertEquals("100.0", aggregatedDevice.getProperties().get("brightness"));
+			}
+		}
+	}
+
+	/**
+	 * Test control aggregated device with device is light status
+	 *
+	 * Expect control status successfully
+	 */
+	@Test
+	void testChangStatusForLight() throws Exception {
+		mock.reset();
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.DEVICE)).thenReturn(PhilipsURL.DEVICE.getUrl() + "-color-light");
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.ZIGBEE_CONNECTIVITY)).thenReturn(PhilipsURL.ZIGBEE_CONNECTIVITY.getUrl() + "-color-light");
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.LIGHT)).thenReturn(PhilipsURL.LIGHT.getUrl());
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.ROOMS)).thenReturn(PhilipsURL.ROOMS.getUrl() + "-color-light");
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.ZONES)).thenReturn(PhilipsURL.ZONES.getUrl() + "-color-light");
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.AUTOMATION)).thenReturn(PhilipsURL.AUTOMATION.getUrl());
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.SCRIPT_ID)).thenReturn(PhilipsURL.SCRIPT_ID.getUrl() + "-automation");
+		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		Thread.sleep(30000);
+		philipsHueDeviceCommunicator.retrieveMultipleStatistics();
+		String property = "status";
+		String value = "0";
+		String deviceID = "677ecc8d-b277-4849-b5ab-2b6e30d8b531";
+		ControllableProperty controllableProperty = new ControllableProperty();
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(value);
+		controllableProperty.setDeviceId(deviceID);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+		Thread.sleep(30000);
+		List<AggregatedDevice> deviceList = philipsHueDeviceCommunicator.retrieveMultipleStatistics();
+		for (AggregatedDevice aggregatedDevice : deviceList) {
+			if (aggregatedDevice.getDeviceId().equals(deviceID)) {
+				Assertions.assertEquals("0", aggregatedDevice.getProperties().get("status"));
+			}
+		}
+	}
+
+	/**
+	 * Test control aggregated device with device is light change colorTemperature(K)
+	 *
+	 * Expect control colorTemperature(K) successfully
+	 */
+	@Test
+	void testChangColorTemperatureForLight() throws Exception {
+		mock.reset();
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.DEVICE)).thenReturn(PhilipsURL.DEVICE.getUrl() + "-color-light");
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.ZIGBEE_CONNECTIVITY)).thenReturn(PhilipsURL.ZIGBEE_CONNECTIVITY.getUrl() + "-color-light");
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.LIGHT)).thenReturn(PhilipsURL.LIGHT.getUrl());
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.ROOMS)).thenReturn(PhilipsURL.ROOMS.getUrl() + "-color-light");
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.ZONES)).thenReturn(PhilipsURL.ZONES.getUrl() + "-color-light");
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.AUTOMATION)).thenReturn(PhilipsURL.AUTOMATION.getUrl());
+		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.SCRIPT_ID)).thenReturn(PhilipsURL.SCRIPT_ID.getUrl() + "-automation");
+		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		Thread.sleep(30000);
+		philipsHueDeviceCommunicator.retrieveMultipleStatistics();
+		String property = "colorTemperature(K)";
+		String value = "366";
+		String deviceID = "677ecc8d-b277-4849-b5ab-2b6e30d8b531";
+		ControllableProperty controllableProperty = new ControllableProperty();
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(value);
+		controllableProperty.setDeviceId(deviceID);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+		philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		Thread.sleep(30000);
+		List<AggregatedDevice> deviceList = philipsHueDeviceCommunicator.retrieveMultipleStatistics();
+		for (AggregatedDevice aggregatedDevice : deviceList) {
+			if (aggregatedDevice.getDeviceId().equals(deviceID)) {
+				Assertions.assertEquals("366", aggregatedDevice.getProperties().get("colorTemperature(K)"));
+			}
 		}
 	}
 }

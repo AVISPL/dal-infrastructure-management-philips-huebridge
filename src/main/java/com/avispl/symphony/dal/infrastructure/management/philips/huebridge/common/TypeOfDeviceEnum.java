@@ -15,7 +15,6 @@ public enum TypeOfDeviceEnum {
 	DEVICE("Device"),
 	ROOM("Room"),
 	ZONE("Zone"),
-	NONE("None"),
 	;
 
 	/**

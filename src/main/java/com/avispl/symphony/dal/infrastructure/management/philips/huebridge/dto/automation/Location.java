@@ -3,8 +3,6 @@
  */
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -69,12 +67,14 @@ public class Location {
 		String itemsValue = PhilipsConstant.EMPTY_STRING;
 		if (items != null) {
 			StringBuilder stringBuilder = new StringBuilder();
+			int itemIndex = 0;
 			for (Group item : items) {
 				String values = item.toString();
-				if (!Objects.equals(item, items[items.length - 1])) {
+				if (items.length - 1 != itemIndex) {
 					values = String.format("%s,", item);
 				}
 				stringBuilder.append(values);
+				itemIndex++;
 			}
 			itemsValue = String.format(",%s", EnumTypeHandler.getFormatNameByColonValue(String.format("[%s]", stringBuilder), "items", true));
 		}

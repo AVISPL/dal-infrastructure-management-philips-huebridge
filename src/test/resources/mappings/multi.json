@@ -453,6 +453,110 @@
           "Content-Type": "application/json"
         }
       }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/clip/v2/resource/light/7ac57d14-65cc-4711-b280-cde1ff272c003"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"type\": \"light\",\n            \"id\": \"7ac57d14-65cc-4711-b280-cde1ff272c003\",\n            \"id_v1\": \"/lights/12\",\n            \"metadata\": {\n                \"name\": \"Light color\"\n            },\n            \"on\": {\n                \"on\": true\n            },\n            \"dimming\": {\n                \"brightness\": 100.0\n            },\n            \"color_temperature\": {\n                \"mirek\": 366\n            },\n            \"color\": {\n                \"gamut\": {\n                    \"blue\": {\n                        \"x\": 0.1532,\n                        \"y\": 0.0475\n                    },\n                    \"green\": {\n                        \"x\": 0.17,\n                        \"y\": 0.7\n                    },\n                    \"red\": {\n                        \"x\": 0.6915,\n                        \"y\": 0.3083\n                    }\n                },\n                \"gamut_type\": \"C\",\n                \"xy\": {\n                    \"x\": 0.4575,\n                    \"y\": 0.4099\n                }\n            }\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/clip/v2/resource/device-color-light"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"id\": \"541c699c-4876-494e-ae94-2e57b8f9bc81\",\n            \"id_v1\": \"\",\n            \"product_data\": {\n                \"model_id\": \"BSB002\",\n                \"manufacturer_name\": \"Signify Netherlands B.V.\",\n                \"product_name\": \"Philips hue\",\n                \"product_archetype\": \"bridge_v2\",\n                \"certified\": true,\n                \"software_version\": \"1.53.1953090030\"\n            },\n            \"metadata\": {\n                \"name\": \"Philips hue\",\n                \"archetype\": \"bridge_v2\"\n            },\n            \"identify\": {},\n            \"services\": [\n                {\n                    \"rid\": \"4fe00071-bb56-442c-9c32-7de591a83c32\",\n                    \"rtype\": \"bridge\"\n                },\n                {\n                    \"rid\": \"01691a89-6c0c-4c6b-bae7-080a906b41c5\",\n                    \"rtype\": \"zigbee_connectivity\"\n                },\n                {\n                    \"rid\": \"b5e5fcf6-88ec-45d9-9fb0-76c1113c1e38\",\n                    \"rtype\": \"entertainment\"\n                }\n            ],\n            \"type\": \"device\"\n        },\n        {\n            \"id\": \"677ecc8d-b277-4849-b5ab-2b6e30d8b531\",\n            \"id_v1\": \"/lights/1\",\n            \"product_data\": {\n                \"model_id\": \"LTA001\",\n                \"manufacturer_name\": \"Signify Netherlands B.V.\",\n                \"product_name\": \"Hue ambiance lamp\",\n                \"product_archetype\": \"sultan_bulb\",\n                \"certified\": true,\n                \"software_version\": \"1.93.11\",\n                \"hardware_platform_type\": \"100b-112\"\n            },\n            \"metadata\": {\n                \"name\": \"Light 1\",\n                \"archetype\": \"sultan_bulb\"\n            },\n            \"identify\": {},\n            \"services\": [\n                {\n                    \"rid\": \"852eb47a-61c3-4345-8b69-c7af4f527a95\",\n                    \"rtype\": \"light\"\n                },\n                {\n                    \"rid\": \"55d22eb1-b2dc-40ee-9a45-7638e4c5f4b7\",\n                    \"rtype\": \"zigbee_connectivity\"\n                }\n            ],\n            \"type\": \"device\"\n        },\n        {\n            \"id\": \"fffb3918-7402-4bf8-ac29-65dc56cf5e14\",\n            \"id_v1\": \"/sensors/2\",\n            \"product_data\": {\n                \"model_id\": \"RWL021\",\n                \"manufacturer_name\": \"Signify Netherlands B.V.\",\n                \"product_name\": \"Hue dimmer switch\",\n                \"product_archetype\": \"unknown_archetype\",\n                \"certified\": true,\n                \"software_version\": \"1.1.28573\",\n                \"hardware_platform_type\": \"100b-109\"\n            },\n            \"metadata\": {\n                \"name\": \"Hue dimmer switch 1\",\n                \"archetype\": \"unknown_archetype\"\n            },\n            \"services\": [\n                {\n                    \"rid\": \"886d732e-8071-4931-9f2c-ff66ed59b309\",\n                    \"rtype\": \"button\"\n                },\n                {\n                    \"rid\": \"a25577ab-6dee-4347-8088-6b92c0d38f4a\",\n                    \"rtype\": \"button\"\n                },\n                {\n                    \"rid\": \"5819a792-ff6d-44ec-b48c-96a1ca967537\",\n                    \"rtype\": \"button\"\n                },\n                {\n                    \"rid\": \"4b87bdd0-68ed-44de-98d0-6629dfcaace9\",\n                    \"rtype\": \"button\"\n                },\n                {\n                    \"rid\": \"b8bf5187-486b-42f1-8a55-56c63258a924\",\n                    \"rtype\": \"device_power\"\n                },\n                {\n                    \"rid\": \"de3a2772-4844-4deb-ae80-b200cdc38933\",\n                    \"rtype\": \"zigbee_connectivity\"\n                }\n            ],\n            \"type\": \"device\"\n        },\n        {\n            \"id\": \"bd22ceb5-e7b4-4ec3-90f4-3e362de7c2b5\",\n            \"id_v1\": \"/lights/5\",\n            \"product_data\": {\n                \"model_id\": \"LTA001\",\n                \"manufacturer_name\": \"Signify Netherlands B.V.\",\n                \"product_name\": \"Hue ambiance lamp\",\n                \"product_archetype\": \"sultan_bulb\",\n                \"certified\": true,\n                \"software_version\": \"1.93.11\",\n                \"hardware_platform_type\": \"100b-112\"\n            },\n            \"metadata\": {\n                \"name\": \"Hue ambiance lamp 2\",\n                \"archetype\": \"sultan_bulb\"\n            },\n            \"identify\": {},\n            \"services\": [\n                {\n                    \"rid\": \"7ac57d14-65cc-4711-b280-cde1ff272c74\",\n                    \"rtype\": \"light\"\n                },\n                {\n                    \"rid\": \"81133c4d-1595-47df-b817-0bc9099c5881\",\n                    \"rtype\": \"zigbee_connectivity\"\n                }\n            ],\n            \"type\": \"device\"\n        },\n        {\n            \"id\": \"bd22ceb5-e7b4-4ec3-90f4-3e362de7c2bb\",\n            \"id_v1\": \"/lights/12\",\n            \"product_data\": {\n                \"model_id\": \"LTA001\",\n                \"manufacturer_name\": \"Signify Netherlands B.V.\",\n                \"product_name\": \"Light Color\",\n                \"product_archetype\": \"sultan_bulb\",\n                \"certified\": true,\n                \"software_version\": \"1.93.11\",\n                \"hardware_platform_type\": \"100b-112\"\n            },\n            \"metadata\": {\n                \"name\": \"Light Color\",\n                \"archetype\": \"sultan_bulb\"\n            },\n            \"identify\": {},\n            \"services\": [\n                {\n                    \"rid\": \"7ac57d14-65cc-4711-b280-cde1ff272c003\",\n                    \"rtype\": \"light\"\n                },\n                {\n                    \"rid\": \"81133c4d-1595-47df-b817-0bc9099c5800\",\n                    \"rtype\": \"zigbee_connectivity\"\n                }\n            ],\n            \"type\": \"device\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/clip/v2/resource/zigbee_connectivity-color-light"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"id\": \"01691a89-6c0c-4c6b-bae7-080a906b41c5\",\n            \"id_v1\": \"\",\n            \"owner\": {\n                \"rid\": \"541c699c-4876-494e-ae94-2e57b8f9bc81\",\n                \"rtype\": \"device\"\n            },\n            \"status\": \"connected\",\n            \"mac_address\": \"00:17:88:01:05:32:c7:cd\",\n            \"type\": \"zigbee_connectivity\"\n        },\n        {\n            \"id\": \"55d22eb1-b2dc-40ee-9a45-7638e4c5f4b7\",\n            \"id_v1\": \"/lights/1\",\n            \"owner\": {\n                \"rid\": \"677ecc8d-b277-4849-b5ab-2b6e30d8b531\",\n                \"rtype\": \"device\"\n            },\n            \"status\": \"connected\",\n            \"mac_address\": \"00:17:88:01:08:a7:d0:0c\",\n            \"type\": \"zigbee_connectivity\"\n        },\n        {\n            \"id\": \"de3a2772-4844-4deb-ae80-b200cdc38933\",\n            \"id_v1\": \"/sensors/2\",\n            \"owner\": {\n                \"rid\": \"fffb3918-7402-4bf8-ac29-65dc56cf5e14\",\n                \"rtype\": \"device\"\n            },\n            \"status\": \"connected\",\n            \"mac_address\": \"00:17:88:01:08:70:4e:95\",\n            \"type\": \"zigbee_connectivity\"\n        },\n        {\n            \"id\": \"81133c4d-1595-47df-b817-0bc9099c5881\",\n            \"id_v1\": \"/lights/5\",\n            \"owner\": {\n                \"rid\": \"bd22ceb5-e7b4-4ec3-90f4-3e362de7c2b5\",\n                \"rtype\": \"device\"\n            },\n            \"status\": \"connected\",\n            \"mac_address\": \"00:17:88:01:08:b1:f7:a2\",\n            \"type\": \"zigbee_connectivity\"\n        },\n         {\n            \"id\": \"81133c4d-1595-47df-b817-0bc9099c5800\",\n            \"id_v1\": \"/lights/12\",\n            \"owner\": {\n                \"rid\": \"bd22ceb5-e7b4-4ec3-90f4-3e362de7c2bb\",\n                \"rtype\": \"device\"\n            },\n            \"status\": \"connected\",\n            \"mac_address\": \"00:17:88:01:08:b1:f7:m2\",\n            \"type\": \"zigbee_connectivity\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/clip/v2/resource/zone-color-light"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"id\": \"a3ad61f1-fe6e-4e5a-96bc-3e54e0b6d6dc\",\n            \"id_v1\": \"/groups/1\",\n            \"children\": [\n                {\n                    \"rid\": \"852eb47a-61c3-4345-8b69-c7af4f527a95\",\n                    \"rtype\": \"light\"\n                },\n                {\n                    \"rid\": \"7ac57d14-65cc-4711-b280-cde1ff272c74\",\n                    \"rtype\": \"light\"\n                },\n                {\n                    \"rid\": \"7ac57d14-65cc-4711-b280-cde1ff272c003\",\n                    \"rtype\": \"light\"\n                }\n            ],\n            \"services\": [\n                {\n                    \"rid\": \"f5ad7cb1-c44e-4192-9e2c-fc8cdb74a03a\",\n                    \"rtype\": \"grouped_light\"\n                }\n            ],\n            \"metadata\": {\n                \"name\": \"Downstairs\",\n                \"archetype\": \"downstairs\"\n            },\n            \"type\": \"zone\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/clip/v2/resource/room-color-light"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"id\": \"50fca7db-43da-4d2b-b4ab-f7fe5e676c7b\",\n            \"id_v1\": \"/groups/6\",\n            \"children\": [\n                {\n                    \"rid\": \"677ecc8d-b277-4849-b5ab-2b6e30d8b531\",\n                    \"rtype\": \"device\"\n                },\n                {\n                    \"rid\": \"bd22ceb5-e7b4-4ec3-90f4-3e362de7c2b5\",\n                    \"rtype\": \"device\"\n                },\n                {\n                    \"rid\": \"bd22ceb5-e7b4-4ec3-90f4-3e362de7c2bb\",\n                    \"rtype\": \"device\"\n                }\n            ],\n            \"services\": [\n                {\n                    \"rid\": \"712440b2-6355-49e4-9015-89cdd42dcc3d\",\n                    \"rtype\": \"grouped_light\"\n                }\n            ],\n            \"metadata\": {\n                \"name\": \"Libraryyy\",\n                \"archetype\": \"dining\"\n            },\n            \"type\": \"room\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/clip/v2/resource/zigbee_connectivity/55d22eb1-b2dc-40ee-9a45-7638e4c5f4b7"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"id\": \"81133c4d-1595-47df-b817-0bc9099c5800\",\n            \"id_v1\": \"/lights/12\",\n            \"owner\": {\n                \"rid\": \"bd22ceb5-e7b4-4ec3-90f4-3e362de7c2bb\",\n                \"rtype\": \"device\"\n            },\n            \"status\": \"connected\",\n            \"mac_address\": \"00:17:88:01:08:b1:f7:m2\",\n            \"type\": \"zigbee_connectivity\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/clip/v2/resource/zigbee_connectivity/81133c4d-1595-47df-b817-0bc9099c5800"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"id\": \"81133c4d-1595-47df-b817-0bc9099c5881\",\n            \"id_v1\": \"/lights/5\",\n            \"owner\": {\n                \"rid\": \"bd22ceb5-e7b4-4ec3-90f4-3e362de7c2b5\",\n                \"rtype\": \"device\"\n            },\n            \"status\": \"connected\",\n            \"mac_address\": \"00:17:88:01:08:b1:f7:a2\",\n            \"type\": \"zigbee_connectivity\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/clip/v2/resource/zigbee_connectivity/81133c4d-1595-47df-b817-0bc9099c5881"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n    \"errors\": [],\n    \"data\": [\n        {\n            \"id\": \"81133c4d-1595-47df-b817-0bc9099c5800\",\n            \"id_v1\": \"/lights/12\",\n            \"owner\": {\n                \"rid\": \"bd22ceb5-e7b4-4ec3-90f4-3e362de7c2bb\",\n                \"rtype\": \"device\"\n            },\n            \"status\": \"connected\",\n            \"mac_address\": \"00:17:88:01:08:b1:f7:m2\",\n            \"type\": \"zigbee_connectivity\"\n        }\n    ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
     }
   ]
 }

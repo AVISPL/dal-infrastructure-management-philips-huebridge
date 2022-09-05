@@ -3,8 +3,6 @@
  */
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonAlias;
 
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.EnumTypeHandler;
@@ -196,10 +194,18 @@ public class AutoConfiguration {
 		if (duration != null && !StringUtils.isNullOrEmpty(duration.getSeconds())) {
 			durationValue = EnumTypeHandler.getFormatNameByColonValue(duration.toString(), "duration", true);
 			StringBuilder deviceGroup = new StringBuilder();
+			int locationIndex = 0;
 			for (Location locationItem : location) {
-				deviceGroup.append(String.format("%s}", EnumTypeHandler.getFormatNameByColonValue(locationItem.getGroup().toString(), "group", true)));
+				String values = EnumTypeHandler.getFormatNameByColonValue(locationItem.getGroup().toString(), "group", true);
+				if (location.length - 1 != locationIndex) {
+					whatTime = String.format("{\"blink\":{},%s},", values);
+				} else {
+					whatTime = String.format("{\"blink\":{},%s}", values);
+				}
+				deviceGroup.append(whatTime);
+				locationIndex++;
 			}
-			whatTime = EnumTypeHandler.getFormatNameByColonValue(String.format("[{\"blink\":{},%s]", deviceGroup), "what", true);
+			whatTime = EnumTypeHandler.getFormatNameByColonValue(String.format("[%s]", deviceGroup), "what", true);
 		} else {
 			whatTime = EnumTypeHandler.getFormatNameByColonValue(String.format("%s}", timeAndRepeats.toString()), "when", true);
 		}
@@ -213,12 +219,14 @@ public class AutoConfiguration {
 			endState = String.format(",%s", EnumTypeHandler.getFormatNameByColonValue(endWith, "end_state", false));
 		}
 		StringBuilder stringBuilder = new StringBuilder();
+		int locationIndex = 0;
 		for (Location locationItem : location) {
 			String values = locationItem.toString();
-			if (!Objects.equals(locationItem, location[location.length - 1])) {
+			if (location.length - 1 != locationIndex) {
 				values = String.format("%s,", values);
 			}
 			stringBuilder.append(values);
+			locationIndex++;
 		}
 		String locationValue = EnumTypeHandler.getFormatNameByColonValue(String.format("[%s],", stringBuilder), "where", true);
 		durationValue = StringUtils.isNullOrEmpty(durationValue) ? durationValue : String.format("%s,", durationValue);

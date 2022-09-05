@@ -65,8 +65,14 @@ public class TimeAndRepeat {
 	public String toString() {
 		String timePointValue = EnumTypeHandler.getFormatNameByColonValue(timePoint.toString(), "time_point", true);
 		StringBuilder stringBuilder = new StringBuilder();
+		int dayIndex = 0;
 		for (String day : days) {
-			stringBuilder.append(String.format(PhilipsConstant.FORMAT_PERCENT, day));
+			String dayValue = String.format(PhilipsConstant.FORMAT_PERCENT + ",", day);
+			if (dayIndex == days.length - 1) {
+				dayValue = String.format(PhilipsConstant.FORMAT_PERCENT, day);
+			}
+			stringBuilder.append(dayValue);
+			dayIndex++;
 		}
 		String value = days == null ? PhilipsConstant.EMPTY_STRING : EnumTypeHandler.getFormatNameByColonValue(String.format("[%s]", stringBuilder), "recurrence_days", true);
 		value = days == null || days.length == 0 ? PhilipsConstant.EMPTY_STRING : String.format(",%s", value);

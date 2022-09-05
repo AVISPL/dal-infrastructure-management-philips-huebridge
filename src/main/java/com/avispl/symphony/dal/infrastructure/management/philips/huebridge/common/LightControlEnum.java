@@ -15,6 +15,9 @@ public enum LightControlEnum {
 	BRIGHTNESS("brightness"),
 	COLOR_TEMPERATURE("colorTemperature(K)"),
 	STATUS("status"),
+	COLOR_CONTROL("ColorControl"),
+	HUE_CONTROL("ColorControlHue"),
+	SATURATION_CONTROL("ColorControlSaturation"),
 	;
 
 	/**
@@ -25,6 +28,7 @@ public enum LightControlEnum {
 	LightControlEnum(String name) {
 		this.name = name;
 	}
+
 	private final String name;
 
 	/**
