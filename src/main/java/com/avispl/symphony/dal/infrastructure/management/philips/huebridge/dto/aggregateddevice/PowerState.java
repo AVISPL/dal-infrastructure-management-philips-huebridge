@@ -20,7 +20,7 @@ public class PowerState {
 	private String batteryLevel;
 
 	/**
-	 * Retrieves {@code {@link #batteryLevel}}
+	 * Retrieves {@link #batteryLevel}
 	 *
 	 * @return value of {@link #batteryLevel}
 	 */
@@ -29,9 +29,9 @@ public class PowerState {
 	}
 
 	/**
-	 * Sets {@code batteryLevel}
+	 * Sets {@link #batteryLevel} value
 	 *
-	 * @param batteryLevel the {@code java.lang.String} field
+	 * @param batteryLevel new value of {@link #batteryLevel}
 	 */
 	public void setBatteryLevel(String batteryLevel) {
 		this.batteryLevel = batteryLevel;

@@ -38,7 +38,7 @@ public enum PhilipsURL {
 	}
 
 	/**
-	 * Retrieves {@code {@link #url}}
+	 * Retrieves {@link #url}
 	 *
 	 * @return value of {@link #url}
 	 */

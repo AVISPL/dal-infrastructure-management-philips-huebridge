@@ -19,7 +19,7 @@ public class MetaDataAutomation {
 	private String category;
 
 	/**
-	 * Retrieves {@code {@link #name}}
+	 * Retrieves {@link #name}
 	 *
 	 * @return value of {@link #name}
 	 */
@@ -28,16 +28,16 @@ public class MetaDataAutomation {
 	}
 
 	/**
-	 * Sets {@code name}
+	 * Sets {@link #name} value
 	 *
-	 * @param name the {@code java.lang.String} field
+	 * @param name new value of {@link #name}
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Retrieves {@code {@link #category}}
+	 * Retrieves {@link #category}
 	 *
 	 * @return value of {@link #category}
 	 */
@@ -46,9 +46,9 @@ public class MetaDataAutomation {
 	}
 
 	/**
-	 * Sets {@code category}
+	 * Sets {@link #category} value
 	 *
-	 * @param category the {@code java.lang.String} field
+	 * @param category new value of {@link #category}
 	 */
 	public void setCategory(String category) {
 		this.category = category;

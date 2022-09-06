@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2022 AVI-SPL, Inc. All Rights Reserved.
+ */
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto;
 
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.GroupLightResponse;
@@ -14,7 +17,7 @@ public class GroupLightWrapper {
 	private GroupLightResponse[] data;
 
 	/**
-	 * Retrieves {@code {@link #data}}
+	 * Retrieves {@link #data}
 	 *
 	 * @return value of {@link #data}
 	 */
@@ -23,9 +26,9 @@ public class GroupLightWrapper {
 	}
 
 	/**
-	 * Sets {@code data}
+	 * Sets {@link #data} value
 	 *
-	 * @param data the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.GroupLightResponse[]} field
+	 * @param data new value of {@link #data}
 	 */
 	public void setData(GroupLightResponse[] data) {
 		this.data = data;

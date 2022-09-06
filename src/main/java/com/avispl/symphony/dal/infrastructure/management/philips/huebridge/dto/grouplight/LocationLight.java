@@ -23,7 +23,7 @@ public class LocationLight {
 	private String axisY;
 
 	/**
-	 * Retrieves {@code {@link #axisX}}
+	 * Retrieves {@link #axisX}
 	 *
 	 * @return value of {@link #axisX}
 	 */
@@ -32,16 +32,16 @@ public class LocationLight {
 	}
 
 	/**
-	 * Sets {@code axisX}
+	 * Sets {@link #axisX} value
 	 *
-	 * @param axisX the {@code java.lang.String} field
+	 * @param axisX new value of {@link #axisX}
 	 */
 	public void setAxisX(String axisX) {
 		this.axisX = axisX;
 	}
 
 	/**
-	 * Retrieves {@code {@link #axisY}}
+	 * Retrieves {@link #axisY}
 	 *
 	 * @return value of {@link #axisY}
 	 */
@@ -50,9 +50,9 @@ public class LocationLight {
 	}
 
 	/**
-	 * Sets {@code axisY}
+	 * Sets {@link #axisY} value
 	 *
-	 * @param axisY the {@code java.lang.String} field
+	 * @param axisY new value of {@link #axisY}
 	 */
 	public void setAxisY(String axisY) {
 		this.axisY = axisY;

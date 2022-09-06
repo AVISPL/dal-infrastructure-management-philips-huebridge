@@ -19,7 +19,7 @@ public class GamutColor {
 	private LocationLight red;
 
 	/**
-	 * Retrieves {@code {@link #blue}}
+	 * Retrieves {@link #blue}
 	 *
 	 * @return value of {@link #blue}
 	 */
@@ -28,16 +28,16 @@ public class GamutColor {
 	}
 
 	/**
-	 * Sets {@code blue}
+	 * Sets {@link #blue} value
 	 *
-	 * @param blue the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.LocationLight} field
+	 * @param blue new value of {@link #blue}
 	 */
 	public void setBlue(LocationLight blue) {
 		this.blue = blue;
 	}
 
 	/**
-	 * Retrieves {@code {@link #green}}
+	 * Retrieves {@link #green}
 	 *
 	 * @return value of {@link #green}
 	 */
@@ -46,16 +46,16 @@ public class GamutColor {
 	}
 
 	/**
-	 * Sets {@code green}
+	 * Sets {@link #green} value
 	 *
-	 * @param green the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.LocationLight} field
+	 * @param green new value of {@link #green}
 	 */
 	public void setGreen(LocationLight green) {
 		this.green = green;
 	}
 
 	/**
-	 * Retrieves {@code {@link #red}}
+	 * Retrieves {@link #red}
 	 *
 	 * @return value of {@link #red}
 	 */
@@ -64,9 +64,9 @@ public class GamutColor {
 	}
 
 	/**
-	 * Sets {@code red}
+	 * Sets {@link #red} value
 	 *
-	 * @param red the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.LocationLight} field
+	 * @param red new value of {@link #red}
 	 */
 	public void setRed(LocationLight red) {
 		this.red = red;

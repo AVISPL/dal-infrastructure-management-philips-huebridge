@@ -32,25 +32,7 @@ public class GroupLightResponse {
 	private ColorLight color;
 
 	/**
-	 * Retrieves {@code {@link #owner}}
-	 *
-	 * @return value of {@link #owner}
-	 */
-	public OwnerResponse getOwner() {
-		return owner;
-	}
-
-	/**
-	 * Sets {@code owner}
-	 *
-	 * @param owner the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.bridge.OwnerResponse} field
-	 */
-	public void setOwner(OwnerResponse owner) {
-		this.owner = owner;
-	}
-
-	/**
-	 * Retrieves {@code {@link #id}}
+	 * Retrieves {@link #id}
 	 *
 	 * @return value of {@link #id}
 	 */
@@ -59,16 +41,16 @@ public class GroupLightResponse {
 	}
 
 	/**
-	 * Sets {@code id}
+	 * Sets {@link #id} value
 	 *
-	 * @param id the {@code java.lang.String} field
+	 * @param id new value of {@link #id}
 	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
 	/**
-	 * Retrieves {@code {@link #dimming}}
+	 * Retrieves {@link #dimming}
 	 *
 	 * @return value of {@link #dimming}
 	 */
@@ -77,16 +59,16 @@ public class GroupLightResponse {
 	}
 
 	/**
-	 * Sets {@code dimming}
+	 * Sets {@link #dimming} value
 	 *
-	 * @param dimming the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.BrightnessLight} field
+	 * @param dimming new value of {@link #dimming}
 	 */
 	public void setDimming(BrightnessLight dimming) {
 		this.dimming = dimming;
 	}
 
 	/**
-	 * Retrieves {@code {@link #statusLight }}
+	 * Retrieves {@link #statusLight}
 	 *
 	 * @return value of {@link #statusLight}
 	 */
@@ -95,16 +77,16 @@ public class GroupLightResponse {
 	}
 
 	/**
-	 * Sets {@code on}
+	 * Sets {@link #statusLight} value
 	 *
-	 * @param statusLight the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.StatusLight} field
+	 * @param statusLight new value of {@link #statusLight}
 	 */
 	public void setStatusLight(StatusLight statusLight) {
 		this.statusLight = statusLight;
 	}
 
 	/**
-	 * Retrieves {@code {@link #temperature}}
+	 * Retrieves {@link #temperature}
 	 *
 	 * @return value of {@link #temperature}
 	 */
@@ -113,16 +95,34 @@ public class GroupLightResponse {
 	}
 
 	/**
-	 * Sets {@code temperature}
+	 * Sets {@link #temperature} value
 	 *
-	 * @param temperature the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.ColorTemperature} field
+	 * @param temperature new value of {@link #temperature}
 	 */
 	public void setTemperature(ColorTemperature temperature) {
 		this.temperature = temperature;
 	}
 
 	/**
-	 * Retrieves {@code {@link #color}}
+	 * Retrieves {@link #owner}
+	 *
+	 * @return value of {@link #owner}
+	 */
+	public OwnerResponse getOwner() {
+		return owner;
+	}
+
+	/**
+	 * Sets {@link #owner} value
+	 *
+	 * @param owner new value of {@link #owner}
+	 */
+	public void setOwner(OwnerResponse owner) {
+		this.owner = owner;
+	}
+
+	/**
+	 * Retrieves {@link #color}
 	 *
 	 * @return value of {@link #color}
 	 */
@@ -131,9 +131,9 @@ public class GroupLightResponse {
 	}
 
 	/**
-	 * Sets {@code color}
+	 * Sets {@link #color} value
 	 *
-	 * @param color the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.ColorLight} field
+	 * @param color new value of {@link #color}
 	 */
 	public void setColor(ColorLight color) {
 		this.color = color;

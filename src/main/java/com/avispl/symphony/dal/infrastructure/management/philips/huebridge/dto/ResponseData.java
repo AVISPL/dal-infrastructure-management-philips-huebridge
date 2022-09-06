@@ -22,7 +22,7 @@ public class ResponseData {
 	private ErrorsResponse[] errors;
 
 	/**
-	 * Retrieves {@code {@link #data}}
+	 * Retrieves {@link #data}
 	 *
 	 * @return value of {@link #data}
 	 */
@@ -31,16 +31,16 @@ public class ResponseData {
 	}
 
 	/**
-	 * Sets {@code data}
+	 * Sets {@link #data} value
 	 *
-	 * @param data the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.romandzone.Children[]} field
+	 * @param data new value of {@link #data}
 	 */
 	public void setData(Children[] data) {
 		this.data = data;
 	}
 
 	/**
-	 * Retrieves {@code {@link #errors}}
+	 * Retrieves {@link #errors}
 	 *
 	 * @return value of {@link #errors}
 	 */
@@ -49,9 +49,9 @@ public class ResponseData {
 	}
 
 	/**
-	 * Sets {@code errors}
+	 * Sets {@link #errors} value
 	 *
-	 * @param errors the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.responseData.ErrorsResponse[]} field
+	 * @param errors new value of {@link #errors}
 	 */
 	public void setErrors(ErrorsResponse[] errors) {
 		this.errors = errors;

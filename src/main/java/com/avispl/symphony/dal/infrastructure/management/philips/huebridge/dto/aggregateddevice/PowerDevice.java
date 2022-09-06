@@ -25,7 +25,7 @@ public class PowerDevice {
 	private String type;
 
 	/**
-	 * Retrieves {@code {@link #id}}
+	 * Retrieves {@link #id}
 	 *
 	 * @return value of {@link #id}
 	 */
@@ -34,16 +34,16 @@ public class PowerDevice {
 	}
 
 	/**
-	 * Sets {@code id}
+	 * Sets {@link #id} value
 	 *
-	 * @param id the {@code java.lang.String} field
+	 * @param id new value of {@link #id}
 	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
 	/**
-	 * Retrieves {@code {@link #owner}}
+	 * Retrieves {@link #owner}
 	 *
 	 * @return value of {@link #owner}
 	 */
@@ -52,16 +52,16 @@ public class PowerDevice {
 	}
 
 	/**
-	 * Sets {@code owner}
+	 * Sets {@link #owner} value
 	 *
-	 * @param owner the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.bridge.OwnerResponse} field
+	 * @param owner new value of {@link #owner}
 	 */
 	public void setOwner(OwnerResponse owner) {
 		this.owner = owner;
 	}
 
 	/**
-	 * Retrieves {@code {@link #powerState }}
+	 * Retrieves {@link #powerState}
 	 *
 	 * @return value of {@link #powerState}
 	 */
@@ -70,16 +70,16 @@ public class PowerDevice {
 	}
 
 	/**
-	 * Sets {@code power_state}
+	 * Sets {@link #powerState} value
 	 *
-	 * @param powerState the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.aggregateddevice.PowerState} field
+	 * @param powerState new value of {@link #powerState}
 	 */
 	public void setPowerState(PowerState powerState) {
 		this.powerState = powerState;
 	}
 
 	/**
-	 * Retrieves {@code {@link #type}}
+	 * Retrieves {@link #type}
 	 *
 	 * @return value of {@link #type}
 	 */
@@ -88,9 +88,9 @@ public class PowerDevice {
 	}
 
 	/**
-	 * Sets {@code type}
+	 * Sets {@link #type} value
 	 *
-	 * @param type the {@code java.lang.String} field
+	 * @param type new value of {@link #type}
 	 */
 	public void setType(String type) {
 		this.type = type;

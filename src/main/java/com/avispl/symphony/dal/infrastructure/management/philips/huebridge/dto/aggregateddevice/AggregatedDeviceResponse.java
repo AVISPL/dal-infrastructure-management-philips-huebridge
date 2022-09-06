@@ -29,7 +29,7 @@ public class AggregatedDeviceResponse {
 	private ProductData productData;
 
 	/**
-	 * Retrieves {@code {@link #id}}
+	 * Retrieves {@link #id}
 	 *
 	 * @return value of {@link #id}
 	 */
@@ -38,16 +38,16 @@ public class AggregatedDeviceResponse {
 	}
 
 	/**
-	 * Sets {@code id}
+	 * Sets {@link #id} value
 	 *
-	 * @param id the {@code java.lang.String} field
+	 * @param id new value of {@link #id}
 	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
 	/**
-	 * Retrieves {@code {@link #services}}
+	 * Retrieves {@link #services}
 	 *
 	 * @return value of {@link #services}
 	 */
@@ -56,34 +56,16 @@ public class AggregatedDeviceResponse {
 	}
 
 	/**
-	 * Sets {@code services}
+	 * Sets {@link #services} value
 	 *
-	 * @param services the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.Services[]} field
+	 * @param services new value of {@link #services}
 	 */
 	public void setServices(ServicesResponse[] services) {
 		this.services = services;
 	}
 
 	/**
-	 * Retrieves {@code {@link #productData}}
-	 *
-	 * @return value of {@link #productData}
-	 */
-	public ProductData getProductData() {
-		return productData;
-	}
-
-	/**
-	 * Sets {@code productData}
-	 *
-	 * @param productData the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.aggregateddevice.ProductData} field
-	 */
-	public void setProductData(ProductData productData) {
-		this.productData = productData;
-	}
-
-	/**
-	 * Retrieves {@code {@link #metaData}}
+	 * Retrieves {@link #metaData}
 	 *
 	 * @return value of {@link #metaData}
 	 */
@@ -92,11 +74,29 @@ public class AggregatedDeviceResponse {
 	}
 
 	/**
-	 * Sets {@code metaData}
+	 * Sets {@link #metaData} value
 	 *
-	 * @param metaData the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.romandzone.MetaData} field
+	 * @param metaData new value of {@link #metaData}
 	 */
 	public void setMetaData(MetaData metaData) {
 		this.metaData = metaData;
+	}
+
+	/**
+	 * Retrieves {@link #productData}
+	 *
+	 * @return value of {@link #productData}
+	 */
+	public ProductData getProductData() {
+		return productData;
+	}
+
+	/**
+	 * Sets {@link #productData} value
+	 *
+	 * @param productData new value of {@link #productData}
+	 */
+	public void setProductData(ProductData productData) {
+		this.productData = productData;
 	}
 }

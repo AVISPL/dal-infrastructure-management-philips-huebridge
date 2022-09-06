@@ -17,7 +17,7 @@ public class ZigbeeConnectivityWrapper {
 	private ZigbeeConnectivity[] data;
 
 	/**
-	 * Retrieves {@code {@link #data}}
+	 * Retrieves {@link #data}
 	 *
 	 * @return value of {@link #data}
 	 */
@@ -26,9 +26,9 @@ public class ZigbeeConnectivityWrapper {
 	}
 
 	/**
-	 * Sets {@code data}
+	 * Sets {@link #data} value
 	 *
-	 * @param data the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.zigbeeconnectivity.ZigbeeConnectivity[]} field
+	 * @param data new value of {@link #data}
 	 */
 	public void setData(ZigbeeConnectivity[] data) {
 		this.data = data;

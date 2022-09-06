@@ -31,7 +31,7 @@ public class MotionDevice {
 	private boolean status;
 
 	/**
-	 * Retrieves {@code {@link #id}}
+	 * Retrieves {@link #id}
 	 *
 	 * @return value of {@link #id}
 	 */
@@ -40,16 +40,16 @@ public class MotionDevice {
 	}
 
 	/**
-	 * Sets {@code id}
+	 * Sets {@link #id} value
 	 *
-	 * @param id the {@code java.lang.String} field
+	 * @param id new value of {@link #id}
 	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
 	/**
-	 * Retrieves {@code {@link #type}}
+	 * Retrieves {@link #type}
 	 *
 	 * @return value of {@link #type}
 	 */
@@ -58,16 +58,16 @@ public class MotionDevice {
 	}
 
 	/**
-	 * Sets {@code type}
+	 * Sets {@link #type} value
 	 *
-	 * @param type the {@code java.lang.String} field
+	 * @param type new value of {@link #type}
 	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
 	/**
-	 * Retrieves {@code {@link #owner}}
+	 * Retrieves {@link #owner}
 	 *
 	 * @return value of {@link #owner}
 	 */
@@ -76,16 +76,16 @@ public class MotionDevice {
 	}
 
 	/**
-	 * Sets {@code owner}
+	 * Sets {@link #owner} value
 	 *
-	 * @param owner the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.bridge.OwnerResponse} field
+	 * @param owner new value of {@link #owner}
 	 */
 	public void setOwner(OwnerResponse owner) {
 		this.owner = owner;
 	}
 
 	/**
-	 * Retrieves {@code {@link #motion}}
+	 * Retrieves {@link #motion}
 	 *
 	 * @return value of {@link #motion}
 	 */
@@ -94,16 +94,16 @@ public class MotionDevice {
 	}
 
 	/**
-	 * Sets {@code motion}
+	 * Sets {@link #motion} value
 	 *
-	 * @param motion the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.aggregateddevice.MotionDeviceDetails} field
+	 * @param motion new value of {@link #motion}
 	 */
 	public void setMotion(MotionDeviceDetails motion) {
 		this.motion = motion;
 	}
 
 	/**
-	 * Retrieves {@code {@link #status}}
+	 * Retrieves {@link #status}
 	 *
 	 * @return value of {@link #status}
 	 */
@@ -112,9 +112,9 @@ public class MotionDevice {
 	}
 
 	/**
-	 * Sets {@code status}
+	 * Sets {@link #status} value
 	 *
-	 * @param status the {@code boolean} field
+	 * @param status new value of {@link #status}
 	 */
 	public void setStatus(boolean status) {
 		this.status = status;

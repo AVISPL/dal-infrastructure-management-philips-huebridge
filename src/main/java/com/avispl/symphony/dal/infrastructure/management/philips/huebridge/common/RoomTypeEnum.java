@@ -70,7 +70,7 @@ public enum RoomTypeEnum {
 	}
 
 	/**
-	 * Retrieves {@code {@link #name}}
+	 * Retrieves {@link #name}
 	 *
 	 * @return value of {@link #name}
 	 */
@@ -79,7 +79,7 @@ public enum RoomTypeEnum {
 	}
 
 	/**
-	 * Retrieves {@code {@link #value}}
+	 * Retrieves {@link #value}
 	 *
 	 * @return value of {@link #value}
 	 */

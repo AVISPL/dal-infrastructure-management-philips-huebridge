@@ -13,7 +13,6 @@ public enum StyleEnum {
 
 	SUNRISE("Sunrise", "sunrise"),
 	FADE_TO_BRIGHT("Fade To Bright", "fade_to_bright"),
-	NONE("None", "None"),
 	;
 
 	/**
@@ -31,7 +30,7 @@ public enum StyleEnum {
 	private final String value;
 
 	/**
-	 * Retrieves {@code {@link #name}}
+	 * Retrieves {@link #name}
 	 *
 	 * @return value of {@link #name}
 	 */
@@ -40,7 +39,7 @@ public enum StyleEnum {
 	}
 
 	/**
-	 * Retrieves {@code {@link #value}}
+	 * Retrieves {@link #value}
 	 *
 	 * @return value of {@link #value}
 	 */

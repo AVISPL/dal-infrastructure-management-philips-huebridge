@@ -17,7 +17,7 @@ public class FadeDuration {
 	private String seconds;
 
 	/**
-	 * Retrieves {@code {@link #seconds}}
+	 * Retrieves {@link #seconds}
 	 *
 	 * @return value of {@link #seconds}
 	 */
@@ -26,9 +26,9 @@ public class FadeDuration {
 	}
 
 	/**
-	 * Sets {@code seconds}
+	 * Sets {@link #seconds} value
 	 *
-	 * @param seconds the {@code java.lang.String} field
+	 * @param seconds new value of {@link #seconds}
 	 */
 	public void setSeconds(String seconds) {
 		this.seconds = seconds;

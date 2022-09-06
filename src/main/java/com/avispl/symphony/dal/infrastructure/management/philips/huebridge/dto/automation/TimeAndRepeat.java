@@ -26,7 +26,7 @@ public class TimeAndRepeat {
 	private TimePoint timePoint;
 
 	/**
-	 * Retrieves {@code {@link #days}}
+	 * Retrieves {@link #days}
 	 *
 	 * @return value of {@link #days}
 	 */
@@ -35,16 +35,16 @@ public class TimeAndRepeat {
 	}
 
 	/**
-	 * Sets {@code days}
+	 * Sets {@link #days} value
 	 *
-	 * @param days the {@code java.lang.String[]} field
+	 * @param days new value of {@link #days}
 	 */
 	public void setDays(String[] days) {
 		this.days = days;
 	}
 
 	/**
-	 * Retrieves {@code {@link #timePoint}}
+	 * Retrieves {@link #timePoint}
 	 *
 	 * @return value of {@link #timePoint}
 	 */
@@ -53,9 +53,9 @@ public class TimeAndRepeat {
 	}
 
 	/**
-	 * Sets {@code timePoint}
+	 * Sets {@link #timePoint} value
 	 *
-	 * @param timePoint the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation.TimePoint} field
+	 * @param timePoint new value of {@link #timePoint}
 	 */
 	public void setTimePoint(TimePoint timePoint) {
 		this.timePoint = timePoint;

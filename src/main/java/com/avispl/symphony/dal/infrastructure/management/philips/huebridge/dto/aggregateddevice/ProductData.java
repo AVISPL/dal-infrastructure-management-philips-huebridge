@@ -35,7 +35,7 @@ public class ProductData {
 	private String name;
 
 	/**
-	 * Retrieves {@code {@link #manufacturer}}
+	 * Retrieves {@link #manufacturer}
 	 *
 	 * @return value of {@link #manufacturer}
 	 */
@@ -44,16 +44,16 @@ public class ProductData {
 	}
 
 	/**
-	 * Sets {@code manufacturer}
+	 * Sets {@link #manufacturer} value
 	 *
-	 * @param manufacturer the {@code java.lang.String} field
+	 * @param manufacturer new value of {@link #manufacturer}
 	 */
 	public void setManufacturer(String manufacturer) {
 		this.manufacturer = manufacturer;
 	}
 
 	/**
-	 * Retrieves {@code {@link #model}}
+	 * Retrieves {@link #model}
 	 *
 	 * @return value of {@link #model}
 	 */
@@ -62,16 +62,16 @@ public class ProductData {
 	}
 
 	/**
-	 * Sets {@code model}
+	 * Sets {@link #model} value
 	 *
-	 * @param model the {@code java.lang.String} field
+	 * @param model new value of {@link #model}
 	 */
 	public void setModel(String model) {
 		this.model = model;
 	}
 
 	/**
-	 * Retrieves {@code {@link #archetype}}
+	 * Retrieves {@link #archetype}
 	 *
 	 * @return value of {@link #archetype}
 	 */
@@ -80,16 +80,16 @@ public class ProductData {
 	}
 
 	/**
-	 * Sets {@code archetype}
+	 * Sets {@link #archetype} value
 	 *
-	 * @param archetype the {@code java.lang.String} field
+	 * @param archetype new value of {@link #archetype}
 	 */
 	public void setArchetype(String archetype) {
 		this.archetype = archetype;
 	}
 
 	/**
-	 * Retrieves {@code {@link #version}}
+	 * Retrieves {@link #version}
 	 *
 	 * @return value of {@link #version}
 	 */
@@ -98,16 +98,16 @@ public class ProductData {
 	}
 
 	/**
-	 * Sets {@code version}
+	 * Sets {@link #version} value
 	 *
-	 * @param version the {@code java.lang.String} field
+	 * @param version new value of {@link #version}
 	 */
 	public void setVersion(String version) {
 		this.version = version;
 	}
 
 	/**
-	 * Retrieves {@code {@link #name}}
+	 * Retrieves {@link #name}
 	 *
 	 * @return value of {@link #name}
 	 */
@@ -116,9 +116,9 @@ public class ProductData {
 	}
 
 	/**
-	 * Sets {@code name}
+	 * Sets {@link #name} value
 	 *
-	 * @param name the {@code java.lang.String} field
+	 * @param name new value of {@link #name}
 	 */
 	public void setName(String name) {
 		this.name = name;

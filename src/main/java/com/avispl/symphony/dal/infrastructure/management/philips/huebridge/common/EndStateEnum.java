@@ -32,7 +32,7 @@ public enum EndStateEnum {
 	private final String value;
 
 	/**
-	 * Retrieves {@code {@link #name}}
+	 * Retrieves {@link #name}
 	 *
 	 * @return value of {@link #name}
 	 */
@@ -41,7 +41,7 @@ public enum EndStateEnum {
 	}
 
 	/**
-	 * Retrieves {@code {@link #value}}
+	 * Retrieves {@link #value}
 	 *
 	 * @return value of {@link #value}
 	 */

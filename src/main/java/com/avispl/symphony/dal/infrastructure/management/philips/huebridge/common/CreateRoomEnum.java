@@ -30,7 +30,7 @@ public enum CreateRoomEnum {
 	private final String roomName;
 
 	/**
-	 * Retrieves {@code {@link #roomName }}
+	 * Retrieves {@link #roomName}
 	 *
 	 * @return value of {@link #roomName}
 	 */

@@ -22,7 +22,7 @@ public class MotionDeviceDetails {
 	private boolean motionDetected;
 
 	/**
-	 * Retrieves {@code {@link #motion}}
+	 * Retrieves {@link #motion}
 	 *
 	 * @return value of {@link #motion}
 	 */
@@ -31,16 +31,16 @@ public class MotionDeviceDetails {
 	}
 
 	/**
-	 * Sets {@code motion}
+	 * Sets {@link #motion} value
 	 *
-	 * @param motion the {@code boolean} field
+	 * @param motion new value of {@link #motion}
 	 */
 	public void setMotion(boolean motion) {
 		this.motion = motion;
 	}
 
 	/**
-	 * Retrieves {@code {@link #motionDetected}}
+	 * Retrieves {@link #motionDetected}
 	 *
 	 * @return value of {@link #motionDetected}
 	 */
@@ -49,9 +49,9 @@ public class MotionDeviceDetails {
 	}
 
 	/**
-	 * Sets {@code motionDetected}
+	 * Sets {@link #motionDetected} value
 	 *
-	 * @param motionDetected the {@code boolean} field
+	 * @param motionDetected new value of {@link #motionDetected}
 	 */
 	public void setMotionDetected(boolean motionDetected) {
 		this.motionDetected = motionDetected;

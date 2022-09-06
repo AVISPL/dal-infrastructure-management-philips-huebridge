@@ -17,7 +17,7 @@ public class AggregatorWrapper {
 	private AggregatedDeviceResponse[] data;
 
 	/**
-	 * Retrieves {@code {@link #data}}
+	 * Retrieves {@link #data}
 	 *
 	 * @return value of {@link #data}
 	 */
@@ -26,9 +26,9 @@ public class AggregatorWrapper {
 	}
 
 	/**
-	 * Sets {@code data}
+	 * Sets {@link #data} value
 	 *
-	 * @param data the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.aggregateddevice.AggregatorDeviceResponse[]} field
+	 * @param data new value of {@link #data}
 	 */
 	public void setData(AggregatedDeviceResponse[] data) {
 		this.data = data;

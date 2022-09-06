@@ -30,7 +30,7 @@ public class RoomAndZoneResponse {
 	private MetaData metaData;
 
 	/**
-	 * Retrieves {@code {@link #id}}
+	 * Retrieves {@link #id}
 	 *
 	 * @return value of {@link #id}
 	 */
@@ -39,52 +39,16 @@ public class RoomAndZoneResponse {
 	}
 
 	/**
-	 * Sets {@code id}
+	 * Sets {@link #id} value
 	 *
-	 * @param id the {@code java.lang.String} field
+	 * @param id new value of {@link #id}
 	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
 	/**
-	 * Retrieves {@code {@link #services}}
-	 *
-	 * @return value of {@link #services}
-	 */
-	public ServicesResponse[] getServices() {
-		return services;
-	}
-
-	/**
-	 * Sets {@code services}
-	 *
-	 * @param services the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.system.ServicesResponse[]} field
-	 */
-	public void setServices(ServicesResponse[] services) {
-		this.services = services;
-	}
-
-	/**
-	 * Retrieves {@code {@link #metaData}}
-	 *
-	 * @return value of {@link #metaData}
-	 */
-	public MetaData getMetaData() {
-		return metaData;
-	}
-
-	/**
-	 * Sets {@code metaData}
-	 *
-	 * @param metaData the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.romandzone.MetaData} field
-	 */
-	public void setMetaData(MetaData metaData) {
-		this.metaData = metaData;
-	}
-
-	/**
-	 * Retrieves {@code {@link #type}}
+	 * Retrieves {@link #type}
 	 *
 	 * @return value of {@link #type}
 	 */
@@ -93,16 +57,34 @@ public class RoomAndZoneResponse {
 	}
 
 	/**
-	 * Sets {@code type}
+	 * Sets {@link #type} value
 	 *
-	 * @param type the {@code java.lang.String} field
+	 * @param type new value of {@link #type}
 	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
 	/**
-	 * Retrieves {@code {@link #children}}
+	 * Retrieves {@link #services}
+	 *
+	 * @return value of {@link #services}
+	 */
+	public ServicesResponse[] getServices() {
+		return services;
+	}
+
+	/**
+	 * Sets {@link #services} value
+	 *
+	 * @param services new value of {@link #services}
+	 */
+	public void setServices(ServicesResponse[] services) {
+		this.services = services;
+	}
+
+	/**
+	 * Retrieves {@link #children}
 	 *
 	 * @return value of {@link #children}
 	 */
@@ -111,12 +93,30 @@ public class RoomAndZoneResponse {
 	}
 
 	/**
-	 * Sets {@code children}
+	 * Sets {@link #children} value
 	 *
-	 * @param children the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.romandzone.Children[]} field
+	 * @param children new value of {@link #children}
 	 */
 	public void setChildren(Children[] children) {
 		this.children = children;
+	}
+
+	/**
+	 * Retrieves {@link #metaData}
+	 *
+	 * @return value of {@link #metaData}
+	 */
+	public MetaData getMetaData() {
+		return metaData;
+	}
+
+	/**
+	 * Sets {@link #metaData} value
+	 *
+	 * @param metaData new value of {@link #metaData}
+	 */
+	public void setMetaData(MetaData metaData) {
+		this.metaData = metaData;
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class RoomAndZoneResponse {
 	 */
 	@Override
 	public String toString() {
-		String metaDataValue = EnumTypeHandler.getFormatNameByColonValue(metaData.toString(), "metadata",true);
+		String metaDataValue = EnumTypeHandler.getFormatNameByColonValue(metaData.toString(), "metadata", true);
 		String typeValue = EnumTypeHandler.getFormatNameByColonValue(type, "type", false);
 		String childrenValue;
 		String childrenItemValue = PhilipsConstant.EMPTY_STRING;
@@ -136,7 +136,7 @@ public class RoomAndZoneResponse {
 			childrenItemValue = childrenItemValue + children.toString();
 		}
 		childrenItemValue = String.format("[%s]", childrenItemValue);
-		childrenValue = EnumTypeHandler.getFormatNameByColonValue(childrenItemValue, "children",true);
+		childrenValue = EnumTypeHandler.getFormatNameByColonValue(childrenItemValue, "children", true);
 
 		return String.format("{%s,%s,%s}", metaDataValue, childrenValue, typeValue);
 	}

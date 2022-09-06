@@ -30,7 +30,7 @@ public enum AutomationEnum {
 	ZONE_ADD("ZoneAdd"),
 	END_WITH("EndWith"),
 	STYLE("Style"),
-	END_BRIGHTNESS("EndBrightness"),
+	END_BRIGHTNESS("MaximumBrightness"),
 	FADE_DURATION_HOUR("FadeDurationHour"),
 	FADE_DURATION_MINUTE("FadeDurationMinute"),
 	DELETE("Delete"),
@@ -49,7 +49,7 @@ public enum AutomationEnum {
 	private final String name;
 
 	/**
-	 * Retrieves {@code {@link #name}}
+	 * Retrieves {@link #name}
 	 *
 	 * @return value of {@link #name}
 	 */

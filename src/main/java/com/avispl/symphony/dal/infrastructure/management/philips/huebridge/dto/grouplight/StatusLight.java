@@ -20,7 +20,7 @@ public class StatusLight {
 	private boolean on;
 
 	/**
-	 * Retrieves {@code {@link #on}}
+	 * Retrieves {@link #on}
 	 *
 	 * @return value of {@link #on}
 	 */
@@ -29,9 +29,9 @@ public class StatusLight {
 	}
 
 	/**
-	 * Sets {@code on}
+	 * Sets {@link #on} value
 	 *
-	 * @param on the {@code boolean} field
+	 * @param on new value of {@link #on}
 	 */
 	public void setOn(boolean on) {
 		this.on = on;

@@ -74,6 +74,7 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.A
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.BridgeWrapper;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.DevicePowerWrapper;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.GroupLightWrapper;
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.LightWrapper;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.MotionSensorWrapper;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.NetworkInfoResponse;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.ResponseData;
@@ -99,6 +100,7 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.g
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.ColorTemperature;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.GroupLightResponse;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.StatusLight;
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.light.LightResponse;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.responseData.ErrorsResponse;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.romandzone.Children;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.romandzone.MetaData;
@@ -329,6 +331,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 * Map of aggregated device with key is deviceId, value is {@link AggregatedDevice}
 	 */
 	private ConcurrentHashMap<String, AggregatedDevice> aggregatedDeviceList = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<String, AggregatedDevice> cacheAggregatedDeviceList = new ConcurrentHashMap<>();
 	/**
 	 * Map of cached color light aggregated device with key is deviceId, value is HSV color of the light
 	 */
@@ -485,6 +488,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				retrieveDeviceDropdownList();
 				// retrieve device and filter devices in first monitoring cycle of polling interval
 				if (currentPhase.get() == localPollingInterval || currentPhase.get() == 0) {
+					cacheAggregatedDeviceList.clear();
 					retrieveDevices();
 					//Add filter device IDs
 					filterDeviceIds();
@@ -645,7 +649,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		if (!cachedColorLightAggregatedDevice.isEmpty()) {
 			for (Entry<String, float[]> cachedDevice : cachedColorLightAggregatedDevice.entrySet()
 			) {
-				AggregatedDevice newDevice = aggregatedDeviceList.get(cachedDevice.getKey());
+				AggregatedDevice newDevice = cacheAggregatedDeviceList.get(cachedDevice.getKey());
 				String dropdownValueInNewData = newDevice.getProperties().get(PhilipsConstant.COLOR_CONTROL);
 				if (!dropdownValueInNewData.equals(AggregatedDeviceColorControllingMetric.CUSTOM_COLOR)) {
 					float[] hsv = cachedDevice.getValue();
@@ -653,12 +657,12 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					List<AdvancedControllableProperty> advancedControllableProperties = newDevice.getControllableProperties();
 					String currentColor = AggregatedDeviceColorControllingMetric.CUSTOM_COLOR;
 					populateControlPropertiesForColorLight(stats, advancedControllableProperties, hsv, currentColor);
-					aggregatedDeviceList.get(cachedDevice.getKey()).setProperties(stats);
-					aggregatedDeviceList.get(cachedDevice.getKey()).setControllableProperties(advancedControllableProperties);
+					cacheAggregatedDeviceList.get(cachedDevice.getKey()).setProperties(stats);
+					cacheAggregatedDeviceList.get(cachedDevice.getKey()).setControllableProperties(advancedControllableProperties);
 				}
 			}
 		}
-		return aggregatedDeviceList.values().stream().collect(Collectors.toList());
+		return cacheAggregatedDeviceList.values().stream().collect(Collectors.toList());
 	}
 
 	/**
@@ -941,13 +945,13 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 * @param controllableProperty is ControllableProperty instance
 	 */
 	private void controlAggregatedDevice(ControllableProperty controllableProperty) {
-		Map<String, String> localStats = aggregatedDeviceList.get(controllableProperty.getDeviceId()).getProperties();
-		List<AdvancedControllableProperty> advancedControllableProperties = aggregatedDeviceList.get(controllableProperty.getDeviceId()).getControllableProperties();
+		Map<String, String> localStats = cacheAggregatedDeviceList.get(controllableProperty.getDeviceId()).getProperties();
+		List<AdvancedControllableProperty> advancedControllableProperties = cacheAggregatedDeviceList.get(controllableProperty.getDeviceId()).getControllableProperties();
 		String type = localStats.get(PhilipsConstant.DEVICE_TYPE);
 		String key = controllableProperty.getProperty();
 		String deviceId = controllableProperty.getDeviceId();
 		String value = String.valueOf(controllableProperty.getValue());
-		String deviceModel = aggregatedDeviceList.get(deviceId).getDeviceModel();
+		String deviceModel = cacheAggregatedDeviceList.get(deviceId).getDeviceModel();
 		deviceId = listMetadataDevice.get(deviceId).getServices()[0].getId();
 		if (PhilipsConstant.LIGHT.equalsIgnoreCase(type)) {
 			LightControlEnum lightProperty = EnumTypeHandler.getMetricOfEnumByName(LightControlEnum.class, key);
@@ -997,14 +1001,14 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					break;
 			}
 			updateValueForTheControllableProperty(key, value, localStats, advancedControllableProperties);
-			aggregatedDeviceList.get(controllableProperty.getDeviceId()).setControllableProperties(advancedControllableProperties);
+			cacheAggregatedDeviceList.get(controllableProperty.getDeviceId()).setControllableProperties(advancedControllableProperties);
 		}
 		if (PhilipsConstant.MOTION_SENSOR.equalsIgnoreCase(type)) {
 			MotionDevice motionDevice = new MotionDevice();
 			motionDevice.setStatus(!String.valueOf(PhilipsConstant.ZERO).equals(value));
 			sendRequestToControlAggregatedDevice(PhilipsUtil.getMonitorURL(PhilipsURL.MOTION_SENSOR), deviceId, motionDevice.toString());
 			updateValueForTheControllableProperty(key, value, localStats, advancedControllableProperties);
-			aggregatedDeviceList.get(controllableProperty.getDeviceId()).setControllableProperties(advancedControllableProperties);
+			cacheAggregatedDeviceList.get(controllableProperty.getDeviceId()).setControllableProperties(advancedControllableProperties);
 		}
 
 	}
@@ -1329,11 +1333,16 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				String type = listMetadataDevice.get(deviceId).getServices()[0].getType();
 				if (PhilipsConstant.LIGHT.equalsIgnoreCase(type)) {
 					retrieveDeviceWhereTypeIsLight(listMetadataDevice.get(deviceId));
-				} else if (PhilipsConstant.BUTTON.equalsIgnoreCase(type)) {
-					retrieveDeviceWhereTypeIsButton(listMetadataDevice.get(deviceId));
 				} else if (PhilipsConstant.MOTION_SENSOR.equalsIgnoreCase(type)) {
 					retrieveDeviceWhereTypeIsMotionSensor(listMetadataDevice.get(deviceId));
+				} else {
+					for (ServicesResponse serviceType : listMetadataDevice.get(deviceId).getServices()) {
+						if (PhilipsConstant.BUTTON.equalsIgnoreCase(serviceType.getType())) {
+							retrieveDeviceWhereTypeIsButton(listMetadataDevice.get(deviceId));
+						}
+					}
 				}
+				cacheAggregatedDeviceList.put(deviceId, aggregatedDeviceList.get(deviceId));
 				if (logger.isDebugEnabled()) {
 					Long time = System.currentTimeMillis() - startTime;
 					logger.debug(String.format("Finished fetch %s details info in worker thread: %s", aggregatedDeviceList.get(deviceId).getDeviceName(), time));
@@ -1398,6 +1407,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				String status = motionDevice.getMotion().isMotion() ? PhilipsConstant.ONLINE : PhilipsConstant.OFFLINE;
 				AdvancedControllableProperty statusControl = controlSwitch(oldProperties, PhilipsConstant.STATUS, status, PhilipsConstant.OFFLINE, PhilipsConstant.ONLINE);
 				advancedControllableProperties.add(statusControl);
+				aggregatedDeviceList.get(deviceID).setControllableProperties(advancedControllableProperties);
 			} else {
 				logger.error(String.format("%s button device type is empty", aggregatedDeviceList.get(deviceID).getDeviceName()));
 			}
@@ -1425,12 +1435,13 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				if (advancedControllableProperties == null) {
 					advancedControllableProperties = new LinkedList<>();
 				}
+				AggregatedDevice aggregatedDevice = aggregatedDeviceList.get(deviceID);
 				if (groupLightWrapper.getData()[0].getColor() != null) {
 					populateControlForColorLightDevices(groupLightResponse, oldProperties, advancedControllableProperties);
-					aggregatedDeviceList.get(deviceID).setControllableProperties(advancedControllableProperties);
+					aggregatedDevice.setControllableProperties(advancedControllableProperties);
 				} else {
 					populateControlForLightDevices(groupLightResponse, oldProperties, advancedControllableProperties);
-					aggregatedDeviceList.get(deviceID).setControllableProperties(advancedControllableProperties);
+					aggregatedDevice.setControllableProperties(advancedControllableProperties);
 				}
 			} else {
 				logger.error(String.format("%s light device is empty", aggregatedDeviceList.get(deviceID).getDeviceName()));
@@ -1647,7 +1658,11 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		if (!PhilipsConstant.REPEAT.equalsIgnoreCase(key) && key.contains(PhilipsConstant.REPEAT) && !AutomationEnum.REPEAT_ADD.getName().equals(key)) {
 			List<String> repeatDayDropdown = Arrays.stream(RepeatDayEnum.values()).map(RepeatDayEnum::getName).collect(Collectors.toList());
 			Map<String, String> repeatDay = repeatNameOfAutomationMap.get(propertyGroup);
+			if (repeatDay == null) {
+				repeatDay = new HashMap<>();
+			}
 			updateDeviceDropdownList(property, value, stats, advancedControllableProperties, repeatDayDropdown, repeatDay, PhilipsConstant.REPEAT_0);
+			repeatNameOfAutomationMap.put(propertyGroup, repeatDay);
 			isControlAddNew = true;
 		}
 		if (!PhilipsConstant.DEVICE.equalsIgnoreCase(key) && key.contains(PhilipsConstant.DEVICE) && !AutomationEnum.DEVICE_ADD.getName().equals(key)) {
@@ -1693,6 +1708,9 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		if (!isAddNewValue) {
 			AutomationEnum automationEnum = EnumTypeHandler.getMetricOfEnumByName(AutomationEnum.class, key);
 			Map<String, String> repeatDay = repeatNameOfAutomationMap.get(propertyGroup);
+			if (repeatDay == null) {
+				repeatDay = new HashMap<>();
+			}
 			switch (automationEnum) {
 				case NAME:
 				case TIME_HOUR:
@@ -2169,7 +2187,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 							hourControlProperty = controlDropdown(stats, hourDropdown, hourKey, convertTimeFormat(Integer.parseInt(hourValue)));
 							addOrUpdateAdvanceControlProperties(advancedControllableProperties, hourControlProperty);
 
-							minuteDropdown = EnumTypeHandler.getEnumNames(TimerHourEnum.class);
+							minuteDropdown = EnumTypeHandler.getEnumNames(TimeMinuteEnum.class);
 							value = automationData.getConfigurations().getTimeAndRepeats().getTimePoint().getTimes().getMinute();
 							minuteKey = groupName + PhilipsConstant.HASH + AutomationEnum.TIME_MINUTE.getName();
 							minuteControlProperty = controlDropdown(stats, minuteDropdown, minuteKey, convertTimeFormat(Integer.parseInt(value)));
@@ -2276,7 +2294,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				//Handle case value is bridge home
 				if (PhilipsConstant.BRIDGE_HOME.equalsIgnoreCase(locationItem.getGroup().getType())) {
 					deviceIndex = 0;
-					for (String value : allDeviceIdAndNameMap.values()) {
+					for (String value : deviceNameAndDeviceIdZoneMap.keySet()) {
 						if (PhilipsConstant.NONE.equals(value)) {
 							continue;
 						}
@@ -2288,6 +2306,8 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					String deviceAdd = groupName + PhilipsConstant.HASH + AutomationEnum.DEVICE_ADD.getName();
 					stats.put(deviceAdd, PhilipsConstant.EMPTY_STRING);
 					advancedControllableProperties.add(createButton(deviceAdd, PhilipsConstant.ADD, PhilipsConstant.ADDING, 0));
+					List<String> deviceOfMap = deviceNameAndDeviceIdZoneMap.keySet().stream().collect(Collectors.toList());
+					addRepeatDayForCreateAutomation(property, stats, advancedControllableProperties, deviceOfMap, device, PhilipsConstant.DEVICE);
 
 					String[] typeDropdown = EnumTypeHandler.getEnumNames(TypeOfDeviceEnum.class);
 					AdvancedControllableProperty typeControlProperty = controlDropdown(stats, typeDropdown, property, PhilipsConstant.DEVICE);
@@ -4051,6 +4071,30 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	}
 
 	/**
+	 * Retrieve list of lights
+	 *
+	 * @return Map of service id and device id
+	 */
+	private Map<String, String> retrieveLights() {
+		List<LightResponse> lightResponseList = new ArrayList<>();
+		Map<String, String> serviceIdAndDeviceId = new HashMap<>();
+		try {
+			LightWrapper lightWrapper = this.doGet(PhilipsUtil.getMonitorURL(PhilipsURL.LIGHT), LightWrapper.class);
+			if (lightWrapper != null && lightWrapper.getData() != null) {
+				Collections.addAll(lightResponseList, lightWrapper.getData());
+			} else {
+				throw new ResourceNotReachableException("List lights data is empty");
+			}
+		} catch (Exception e) {
+			logger.error(String.format("Error while retrieving list lights %s", e.getMessage()), e);
+		}
+		for (LightResponse lightResponse : lightResponseList) {
+			serviceIdAndDeviceId.put(lightResponse.getServiceId(), lightResponse.getOwner().getRid());
+		}
+		return serviceIdAndDeviceId;
+	}
+
+	/**
 	 * Retrieve all rooms
 	 */
 	private void retrieveGroupLight() {
@@ -4193,10 +4237,11 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				if (!PhilipsConstant.BRIDGE.equalsIgnoreCase(aggregatorDeviceResponse.getServices()[0].getType())) {
 					properties.put(PhilipsConstant.SOFTWARE_VERSION, aggregatorDeviceResponse.getProductData().getVersion());
 					properties.put(PhilipsConstant.DEVICE_TYPE, aggregatorDeviceResponse.getServices()[0].getType());
+					properties.put(PhilipsConstant.PRODUCT_NAME, aggregatorDeviceResponse.getProductData().getName());
 					aggregatedDevice.setDeviceId(aggregatorDeviceResponse.getId());
 					aggregatedDevice.setDeviceModel(aggregatorDeviceResponse.getProductData().getModel());
 					aggregatedDevice.setDeviceType(aggregatorDeviceResponse.getServices()[0].getType());
-					aggregatedDevice.setDeviceName(aggregatorDeviceResponse.getProductData().getName());
+					aggregatedDevice.setDeviceName(aggregatorDeviceResponse.getMetaData().getName());
 					aggregatedDevice.setProperties(properties);
 					aggregatedDeviceList.put(aggregatedDevice.getDeviceId(), aggregatedDevice);
 				}
@@ -4213,6 +4258,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	private void filterDeviceIds() {
 		ConcurrentHashMap<String, AggregatedDevice> listOfDeviceAfterFiltered = new ConcurrentHashMap<>();
 		Children[] listOfDeviceInsideZone = listServiceIdInZone();
+
 		if (listOfDeviceInsideZone == null || listOfDeviceInsideZone.length == 0) {
 			aggregatedDeviceList = new ConcurrentHashMap<>();
 			listMetadataDevice = new ConcurrentHashMap<>();
@@ -4225,10 +4271,21 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			String serviceId = device.getRid();
 			listRidInZone.add(serviceId);
 		}
-		// Filter by Zone
-		listOfDeviceAfterFiltered = filterByZone(listRidInZone);
-		if (listOfDeviceAfterFiltered.isEmpty()) {
-			return;
+		// Filter by Zone Case roomNames is specified:
+		if (StringUtils.isNotNullOrEmpty(roomNames)) {
+			listOfDeviceAfterFiltered = filterByZone(listRidInZone);
+			if (listOfDeviceAfterFiltered.isEmpty()) {
+				aggregatedDeviceList = new ConcurrentHashMap<>();
+				return;
+			}
+		} else {
+			Map<String, String> serviceAndDeviceId = retrieveLights();
+			for (String s : listRidInZone) {
+				String deviceId = serviceAndDeviceId.get(s);
+				if (deviceId != null) {
+					listOfDeviceAfterFiltered.put(deviceId, aggregatedDeviceList.get(deviceId));
+				}
+			}
 		}
 		// Filter by Room
 		try {
@@ -4272,6 +4329,13 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			zoneListAfterFilter = new ArrayList<>();
 			roomListAfterFilter = new ArrayList<>();
 		}
+		// Populate devices where type isn't light to the listOfDeviceAfterFiltered. Because other device --
+		// types (motion, button,etc.) aren't belongs to any zones/rooms, so we only filter by types, names for these types.
+		for (Entry<String, AggregatedDevice> device : aggregatedDeviceList.entrySet()) {
+			if (!PhilipsConstant.LIGHT.equals(device.getValue().getDeviceType())) {
+				listOfDeviceAfterFiltered.put(device.getKey(), device.getValue());
+			}
+		}
 		// filter by type
 		if (StringUtils.isNotNullOrEmpty(deviceTypes)) {
 			listOfDeviceAfterFiltered = filterByDeviceType(listOfDeviceAfterFiltered);
@@ -4293,7 +4357,6 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 */
 	private ConcurrentHashMap<String, AggregatedDevice> filterByZone(List<String> listRidInZone) {
 		ConcurrentHashMap<String, AggregatedDevice> listOfDeviceAfterFiltered = new ConcurrentHashMap<>();
-		//
 		List<String> listOfChildrenNodeInsideRoom = new ArrayList<>();
 		for (RoomAndZoneResponse roomAndZoneResponse : roomList) {
 			Children[] tempList = roomAndZoneResponse.getChildren();

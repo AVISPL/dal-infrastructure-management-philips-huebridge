@@ -22,7 +22,7 @@ public class MetaData {
 	private String archetype;
 
 	/**
-	 * Retrieves {@code {@link #name}}
+	 * Retrieves {@link #name}
 	 *
 	 * @return value of {@link #name}
 	 */
@@ -31,16 +31,16 @@ public class MetaData {
 	}
 
 	/**
-	 * Sets {@code name}
+	 * Sets {@link #name} value
 	 *
-	 * @param name the {@code java.lang.String} field
+	 * @param name new value of {@link #name}
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Retrieves {@code {@link #archetype}}
+	 * Retrieves {@link #archetype}
 	 *
 	 * @return value of {@link #archetype}
 	 */
@@ -49,9 +49,9 @@ public class MetaData {
 	}
 
 	/**
-	 * Sets {@code archetype}
+	 * Sets {@link #archetype} value
 	 *
-	 * @param archetype the {@code java.lang.String} field
+	 * @param archetype new value of {@link #archetype}
 	 */
 	public void setArchetype(String archetype) {
 		this.archetype = archetype;

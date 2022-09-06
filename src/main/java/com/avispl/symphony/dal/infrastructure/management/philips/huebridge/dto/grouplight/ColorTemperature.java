@@ -17,7 +17,7 @@ public class ColorTemperature {
 	private String mirek;
 
 	/**
-	 * Retrieves {@code {@link #mirek}}
+	 * Retrieves {@link #mirek}
 	 *
 	 * @return value of {@link #mirek}
 	 */
@@ -26,9 +26,9 @@ public class ColorTemperature {
 	}
 
 	/**
-	 * Sets {@code mirek}
+	 * Sets {@link #mirek} value
 	 *
-	 * @param mirek the {@code java.lang.String} field
+	 * @param mirek new value of {@link #mirek}
 	 */
 	public void setMirek(String mirek) {
 		this.mirek = mirek;

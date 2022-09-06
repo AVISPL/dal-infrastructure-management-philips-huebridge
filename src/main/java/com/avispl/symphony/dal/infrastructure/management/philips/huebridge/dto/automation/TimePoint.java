@@ -22,7 +22,7 @@ public class TimePoint {
 	private String type;
 
 	/**
-	 * Retrieves {@code {@link #times}}
+	 * Retrieves {@link #times}
 	 *
 	 * @return value of {@link #times}
 	 */
@@ -31,16 +31,16 @@ public class TimePoint {
 	}
 
 	/**
-	 * Sets {@code times}
+	 * Sets {@link #times} value
 	 *
-	 * @param times the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation.CurrentTime} field
+	 * @param times new value of {@link #times}
 	 */
 	public void setTimes(CurrentTime times) {
 		this.times = times;
 	}
 
 	/**
-	 * Retrieves {@code {@link #type}}
+	 * Retrieves {@link #type}
 	 *
 	 * @return value of {@link #type}
 	 */
@@ -49,9 +49,9 @@ public class TimePoint {
 	}
 
 	/**
-	 * Sets {@code type}
+	 * Sets {@link #type} value
 	 *
-	 * @param type the {@code java.lang.String} field
+	 * @param type new value of {@link #type}
 	 */
 	public void setType(String type) {
 		this.type = type;

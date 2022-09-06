@@ -21,7 +21,7 @@ public class CurrentTime {
 	private String minute;
 
 	/**
-	 * Retrieves {@code {@link #hour}}
+	 * Retrieves {@link #hour}
 	 *
 	 * @return value of {@link #hour}
 	 */
@@ -30,16 +30,16 @@ public class CurrentTime {
 	}
 
 	/**
-	 * Sets {@code hour}
+	 * Sets {@link #hour} value
 	 *
-	 * @param hour the {@code java.lang.String} field
+	 * @param hour new value of {@link #hour}
 	 */
 	public void setHour(String hour) {
 		this.hour = hour;
 	}
 
 	/**
-	 * Retrieves {@code {@link #minute}}
+	 * Retrieves {@link #minute}
 	 *
 	 * @return value of {@link #minute}
 	 */
@@ -48,9 +48,9 @@ public class CurrentTime {
 	}
 
 	/**
-	 * Sets {@code minute}
+	 * Sets {@link #minute} value
 	 *
-	 * @param minute the {@code java.lang.String} field
+	 * @param minute new value of {@link #minute}
 	 */
 	public void setMinute(String minute) {
 		this.minute = minute;

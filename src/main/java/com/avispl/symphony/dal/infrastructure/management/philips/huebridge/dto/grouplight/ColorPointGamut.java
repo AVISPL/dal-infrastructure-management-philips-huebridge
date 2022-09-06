@@ -16,11 +16,12 @@ public class ColorPointGamut {
 
 	private float valueA;
 	private float valueB;
+	
 	/**
 	 * ColorPointGamut instantiation
 	 *
-	 * @param valueA {@code {@link #valueA}}
-	 * @param valueB {@code {@link #valueB}}
+	 * @param valueA {@link #valueA}
+	 * @param valueB {@link #valueB}
 	 */
 	public ColorPointGamut(float valueA, float valueB) {
 		this.valueA = valueA;
@@ -28,7 +29,7 @@ public class ColorPointGamut {
 	}
 
 	/**
-	 * Retrieves {@code {@link #valueA}}
+	 * Retrieves {@link #valueA}
 	 *
 	 * @return value of {@link #valueA}
 	 */
@@ -37,16 +38,16 @@ public class ColorPointGamut {
 	}
 
 	/**
-	 * Sets {@code valueA}
+	 * Sets {@link #valueA} value
 	 *
-	 * @param valueA the {@code float} field
+	 * @param valueA new value of {@link #valueA}
 	 */
 	public void setValueA(float valueA) {
 		this.valueA = valueA;
 	}
 
 	/**
-	 * Retrieves {@code {@link #valueB}}
+	 * Retrieves {@link #valueB}
 	 *
 	 * @return value of {@link #valueB}
 	 */
@@ -55,9 +56,9 @@ public class ColorPointGamut {
 	}
 
 	/**
-	 * Sets {@code valueB}
+	 * Sets {@link #valueB} value
 	 *
-	 * @param valueB the {@code float} field
+	 * @param valueB new value of {@link #valueB}
 	 */
 	public void setValueB(float valueB) {
 		this.valueB = valueB;

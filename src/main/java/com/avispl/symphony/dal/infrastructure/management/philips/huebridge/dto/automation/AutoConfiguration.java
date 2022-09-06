@@ -41,7 +41,7 @@ public class AutoConfiguration {
 	private String endWith;
 
 	/**
-	 * Retrieves {@code {@link #style}}
+	 * Retrieves {@link #style}
 	 *
 	 * @return value of {@link #style}
 	 */
@@ -50,16 +50,16 @@ public class AutoConfiguration {
 	}
 
 	/**
-	 * Sets {@code style}
+	 * Sets {@link #style} value
 	 *
-	 * @param style the {@code java.lang.String} field
+	 * @param style new value of {@link #style}
 	 */
 	public void setStyle(String style) {
 		this.style = style;
 	}
 
 	/**
-	 * Retrieves {@code {@link #location}}
+	 * Retrieves {@link #location}
 	 *
 	 * @return value of {@link #location}
 	 */
@@ -68,16 +68,16 @@ public class AutoConfiguration {
 	}
 
 	/**
-	 * Sets {@code location}
+	 * Sets {@link #location} value
 	 *
-	 * @param location the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation.Location[]} field
+	 * @param location new value of {@link #location}
 	 */
 	public void setLocation(Location[] location) {
 		this.location = location;
 	}
 
 	/**
-	 * Retrieves {@code {@link #timeAndRepeats}}
+	 * Retrieves {@link #timeAndRepeats}
 	 *
 	 * @return value of {@link #timeAndRepeats}
 	 */
@@ -86,16 +86,16 @@ public class AutoConfiguration {
 	}
 
 	/**
-	 * Sets {@code timeAndRepeats}
+	 * Sets {@link #timeAndRepeats} value
 	 *
-	 * @param timeAndRepeats the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation.TimeAndRepeat} field
+	 * @param timeAndRepeats new value of {@link #timeAndRepeats}
 	 */
 	public void setTimeAndRepeats(TimeAndRepeat timeAndRepeats) {
 		this.timeAndRepeats = timeAndRepeats;
 	}
 
 	/**
-	 * Retrieves {@code {@link #fadeInDuration}}
+	 * Retrieves {@link #fadeInDuration}
 	 *
 	 * @return value of {@link #fadeInDuration}
 	 */
@@ -104,16 +104,16 @@ public class AutoConfiguration {
 	}
 
 	/**
-	 * Sets {@code fadeInDuration}
+	 * Sets {@link #fadeInDuration} value
 	 *
-	 * @param fadeInDuration the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation.FadeDuration} field
+	 * @param fadeInDuration new value of {@link #fadeInDuration}
 	 */
 	public void setFadeInDuration(FadeDuration fadeInDuration) {
 		this.fadeInDuration = fadeInDuration;
 	}
 
 	/**
-	 * Retrieves {@code {@link #fadeOutDuration}}
+	 * Retrieves {@link #fadeOutDuration}
 	 *
 	 * @return value of {@link #fadeOutDuration}
 	 */
@@ -122,16 +122,16 @@ public class AutoConfiguration {
 	}
 
 	/**
-	 * Sets {@code fadeOutDuration}
+	 * Sets {@link #fadeOutDuration} value
 	 *
-	 * @param fadeOutDuration the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation.FadeDuration} field
+	 * @param fadeOutDuration new value of {@link #fadeOutDuration}
 	 */
 	public void setFadeOutDuration(FadeDuration fadeOutDuration) {
 		this.fadeOutDuration = fadeOutDuration;
 	}
 
 	/**
-	 * Retrieves {@code {@link #duration}}
+	 * Retrieves {@link #duration}
 	 *
 	 * @return value of {@link #duration}
 	 */
@@ -140,16 +140,16 @@ public class AutoConfiguration {
 	}
 
 	/**
-	 * Sets {@code duration}
+	 * Sets {@link #duration} value
 	 *
-	 * @param duration the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation.FadeDuration} field
+	 * @param duration new value of {@link #duration}
 	 */
 	public void setDuration(FadeDuration duration) {
 		this.duration = duration;
 	}
 
 	/**
-	 * Retrieves {@code {@link #endBrightness}}
+	 * Retrieves {@link #endBrightness}
 	 *
 	 * @return value of {@link #endBrightness}
 	 */
@@ -158,16 +158,16 @@ public class AutoConfiguration {
 	}
 
 	/**
-	 * Sets {@code endBrightness}
+	 * Sets {@link #endBrightness} value
 	 *
-	 * @param endBrightness the {@code java.lang.String} field
+	 * @param endBrightness new value of {@link #endBrightness}
 	 */
 	public void setEndBrightness(String endBrightness) {
 		this.endBrightness = endBrightness;
 	}
 
 	/**
-	 * Retrieves {@code {@link #endWith}}
+	 * Retrieves {@link #endWith}
 	 *
 	 * @return value of {@link #endWith}
 	 */
@@ -176,9 +176,9 @@ public class AutoConfiguration {
 	}
 
 	/**
-	 * Sets {@code endWith}
+	 * Sets {@link #endWith} value
 	 *
-	 * @param endWith the {@code java.lang.String} field
+	 * @param endWith new value of {@link #endWith}
 	 */
 	public void setEndWith(String endWith) {
 		this.endWith = endWith;

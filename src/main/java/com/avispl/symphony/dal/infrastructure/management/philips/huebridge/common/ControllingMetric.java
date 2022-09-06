@@ -31,7 +31,7 @@ public enum ControllingMetric {
 	private final String name;
 
 	/**
-	 * Retrieves {@code {@link #name}}
+	 * Retrieves {@link #name}
 	 *
 	 * @return value of {@link #name}
 	 */

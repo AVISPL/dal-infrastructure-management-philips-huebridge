@@ -23,7 +23,7 @@ public class ServicesResponse {
 	private String type;
 
 	/**
-	 * Retrieves {@code {@link #id}}
+	 * Retrieves {@link #id}
 	 *
 	 * @return value of {@link #id}
 	 */
@@ -32,16 +32,16 @@ public class ServicesResponse {
 	}
 
 	/**
-	 * Sets {@code id}
+	 * Sets {@link #id} value
 	 *
-	 * @param id the {@code java.lang.String} field
+	 * @param id new value of {@link #id}
 	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
 	/**
-	 * Retrieves {@code {@link #type}}
+	 * Retrieves {@link #type}
 	 *
 	 * @return value of {@link #type}
 	 */
@@ -50,9 +50,9 @@ public class ServicesResponse {
 	}
 
 	/**
-	 * Sets {@code type}
+	 * Sets {@link #type} value
 	 *
-	 * @param type the {@code java.lang.String} field
+	 * @param type new value of {@link #type}
 	 */
 	public void setType(String type) {
 		this.type = type;

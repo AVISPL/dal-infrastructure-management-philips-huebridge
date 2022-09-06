@@ -23,7 +23,7 @@ public class ColorLight {
 	private LocationLight locationLight;
 
 	/**
-	 * Retrieves {@code {@link #gamut}}
+	 * Retrieves {@link #gamut}
 	 *
 	 * @return value of {@link #gamut}
 	 */
@@ -32,16 +32,16 @@ public class ColorLight {
 	}
 
 	/**
-	 * Sets {@code gamut}
+	 * Sets {@link #gamut} value
 	 *
-	 * @param gamut the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.GamutColor} field
+	 * @param gamut new value of {@link #gamut}
 	 */
 	public void setGamut(GamutColor gamut) {
 		this.gamut = gamut;
 	}
 
 	/**
-	 * Retrieves {@code {@link #gamutType}}
+	 * Retrieves {@link #gamutType}
 	 *
 	 * @return value of {@link #gamutType}
 	 */
@@ -50,16 +50,16 @@ public class ColorLight {
 	}
 
 	/**
-	 * Sets {@code gamutType}
+	 * Sets {@link #gamutType} value
 	 *
-	 * @param gamutType the {@code java.lang.String} field
+	 * @param gamutType new value of {@link #gamutType}
 	 */
 	public void setGamutType(String gamutType) {
 		this.gamutType = gamutType;
 	}
 
 	/**
-	 * Retrieves {@code {@link #locationLight}}
+	 * Retrieves {@link #locationLight}
 	 *
 	 * @return value of {@link #locationLight}
 	 */
@@ -68,9 +68,9 @@ public class ColorLight {
 	}
 
 	/**
-	 * Sets {@code locationLight}
+	 * Sets {@link #locationLight} value
 	 *
-	 * @param locationLight the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.LocationLight} field
+	 * @param locationLight new value of {@link #locationLight}
 	 */
 	public void setLocationLight(LocationLight locationLight) {
 		this.locationLight = locationLight;

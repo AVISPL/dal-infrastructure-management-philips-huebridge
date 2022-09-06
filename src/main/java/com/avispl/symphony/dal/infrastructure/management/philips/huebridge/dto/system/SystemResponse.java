@@ -25,7 +25,7 @@ public class SystemResponse {
 	private ProductData productData;
 
 	/**
-	 * Retrieves {@code {@link #id}}
+	 * Retrieves {@link #id}
 	 *
 	 * @return value of {@link #id}
 	 */
@@ -34,16 +34,16 @@ public class SystemResponse {
 	}
 
 	/**
-	 * Sets {@code id}
+	 * Sets {@link #id} value
 	 *
-	 * @param id the {@code java.lang.String} field
+	 * @param id new value of {@link #id}
 	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
 	/**
-	 * Retrieves {@code {@link #services}}
+	 * Retrieves {@link #services}
 	 *
 	 * @return value of {@link #services}
 	 */
@@ -52,16 +52,16 @@ public class SystemResponse {
 	}
 
 	/**
-	 * Sets {@code services}
+	 * Sets {@link #services} value
 	 *
-	 * @param services the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.Services[]} field
+	 * @param services new value of {@link #services}
 	 */
 	public void setServices(ServicesResponse[] services) {
 		this.services = services;
 	}
 
 	/**
-	 * Retrieves {@code {@link #productData}}
+	 * Retrieves {@link #productData}
 	 *
 	 * @return value of {@link #productData}
 	 */
@@ -70,9 +70,9 @@ public class SystemResponse {
 	}
 
 	/**
-	 * Sets {@code productData}
+	 * Sets {@link #productData} value
 	 *
-	 * @param productData the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.aggregateddevice.ProductData} field
+	 * @param productData new value of {@link #productData}
 	 */
 	public void setProductData(ProductData productData) {
 		this.productData = productData;

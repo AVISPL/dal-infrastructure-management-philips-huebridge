@@ -22,7 +22,7 @@ public class ScriptAutomationResponse {
 	private MetaDataAutomation metadata;
 
 	/**
-	 * Retrieves {@code {@link #id}}
+	 * Retrieves {@link #id}
 	 *
 	 * @return value of {@link #id}
 	 */
@@ -31,16 +31,16 @@ public class ScriptAutomationResponse {
 	}
 
 	/**
-	 * Sets {@code id}
+	 * Sets {@link #id} value
 	 *
-	 * @param id the {@code java.lang.String} field
+	 * @param id new value of {@link #id}
 	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
 	/**
-	 * Retrieves {@code {@link #metadata}}
+	 * Retrieves {@link #metadata}
 	 *
 	 * @return value of {@link #metadata}
 	 */
@@ -49,9 +49,9 @@ public class ScriptAutomationResponse {
 	}
 
 	/**
-	 * Sets {@code metadata}
+	 * Sets {@link #metadata} value
 	 *
-	 * @param metadata the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.scriptautomation.MetaDataAutomation} field
+	 * @param metadata new value of {@link #metadata}
 	 */
 	public void setMetadata(MetaDataAutomation metadata) {
 		this.metadata = metadata;

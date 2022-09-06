@@ -22,7 +22,7 @@ public class ZigbeeConnectivity {
 	private String status;
 
 	/**
-	 * Retrieves {@code {@link #macAddress}}
+	 * Retrieves {@link #macAddress}
 	 *
 	 * @return value of {@link #macAddress}
 	 */
@@ -31,16 +31,16 @@ public class ZigbeeConnectivity {
 	}
 
 	/**
-	 * Sets {@code macAddress}
+	 * Sets {@link #macAddress} value
 	 *
-	 * @param macAddress the {@code java.lang.String} field
+	 * @param macAddress new value of {@link #macAddress}
 	 */
 	public void setMacAddress(String macAddress) {
 		this.macAddress = macAddress;
 	}
 
 	/**
-	 * Retrieves {@code {@link #status}}
+	 * Retrieves {@link #status}
 	 *
 	 * @return value of {@link #status}
 	 */
@@ -49,9 +49,9 @@ public class ZigbeeConnectivity {
 	}
 
 	/**
-	 * Sets {@code status}
+	 * Sets {@link #status} value
 	 *
-	 * @param status the {@code java.lang.String} field
+	 * @param status new value of {@link #status}
 	 */
 	public void setStatus(String status) {
 		this.status = status;

@@ -87,11 +87,12 @@ public class PhilipsConstant {
 	public static String TIMERS = "Timers";
 	public static String TIME = "Time";
 	public static String DEVICE_TYPE = "deviceType";
+	public static String PRODUCT_NAME = "productName";
 	public static String SOFTWARE_VERSION = "softwareVersion";
 	public static String BATTERY_LEVEL = "batteryLevel(%)";
 	public static String MOTION_DETECTED = "motionDetected";
 	public static String MIN_POLLING_INTERVAL_KEY = "MinPollingInterval";
-	public static String MAX_POLLING_INTERVAL_KEY = "MaxPollingInterval";
+	public static String MAX_POLLING_INTERVAL_KEY = "NextPollingInterval";
 	public static String COLOR_CONTROL_SATURATION = "ColorControlSaturation";
 	public static String COLOR_CONTROL_SATURATION_CURRENT_VALUE = "ColorControlSaturationCurrentValue";
 	public static String COLOR_CONTROL_HUE_CURRENT_VALUE = "ColorControlHueCurrentValue";

@@ -15,7 +15,7 @@ public class ErrorsResponse {
 	private String description;
 
 	/**
-	 * Retrieves {@code {@link #description}}
+	 * Retrieves {@link #description}
 	 *
 	 * @return value of {@link #description}
 	 */
@@ -24,9 +24,9 @@ public class ErrorsResponse {
 	}
 
 	/**
-	 * Sets {@code description}
+	 * Sets {@link #description} value
 	 *
-	 * @param description the {@code java.lang.String} field
+	 * @param description new value of {@link #description}
 	 */
 	public void setDescription(String description) {
 		this.description = description;

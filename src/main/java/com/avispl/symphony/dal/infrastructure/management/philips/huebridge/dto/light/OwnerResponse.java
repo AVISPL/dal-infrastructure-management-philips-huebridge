@@ -1,22 +1,20 @@
 /**
  * Copyright (c) 2022 AVI-SPL, Inc. All Rights Reserved.
  */
-package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.romandzone;
+package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.light;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.EnumTypeHandler;
-
 /**
- * Children class contains rid and type of the device
+ * OwnerResponse class provides Owner as id and type for the device
  *
  * @author Harry / Symphony Dev Team<br>
- * Created on 8/3/2022
+ * Created on 8/2/2022
  * @since 1.0.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Children {
+public class OwnerResponse {
 
 	private String rid;
 
@@ -57,17 +55,5 @@ public class Children {
 	 */
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	/**
-	 * Get To String of Children
-	 *
-	 * @return String is full param of Children
-	 */
-	@Override
-	public String toString() {
-		String ridValue = EnumTypeHandler.getFormatNameByColonValue(rid, "rid",false);
-		String typeValue = EnumTypeHandler.getFormatNameByColonValue(type, "rtype",false);
-		return String.format("{%s,%s}", ridValue, typeValue);
 	}
 }

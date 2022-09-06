@@ -17,7 +17,7 @@ public class BrightnessLight {
 	private String brightness;
 
 	/**
-	 * Retrieves {@code {@link #brightness}}
+	 * Retrieves {@link #brightness}
 	 *
 	 * @return value of {@link #brightness}
 	 */
@@ -26,9 +26,9 @@ public class BrightnessLight {
 	}
 
 	/**
-	 * Sets {@code brightness}
+	 * Sets {@link #brightness} value
 	 *
-	 * @param brightness the {@code java.lang.String} field
+	 * @param brightness new value of {@link #brightness}
 	 */
 	public void setBrightness(String brightness) {
 		this.brightness = brightness;

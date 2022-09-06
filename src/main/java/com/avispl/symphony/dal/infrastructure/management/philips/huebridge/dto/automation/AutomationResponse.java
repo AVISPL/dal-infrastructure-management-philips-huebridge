@@ -32,7 +32,7 @@ public class AutomationResponse {
 	private MetaData metaData;
 
 	/**
-	 * Retrieves {@code {@link #id}}
+	 * Retrieves {@link #id}
 	 *
 	 * @return value of {@link #id}
 	 */
@@ -41,16 +41,16 @@ public class AutomationResponse {
 	}
 
 	/**
-	 * Sets {@code id}
+	 * Sets {@link #id} value
 	 *
-	 * @param id the {@code java.lang.String} field
+	 * @param id new value of {@link #id}
 	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
 	/**
-	 * Retrieves {@code {@link #enabled}}
+	 * Retrieves {@link #enabled}
 	 *
 	 * @return value of {@link #enabled}
 	 */
@@ -59,16 +59,16 @@ public class AutomationResponse {
 	}
 
 	/**
-	 * Sets {@code enabled}
+	 * Sets {@link #enabled} value
 	 *
-	 * @param enabled the {@code java.lang.String} field
+	 * @param enabled new value of {@link #enabled}
 	 */
 	public void setEnabled(String enabled) {
 		this.enabled = enabled;
 	}
 
 	/**
-	 * Retrieves {@code {@link #status}}
+	 * Retrieves {@link #status}
 	 *
 	 * @return value of {@link #status}
 	 */
@@ -77,16 +77,16 @@ public class AutomationResponse {
 	}
 
 	/**
-	 * Sets {@code status}
+	 * Sets {@link #status} value
 	 *
-	 * @param status the {@code java.lang.String} field
+	 * @param status new value of {@link #status}
 	 */
 	public void setStatus(String status) {
 		this.status = status;
 	}
 
 	/**
-	 * Retrieves {@code {@link #scriptId }}
+	 * Retrieves {@link #scriptId}
 	 *
 	 * @return value of {@link #scriptId}
 	 */
@@ -95,16 +95,16 @@ public class AutomationResponse {
 	}
 
 	/**
-	 * Sets {@code script_id}
+	 * Sets {@link #scriptId} value
 	 *
-	 * @param scriptId the {@code java.lang.String} field
+	 * @param scriptId new value of {@link #scriptId}
 	 */
 	public void setScriptId(String scriptId) {
 		this.scriptId = scriptId;
 	}
 
 	/**
-	 * Retrieves {@code {@link #configurations}}
+	 * Retrieves {@link #configurations}
 	 *
 	 * @return value of {@link #configurations}
 	 */
@@ -113,16 +113,16 @@ public class AutomationResponse {
 	}
 
 	/**
-	 * Sets {@code configurations}
+	 * Sets {@link #configurations} value
 	 *
-	 * @param configurations the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation.AutoConfiguration} field
+	 * @param configurations new value of {@link #configurations}
 	 */
 	public void setConfigurations(AutoConfiguration configurations) {
 		this.configurations = configurations;
 	}
 
 	/**
-	 * Retrieves {@code {@link #metaData}}
+	 * Retrieves {@link #metaData}
 	 *
 	 * @return value of {@link #metaData}
 	 */
@@ -131,9 +131,9 @@ public class AutomationResponse {
 	}
 
 	/**
-	 * Sets {@code metaData}
+	 * Sets {@link #metaData} value
 	 *
-	 * @param metaData the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.romandzone.MetaData} field
+	 * @param metaData new value of {@link #metaData}
 	 */
 	public void setMetaData(MetaData metaData) {
 		this.metaData = metaData;

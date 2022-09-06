@@ -37,7 +37,7 @@ public class NetworkInfoResponse {
 	private String version;
 
 	/**
-	 * Retrieves {@code {@link #mac}}
+	 * Retrieves {@link #mac}
 	 *
 	 * @return value of {@link #mac}
 	 */
@@ -46,16 +46,16 @@ public class NetworkInfoResponse {
 	}
 
 	/**
-	 * Sets {@code mac}
+	 * Sets {@link #mac} value
 	 *
-	 * @param mac the {@code java.lang.String} field
+	 * @param mac new value of {@link #mac}
 	 */
 	public void setMac(String mac) {
 		this.mac = mac;
 	}
 
 	/**
-	 * Retrieves {@code {@link #netmask}}
+	 * Retrieves {@link #netmask}
 	 *
 	 * @return value of {@link #netmask}
 	 */
@@ -64,16 +64,16 @@ public class NetworkInfoResponse {
 	}
 
 	/**
-	 * Sets {@code netmask}
+	 * Sets {@link #netmask} value
 	 *
-	 * @param netmask the {@code java.lang.String} field
+	 * @param netmask new value of {@link #netmask}
 	 */
 	public void setNetmask(String netmask) {
 		this.netmask = netmask;
 	}
 
 	/**
-	 * Retrieves {@code {@link #localtime}}
+	 * Retrieves {@link #localtime}
 	 *
 	 * @return value of {@link #localtime}
 	 */
@@ -82,16 +82,16 @@ public class NetworkInfoResponse {
 	}
 
 	/**
-	 * Sets {@code localtime}
+	 * Sets {@link #localtime} value
 	 *
-	 * @param localtime the {@code java.lang.String} field
+	 * @param localtime new value of {@link #localtime}
 	 */
 	public void setLocaltime(String localtime) {
 		this.localtime = localtime;
 	}
 
 	/**
-	 * Retrieves {@code {@link #timezone}}
+	 * Retrieves {@link #timezone}
 	 *
 	 * @return value of {@link #timezone}
 	 */
@@ -100,16 +100,16 @@ public class NetworkInfoResponse {
 	}
 
 	/**
-	 * Sets {@code timezone}
+	 * Sets {@link #timezone} value
 	 *
-	 * @param timezone the {@code java.lang.String} field
+	 * @param timezone new value of {@link #timezone}
 	 */
 	public void setTimezone(String timezone) {
 		this.timezone = timezone;
 	}
 
 	/**
-	 * Retrieves {@code {@link #utc}}
+	 * Retrieves {@link #utc}
 	 *
 	 * @return value of {@link #utc}
 	 */
@@ -118,16 +118,16 @@ public class NetworkInfoResponse {
 	}
 
 	/**
-	 * Sets {@code utc}
+	 * Sets {@link #utc} value
 	 *
-	 * @param utc the {@code java.lang.String} field
+	 * @param utc new value of {@link #utc}
 	 */
 	public void setUtc(String utc) {
 		this.utc = utc;
 	}
 
 	/**
-	 * Retrieves {@code {@link #address}}
+	 * Retrieves {@link #address}
 	 *
 	 * @return value of {@link #address}
 	 */
@@ -136,16 +136,16 @@ public class NetworkInfoResponse {
 	}
 
 	/**
-	 * Sets {@code address}
+	 * Sets {@link #address} value
 	 *
-	 * @param address the {@code java.lang.String} field
+	 * @param address new value of {@link #address}
 	 */
 	public void setAddress(String address) {
 		this.address = address;
 	}
 
 	/**
-	 * Retrieves {@code {@link #model}}
+	 * Retrieves {@link #model}
 	 *
 	 * @return value of {@link #model}
 	 */
@@ -154,16 +154,16 @@ public class NetworkInfoResponse {
 	}
 
 	/**
-	 * Sets {@code model}
+	 * Sets {@link #model} value
 	 *
-	 * @param model the {@code java.lang.String} field
+	 * @param model new value of {@link #model}
 	 */
 	public void setModel(String model) {
 		this.model = model;
 	}
 
 	/**
-	 * Retrieves {@code {@link #version}}
+	 * Retrieves {@link #version}
 	 *
 	 * @return value of {@link #version}
 	 */
@@ -172,9 +172,9 @@ public class NetworkInfoResponse {
 	}
 
 	/**
-	 * Sets {@code version}
+	 * Sets {@link #version} value
 	 *
-	 * @param version the {@code java.lang.String} field
+	 * @param version new value of {@link #version}
 	 */
 	public void setVersion(String version) {
 		this.version = version;

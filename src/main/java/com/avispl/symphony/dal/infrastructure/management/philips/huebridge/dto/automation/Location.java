@@ -26,7 +26,7 @@ public class Location {
 	private Group[] items;
 
 	/**
-	 * Retrieves {@code {@link #group}}
+	 * Retrieves {@link #group}
 	 *
 	 * @return value of {@link #group}
 	 */
@@ -35,16 +35,16 @@ public class Location {
 	}
 
 	/**
-	 * Sets {@code group}
+	 * Sets {@link #group} value
 	 *
-	 * @param group the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation.Group} field
+	 * @param group new value of {@link #group}
 	 */
 	public void setGroup(Group group) {
 		this.group = group;
 	}
 
 	/**
-	 * Retrieves {@code {@link #items}}
+	 * Retrieves {@link #items}
 	 *
 	 * @return value of {@link #items}
 	 */
@@ -53,9 +53,9 @@ public class Location {
 	}
 
 	/**
-	 * Sets {@code items}
+	 * Sets {@link #items} value
 	 *
-	 * @param items the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation.Group[]} field
+	 * @param items new value of {@link #items}
 	 */
 	public void setItems(Group[] items) {
 		this.items = items;
