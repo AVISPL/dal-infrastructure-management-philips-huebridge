@@ -488,7 +488,6 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				retrieveDeviceDropdownList();
 				// retrieve device and filter devices in first monitoring cycle of polling interval
 				if (currentPhase.get() == localPollingInterval || currentPhase.get() == 0) {
-					cacheAggregatedDeviceList.clear();
 					retrieveDevices();
 					//Add filter device IDs
 					filterDeviceIds();
@@ -604,7 +603,9 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			executorService = null;
 		}
 		aggregatedDeviceList.clear();
+		cacheAggregatedDeviceList.clear();
 		listMetadataDevice.clear();
+		currentPhase.set(0);
 		if (localExtendedStatistics != null && localExtendedStatistics.getStatistics() != null && localExtendedStatistics.getControllableProperties() != null) {
 			localExtendedStatistics.getStatistics().clear();
 			localExtendedStatistics.getControllableProperties().clear();
@@ -662,6 +663,8 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				}
 			}
 		}
+		List<String> deviceID = aggregatedDeviceList.keySet().stream().collect(Collectors.toList());
+		cacheAggregatedDeviceList.keySet().removeIf(item -> !deviceID.contains(item));
 		return cacheAggregatedDeviceList.values().stream().collect(Collectors.toList());
 	}
 
@@ -1342,7 +1345,12 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 						}
 					}
 				}
-				cacheAggregatedDeviceList.put(deviceId, aggregatedDeviceList.get(deviceId));
+				if (cacheAggregatedDeviceList.keySet().stream().collect(Collectors.toList()).contains(deviceId)) {
+					cacheAggregatedDeviceList.remove(deviceId);
+					cacheAggregatedDeviceList.put(deviceId, aggregatedDeviceList.get(deviceId));
+				} else {
+					cacheAggregatedDeviceList.put(deviceId, aggregatedDeviceList.get(deviceId));
+				}
 				if (logger.isDebugEnabled()) {
 					Long time = System.currentTimeMillis() - startTime;
 					logger.debug(String.format("Finished fetch %s details info in worker thread: %s", aggregatedDeviceList.get(deviceId).getDeviceName(), time));
@@ -3968,7 +3976,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		}
 		try {
 			RoomAndZoneWrapper zoneWrapper = this.doGet(request, RoomAndZoneWrapper.class);
-			if (zoneWrapper != null && zoneWrapper.getData() != null && Arrays.stream(zoneWrapper.getData()).anyMatch(item -> item.getMetaData().getName().equals(name))) {
+			if (zoneWrapper != null && zoneWrapper.getData() != null && Arrays.stream(zoneWrapper.getData()).anyMatch(item -> item.getMetaData().getName().equals(name.trim()))) {
 				throw new ResourceNotReachableException(String.format("The name: %s already exists", name));
 			}
 		} catch (Exception e) {
@@ -3984,7 +3992,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	private void isAutomationNameExisting(String name) {
 		try {
 			AutomationWrapper automationWrapper = this.doGet(PhilipsUtil.getMonitorURL(PhilipsURL.AUTOMATION), AutomationWrapper.class);
-			if (automationWrapper != null && automationWrapper.getData() != null && Arrays.stream(automationWrapper.getData()).anyMatch(item -> item.getMetaData().getName().equals(name))) {
+			if (automationWrapper != null && automationWrapper.getData() != null && Arrays.stream(automationWrapper.getData()).anyMatch(item -> item.getMetaData().getName().equals(name.trim()))) {
 				throw new ResourceNotReachableException(String.format("The name: %s already exists", name));
 			}
 		} catch (Exception e) {
