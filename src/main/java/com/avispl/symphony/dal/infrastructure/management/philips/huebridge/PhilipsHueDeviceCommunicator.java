@@ -490,7 +490,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				if (currentPhase.get() == localPollingInterval || currentPhase.get() == 0) {
 					retrieveDevices();
 					//Add filter device IDs
-					filterDeviceIds();
+					filterDeviceIds(stats);
 				}
 				retrieveAutomations();
 				retrieveScriptIdForAutomation();
@@ -606,6 +606,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		cacheAggregatedDeviceList.clear();
 		listMetadataDevice.clear();
 		currentPhase.set(0);
+		deviceIds.clear();
 		if (localExtendedStatistics != null && localExtendedStatistics.getStatistics() != null && localExtendedStatistics.getControllableProperties() != null) {
 			localExtendedStatistics.getStatistics().clear();
 			localExtendedStatistics.getControllableProperties().clear();
@@ -2189,7 +2190,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 									String.valueOf(PhilipsConstant.MIN_END_BRIGHTNESS), String.valueOf(PhilipsConstant.MAX_END_BRIGHTNESS));
 							addOrUpdateAdvanceControlProperties(advancedControllableProperties, sliderControlProperty);
 
-							hourDropdown = EnumTypeHandler.getEnumNames(TimerHourEnum.class);
+							hourDropdown = EnumTypeHandler.getEnumNames(TimeHourEnum.class);
 							hourValue = automationData.getConfigurations().getTimeAndRepeats().getTimePoint().getTimes().getHour();
 							hourKey = groupName + PhilipsConstant.HASH + AutomationEnum.TIME_HOUR.getName();
 							hourControlProperty = controlDropdown(stats, hourDropdown, hourKey, convertTimeFormat(Integer.parseInt(hourValue)));
@@ -2197,8 +2198,11 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 
 							minuteDropdown = EnumTypeHandler.getEnumNames(TimeMinuteEnum.class);
 							value = automationData.getConfigurations().getTimeAndRepeats().getTimePoint().getTimes().getMinute();
+							if (Integer.parseInt(value) < 10) {
+								value = PhilipsConstant.ZERO + value;
+							}
 							minuteKey = groupName + PhilipsConstant.HASH + AutomationEnum.TIME_MINUTE.getName();
-							minuteControlProperty = controlDropdown(stats, minuteDropdown, minuteKey, convertTimeFormat(Integer.parseInt(value)));
+							minuteControlProperty = controlDropdown(stats, minuteDropdown, minuteKey, value);
 							addOrUpdateAdvanceControlProperties(advancedControllableProperties, minuteControlProperty);
 							currentTime = PhilipsConstant.ZERO;
 							if (Integer.parseInt(hourValue) >= 12) {
@@ -3555,7 +3559,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		FadeDuration fadeDurationDTO = new FadeDuration();
 		config.setEndBrightness(endBrightness);
 		if (!StringUtils.isNullOrEmpty(style)) {
-			config.setStyle(style.toLowerCase(Locale.ROOT));
+			config.setStyle(StyleEnum.getValueOfEnumByName(style).toLowerCase(Locale.ROOT));
 		}
 		TimeAndRepeat timeAndRepeat = new TimeAndRepeat();
 		List<String> days = new LinkedList<>();
@@ -3624,8 +3628,16 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			TimePoint timePoint = new TimePoint();
 			CurrentTime currentTime = new CurrentTime();
 			if (String.valueOf(PhilipsConstant.NUMBER_ONE).equals(timeCurrent)) {
-				int time = Integer.parseInt(timeHour) + 12;
+				int time = Integer.parseInt(timeHour);
 				timeHour = String.valueOf(time);
+				if (time != 12) {
+					timeHour = String.valueOf(time + 12);
+				}
+			} else {
+				int time = Integer.parseInt(timeHour);
+				if (time == 12) {
+					timeHour = String.valueOf(0);
+				}
 			}
 			currentTime.setHour(String.valueOf(Integer.valueOf(timeHour)));
 			currentTime.setMinute(String.valueOf(Integer.valueOf(timeMinute)));
@@ -4263,9 +4275,9 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	/**
 	 * Filter By Ids device
 	 */
-	private void filterDeviceIds() {
+	private void filterDeviceIds(Map<String, String> stats) {
 		ConcurrentHashMap<String, AggregatedDevice> listOfDeviceAfterFiltered = new ConcurrentHashMap<>();
-		Children[] listOfDeviceInsideZone = listServiceIdInZone();
+		Children[] listOfDeviceInsideZone = listServiceIdInZone(stats);
 
 		if (listOfDeviceInsideZone == null || listOfDeviceInsideZone.length == 0) {
 			aggregatedDeviceList = new ConcurrentHashMap<>();
@@ -4387,10 +4399,11 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	/**
 	 * Get list of service ids inside zone
 	 */
-	private Children[] listServiceIdInZone() {
+	private Children[] listServiceIdInZone(Map<String, String> stats) {
 		int indexOfZoneToBeUse = -1;
 		try {
 			if (zoneList.isEmpty()) {
+				stats.put("CurrentZoneFilter", "Empty");
 				return null;
 			}
 			for (int indexZone = 0; indexZone < zoneList.size(); indexZone++) {
@@ -4407,6 +4420,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		}
 		// return services of zone list
 		zoneListAfterFilter.add(zoneList.get(indexOfZoneToBeUse));
+		stats.put("CurrentZoneFilter", zoneList.get(indexOfZoneToBeUse).getMetaData().getName());
 		return zoneList.get(indexOfZoneToBeUse).getChildren();
 	}
 
