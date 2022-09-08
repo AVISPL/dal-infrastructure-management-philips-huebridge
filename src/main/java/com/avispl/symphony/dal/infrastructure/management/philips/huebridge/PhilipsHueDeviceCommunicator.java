@@ -320,7 +320,6 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	private final Map<String, Map<String, String>> timeAndMinuteForCreateAutomation = new HashMap<>();
 	private final Map<String, Map<String, String>> repeatCreateAutomation = new HashMap<>();
 	private final Map<String, Map<String, Map<String, String>>> repeatControlForAutomation = new HashMap<>();
-	private final Map<String, String> editedForControlGroup = new HashMap<>();
 	/**
 	 * Caching the list of device Ids
 	 */
