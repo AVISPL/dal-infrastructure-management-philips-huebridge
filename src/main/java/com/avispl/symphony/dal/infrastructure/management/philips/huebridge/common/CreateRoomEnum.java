@@ -21,7 +21,7 @@ public enum CreateRoomEnum {
 	/**
 	 * CreateRoomEum instantiation
 	 *
-	 * @param name {@code {@link #roomName }}
+	 * @param name {@link #name
 	 */
 	CreateRoomEnum(String name) {
 		this.roomName = name;

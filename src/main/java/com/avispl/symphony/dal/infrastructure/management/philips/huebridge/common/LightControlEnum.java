@@ -23,7 +23,7 @@ public enum LightControlEnum {
 	/**
 	 * LightControlEnum instantiation
 	 *
-	 * @param name {@code {@link #name}}
+	 * @param name {@link #name
 	 */
 	LightControlEnum(String name) {
 		this.name = name;

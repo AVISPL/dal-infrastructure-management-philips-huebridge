@@ -29,7 +29,7 @@ public enum TimeHourEnum {
 	/**
 	 * TimeHourEnum instantiation
 	 *
-	 * @param name {@code {@link #name}}
+	 * @param name {@link #name}
 	 */
 	TimeHourEnum(String name) {
 		this.name = name;

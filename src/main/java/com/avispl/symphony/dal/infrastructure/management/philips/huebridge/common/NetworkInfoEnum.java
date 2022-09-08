@@ -22,7 +22,7 @@ public enum NetworkInfoEnum {
 	/**
 	 * NetworkInfoEnum instantiation
 	 *
-	 * @param name {@code {@link #name}}
+	 * @param name {@link #name
 	 */
 	NetworkInfoEnum(String name) {
 		this.name = name;

@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import com.avispl.symphony.api.dal.dto.control.ControllableProperty;
 import com.avispl.symphony.api.dal.dto.monitor.ExtendedStatistics;
 import com.avispl.symphony.api.dal.dto.monitor.aggregator.AggregatedDevice;
-import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.RepeatDayEnum;
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.DayEnum;
 
 class PhilipsHueDeviceCommunicatorTestReal {
 
@@ -325,39 +325,50 @@ class PhilipsHueDeviceCommunicatorTestReal {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		Thread.sleep(10000);
+		List<AggregatedDevice> list = philipsHueDeviceCommunicator.retrieveMultipleStatistics();
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "AutomationWakeUpWithLight-WU 2 light#TimeCurrent";
+		String property = "AutomationTimer-new name#TimeCurrent";
 		String value = "1";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
+//		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+//		property = "AutomationGoToSleep-Go to sleep0222#RepeatMonday";
+//		value = "0";
+//		controllableProperty.setProperty(property);
+//		controllableProperty.setValue(value);
+//		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+		property = "AutomationTimer-new name#Name";
+		value = "new name 1";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
-		property = "AutomationWakeUpWithLight-WU 2 light#ApplyChange";
+		property = "AutomationTimer-new name#ApplyChange";
 		value = "1";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 
 		property = "CreateAutomationBehaviorInstance#TypeOfAutomation";
-		value = "GoToSleep";
+		value = "Timer";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
-		property = "CreateAutomationBehaviorInstance#Repeat";
-		value = "1";
+		property = "CreateAutomationBehaviorInstance#Name";
+		value = "timer2";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 
-		property = "CreateAutomationBehaviorInstance#Repeat0";
-		value = RepeatDayEnum.MONDAY.getName();
+		property = "CreateAutomationBehaviorInstance#DeviceAdd";
+		value = "1";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
-		property = "CreateAutomationBehaviorInstance#Zone0";
-		value = "AllDeviceInRoom-Downstairs";
+		property = "CreateAutomationBehaviorInstance#Device0";
+		value = "Hue ambiance lamp 2-Living Room";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
@@ -399,7 +410,7 @@ class PhilipsHueDeviceCommunicatorTestReal {
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 
 		property = "CreateAutomationBehaviorInstance#Repeat0";
-		value = RepeatDayEnum.MONDAY.getName();
+		value = DayEnum.MONDAY.getName();
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 
@@ -449,7 +460,7 @@ class PhilipsHueDeviceCommunicatorTestReal {
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 
 		property = "CreateAutomationBehaviorInstance#Repeat0";
-		value = RepeatDayEnum.MONDAY.getName();
+		value = DayEnum.MONDAY.getName();
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 
@@ -499,7 +510,7 @@ class PhilipsHueDeviceCommunicatorTestReal {
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 
 		property = "CreateAutomationBehaviorInstance#Repeat0";
-		value = RepeatDayEnum.MONDAY.getName();
+		value = DayEnum.MONDAY.getName();
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 

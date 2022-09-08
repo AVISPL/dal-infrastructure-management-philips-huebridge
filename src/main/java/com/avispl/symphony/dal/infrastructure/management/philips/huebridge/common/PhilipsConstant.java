@@ -104,6 +104,7 @@ public class PhilipsConstant {
 	public static int NUMBER_ONE = 1;
 	public static int ZERO = 0;
 	public static int DEFAULT_FADE_DURATION = 900;
+	public static int DEFAULT_FADE_DURATION_GO_TO_SLEEP = 1800;
 	public static int MIN_FADE_DURATION = 10;
 	public static int MAX_FADE_DURATION = 5400;
 	public static int MIN_END_BRIGHTNESS = 1;

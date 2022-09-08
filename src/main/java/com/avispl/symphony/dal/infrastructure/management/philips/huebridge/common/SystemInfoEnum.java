@@ -24,7 +24,7 @@ public enum SystemInfoEnum {
 	/**
 	 * SystemInfoEnum instantiation
 	 *
-	 * @param name {@code {@link #name}}
+	 * @param name {@link #name}
 	 */
 	SystemInfoEnum(String name) {
 		this.name = name;

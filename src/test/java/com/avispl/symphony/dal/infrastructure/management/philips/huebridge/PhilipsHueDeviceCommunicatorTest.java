@@ -26,7 +26,7 @@ import com.avispl.symphony.api.dal.error.ResourceNotReachableException;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.NetworkInfoEnum;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.PhilipsURL;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.PhilipsUtil;
-import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.RepeatDayEnum;
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.DayEnum;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.SystemInfoEnum;
 
 /**
@@ -1428,7 +1428,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 
 		property = "CreateAutomationBehaviorInstance#Repeat0";
-		value = RepeatDayEnum.MONDAY.getName();
+		value = DayEnum.MONDAY.getName();
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 
@@ -1491,7 +1491,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 
 		property = "CreateAutomationBehaviorInstance#Repeat0";
-		value = RepeatDayEnum.MONDAY.getName();
+		value = DayEnum.MONDAY.getName();
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 

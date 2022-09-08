@@ -1,13 +1,16 @@
+/**
+ * Copyright (c) 2022 AVI-SPL, Inc. All Rights Reserved.
+ */
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common;
 
 /**
- * RepeatDayEnum class defined list days for monitoring and controlling process
+ * DayEnum class defined list days for monitoring and controlling process
  *
  * @author Harry / Symphony Dev Team<br>
  * Created on 8/23/2022
  * @since 1.0.0
  */
-public enum RepeatDayEnum {
+public enum DayEnum {
 
 	MONDAY("Monday"),
 	TUESDAY("Tuesday"),
@@ -22,9 +25,9 @@ public enum RepeatDayEnum {
 	/**
 	 * RepeatDayEnum instantiation
 	 *
-	 * @param name {@code {@link #name }}
+	 * @param name {@link #name}
 	 */
-	RepeatDayEnum(String name) {
+	DayEnum(String name) {
 		this.name = name;
 	}
 

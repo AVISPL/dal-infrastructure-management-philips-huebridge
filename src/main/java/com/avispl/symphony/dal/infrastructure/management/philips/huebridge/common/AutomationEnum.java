@@ -16,6 +16,14 @@ public enum AutomationEnum {
 	FADE_DURATION("FadeDuration"),
 	NAME("Name"),
 	REPEAT("Repeat"),
+	REPEAT_MONDAY("RepeatMonday"),
+	REPEAT_TUESDAY("RepeatTuesday"),
+	REPEAT_THURSDAY("RepeatThursday"),
+	REPEAT_WEDNESDAY("RepeatWednesday"),
+	REPEAT_FRIDAY("RepeatFriday"),
+	REPEAT_SATURDAY("RepeatSaturday"),
+	REPEAT_SUNDAY("RepeatSunday"),
+
 	REPEAT_ADD("RepeatAdd"),
 	STATUS("Status"),
 	TIME_CURRENT("TimeCurrent"),
@@ -40,7 +48,7 @@ public enum AutomationEnum {
 	/**
 	 * AutomationEnum instantiation
 	 *
-	 * @param name {@code {@link #name}}
+	 * @param name  {@link #name}
 	 */
 	AutomationEnum(String name) {
 		this.name = name;

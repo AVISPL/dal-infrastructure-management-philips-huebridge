@@ -23,7 +23,7 @@ public enum RoomsAndZonesControlEnum {
 	/**
 	 * RoomsAndZonesControlEnum instantiation
 	 *
-	 * @param name {@code {@link #name}}
+	 * @param name {@link #name}
 	 */
 	RoomsAndZonesControlEnum(String name) {
 		this.name = name;

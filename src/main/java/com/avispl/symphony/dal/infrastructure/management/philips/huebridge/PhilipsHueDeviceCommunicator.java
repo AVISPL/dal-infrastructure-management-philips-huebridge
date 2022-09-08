@@ -24,7 +24,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -59,7 +58,8 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.commo
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.PhilipsConstant;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.PhilipsURL;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.PhilipsUtil;
-import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.RepeatDayEnum;
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.DayEnum;
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.RepeatEnum;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.RoomTypeEnum;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.RoomsAndZonesControlEnum;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.StyleEnum;
@@ -191,11 +191,6 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	private final Set<String> failedMonitoringDeviceIds = ConcurrentHashMap.newKeySet();
 
 	/**
-	 * Map of Repeat name for automation
-	 */
-	private final Map<String, String> repeatNameOfCreateAutomationMap = new HashMap<>();
-
-	/**
 	 * Map of Automation and Repeat name for automation
 	 */
 	private final Map<String, Map<String, String>> repeatNameOfAutomationMap = new HashMap<>();
@@ -322,6 +317,10 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	private boolean isCreateZone;
 	private boolean isEmergencyDelivery;
 	private boolean isConfigManagement;
+	private final Map<String, Map<String, String>> timeAndMinuteForCreateAutomation = new HashMap<>();
+	private final Map<String, Map<String, String>> repeatCreateAutomation = new HashMap<>();
+	private final Map<String, Map<String, Map<String, String>>> repeatControlForAutomation = new HashMap<>();
+	private final Map<String, String> editedForControlGroup = new HashMap<>();
 	/**
 	 * Caching the list of device Ids
 	 */
@@ -350,7 +349,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	private PhilipsHueDeviceDataLoader deviceDataLoader;
 
 	/**
-	 * Retrieves {@code {@link #zoneName}}
+	 * Retrieves {@link #zoneName}
 	 *
 	 * @return value of {@link #zoneName}
 	 */
@@ -359,16 +358,16 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	}
 
 	/**
-	 * Sets {@code zoneName}
+	 * Sets {@link #zoneName} value
 	 *
-	 * @param zoneName the {@code java.lang.String} field
+	 * @param zoneName new value of {@link #zoneName}
 	 */
 	public void setZoneName(String zoneName) {
 		this.zoneName = zoneName;
 	}
 
 	/**
-	 * Retrieves {@code {@link #roomNames}}
+	 * Retrieves {@link #roomNames}
 	 *
 	 * @return value of {@link #roomNames}
 	 */
@@ -377,16 +376,16 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	}
 
 	/**
-	 * Sets {@code roomNames}
+	 * Sets {@link #roomNames} value
 	 *
-	 * @param roomNames the {@code java.lang.String} field
+	 * @param roomNames new value of {@link #roomNames}
 	 */
 	public void setRoomNames(String roomNames) {
 		this.roomNames = roomNames;
 	}
 
 	/**
-	 * Retrieves {@code {@link #deviceTypes}}
+	 * Retrieves {@link #deviceTypes}
 	 *
 	 * @return value of {@link #deviceTypes}
 	 */
@@ -395,16 +394,16 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	}
 
 	/**
-	 * Sets {@code deviceTypes}
+	 * Sets {@link #deviceTypes} value
 	 *
-	 * @param deviceTypes the {@code java.lang.String} field
+	 * @param deviceTypes new value of {@link #deviceTypes}
 	 */
 	public void setDeviceTypes(String deviceTypes) {
 		this.deviceTypes = deviceTypes;
 	}
 
 	/**
-	 * Retrieves {@code {@link #deviceNames}}
+	 * Retrieves {@link #deviceNames}
 	 *
 	 * @return value of {@link #deviceNames}
 	 */
@@ -413,16 +412,16 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	}
 
 	/**
-	 * Sets {@code deviceNames}
+	 * Sets {@link #deviceNames} value
 	 *
-	 * @param deviceNames the {@code java.lang.String} field
+	 * @param deviceNames new value of {@link #deviceNames}
 	 */
 	public void setDeviceNames(String deviceNames) {
 		this.deviceNames = deviceNames;
 	}
 
 	/**
-	 * Retrieves {@code {@link #configManagement}}
+	 * Retrieves {@link #configManagement}
 	 *
 	 * @return value of {@link #configManagement}
 	 */
@@ -431,16 +430,16 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	}
 
 	/**
-	 * Sets {@code configManagement}
+	 * Sets {@link #configManagement} value
 	 *
-	 * @param configManagement the {@code java.lang.String} field
+	 * @param configManagement new value of {@link #configManagement}
 	 */
 	public void setConfigManagement(String configManagement) {
 		this.configManagement = configManagement;
 	}
 
 	/**
-	 * Retrieves {@code {@link #pollingInterval }}
+	 * Retrieves {@link #pollingInterval}
 	 *
 	 * @return value of {@link #pollingInterval}
 	 */
@@ -449,9 +448,9 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	}
 
 	/**
-	 * Sets {@code pollingInterval}
+	 * Sets {@link #pollingInterval} value
 	 *
-	 * @param pollingInterval the {@code java.lang.String} field
+	 * @param pollingInterval new value of {@link #pollingInterval}
 	 */
 	public void setPollingInterval(String pollingInterval) {
 		this.pollingInterval = pollingInterval;
@@ -1181,7 +1180,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 * Round the value
 	 *
 	 * @param d Value to be rounded
-	 * @return Preciesed value.
+	 * @return Precised value.
 	 */
 	float precision(float d) {
 		return (float) (Math.round(10000.0 * d) / 10000.0);
@@ -1661,19 +1660,8 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	private boolean handleControlForAddingNewDevice(String property, String value, Map<String, Map<String, String>> typeAndMapOfDevice, Map<String, String> stats,
 			List<AdvancedControllableProperty> advancedControllableProperties) {
 		String[] propertyList = property.split(PhilipsConstant.HASH);
-		String propertyGroup = propertyList[0];
 		String key = propertyList[1];
 		boolean isControlAddNew = false;
-		if (!PhilipsConstant.REPEAT.equalsIgnoreCase(key) && key.contains(PhilipsConstant.REPEAT) && !AutomationEnum.REPEAT_ADD.getName().equals(key)) {
-			List<String> repeatDayDropdown = Arrays.stream(RepeatDayEnum.values()).map(RepeatDayEnum::getName).collect(Collectors.toList());
-			Map<String, String> repeatDay = repeatNameOfAutomationMap.get(propertyGroup);
-			if (repeatDay == null) {
-				repeatDay = new HashMap<>();
-			}
-			updateDeviceDropdownList(property, value, stats, advancedControllableProperties, repeatDayDropdown, repeatDay, PhilipsConstant.REPEAT_0);
-			repeatNameOfAutomationMap.put(propertyGroup, repeatDay);
-			isControlAddNew = true;
-		}
 		if (!PhilipsConstant.DEVICE.equalsIgnoreCase(key) && key.contains(PhilipsConstant.DEVICE) && !AutomationEnum.DEVICE_ADD.getName().equals(key)) {
 			List<String> deviceDropdown = deviceNameAndDeviceIdZoneMap.keySet().stream().collect(Collectors.toList());
 			Map<String, String> mapOfDevice = typeAndMapOfDevice.get(PhilipsConstant.DEVICE);
@@ -1716,10 +1704,6 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		boolean isAddNewValue = handleControlForAddingNewDevice(property, value, typeAndMapOfDevice, stats, advancedControllableProperties);
 		if (!isAddNewValue) {
 			AutomationEnum automationEnum = EnumTypeHandler.getMetricOfEnumByName(AutomationEnum.class, key);
-			Map<String, String> repeatDay = repeatNameOfAutomationMap.get(propertyGroup);
-			if (repeatDay == null) {
-				repeatDay = new HashMap<>();
-			}
 			switch (automationEnum) {
 				case NAME:
 				case TIME_HOUR:
@@ -1734,26 +1718,25 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					break;
 				case REPEAT:
 					updateValueForTheControllableProperty(property, value, stats, advancedControllableProperties);
+					Map<String, String> mapOfRepeat = repeatControlForAutomation.get(propertyGroup).get(stats.get(propertyGroup + PhilipsConstant.HASH + AutomationEnum.TYPE_OF_AUTOMATION.getName()));
 					if (String.valueOf(PhilipsConstant.NUMBER_ONE).equals(value)) {
-						stats.put(propertyGroup + PhilipsConstant.HASH + AutomationEnum.REPEAT_ADD.getName(), PhilipsConstant.EMPTY_STRING);
-						advancedControllableProperties.add(createButton(propertyGroup + PhilipsConstant.HASH + AutomationEnum.REPEAT_ADD.getName(), PhilipsConstant.ADD, PhilipsConstant.ADDING, 0));
-						List<String> dayDropdown = Arrays.stream(RepeatDayEnum.values()).map(RepeatDayEnum::getName).collect(Collectors.toList());
-						addRepeatDayForCreateAutomation(property, stats, advancedControllableProperties, dayDropdown, repeatDay, PhilipsConstant.REPEAT);
+						populateControlOfRepeatForAutomation(propertyGroup, stats, advancedControllableProperties, mapOfRepeat);
 					} else {
-						String repeatAdd = propertyGroup + PhilipsConstant.HASH + AutomationEnum.REPEAT_ADD.getName();
-						stats.remove(repeatAdd);
-						advancedControllableProperties.removeIf(item -> item.getName().equals(repeatAdd));
-						removeRepeatDayForCreateAutomation(property, stats, advancedControllableProperties, repeatDay);
+						removeControlOfRepeatForAutomation(propertyGroup, stats, advancedControllableProperties, mapOfRepeat);
 					}
+					mapOfRepeat.put(AutomationEnum.REPEAT.getName(), value);
 					break;
-				case REPEAT_ADD:
-					if (repeatDay == null) {
-						repeatDay = new HashMap<>();
-						initializeDeviceDropdown(repeatDay, PhilipsConstant.REPEAT, PhilipsConstant.MAXIMUM_REPEAT_DAY);
-						repeatDay.put(PhilipsConstant.REPEAT_0, null);
-					}
-					addNewRepeatForAutomation(propertyGroup, stats, advancedControllableProperties, repeatDay);
-					repeatNameOfAutomationMap.put(propertyGroup, repeatDay);
+				case REPEAT_MONDAY:
+				case REPEAT_TUESDAY:
+				case REPEAT_WEDNESDAY:
+				case REPEAT_THURSDAY:
+				case REPEAT_FRIDAY:
+				case REPEAT_SATURDAY:
+				case REPEAT_SUNDAY:
+					updateValueForTheControllableProperty(property, value, stats, advancedControllableProperties);
+					mapOfRepeat = repeatControlForAutomation.get(propertyGroup).get(stats.get(propertyGroup + PhilipsConstant.HASH + AutomationEnum.TYPE_OF_AUTOMATION.getName()));
+					mapOfRepeat.put(automationEnum.getName(), value);
+					isDisableRepeat(propertyGroup, stats, advancedControllableProperties, mapOfRepeat);
 					break;
 				case FADE_DURATION:
 					value = String.valueOf(getValueByRange(PhilipsConstant.MIN_FADE_DURATION, PhilipsConstant.MAX_FADE_DURATION, value));
@@ -1814,14 +1797,8 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 							}
 					}
 					break;
-				case DELETE:
-				case CREATE:
-					if (logger.isDebugEnabled()) {
-						logger.debug(String.format("Controlling automation by name %s is not supported.", automationEnum.getName()));
-					}
-					break;
 				case APPLY_CHANGE:
-					AutomationResponse automationRequest = convertAutomationByValues(propertyGroup, stats, typeAndMapOfDevice, repeatDay);
+					AutomationResponse automationRequest = convertAutomationByValues(propertyGroup, stats, typeAndMapOfDevice);
 					sendRequestToCreateAutomation(automationRequest, true);
 					isEmergencyDelivery = false;
 					break;
@@ -1838,6 +1815,8 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					updateValueForTheControllableProperty(property, value, stats, advancedControllableProperties);
 					isEmergencyDelivery = isCurrentEmergencyDelivery;
 					break;
+				case DELETE:
+				case CREATE:
 				default:
 					if (logger.isDebugEnabled()) {
 						logger.debug(String.format("Controlling automation by name %s is not supported.", automationEnum.getName()));
@@ -1916,8 +1895,14 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 */
 	private void createAutomation(Map<String, String> stats, List<AdvancedControllableProperty> createAutomationControllableProperties) {
 		String group = PhilipsConstant.CREATE_AUTOMATION + PhilipsConstant.HASH;
+		repeatCreateAutomation.clear();
+		timeAndMinuteForCreateAutomation.clear();
 		for (AutomationEnum automationEnum : AutomationEnum.values()) {
 			String property = group + automationEnum.getName();
+			initializeTimeForAutomation();
+			initializeRepeatForAutomation(repeatCreateAutomation, TypeOfAutomation.WAKE_UP_WITH_LIGHT.getName());
+			initializeRepeatForAutomation(repeatCreateAutomation, TypeOfAutomation.GO_TO_SLEEP.getName());
+			initializeRepeatForAutomation(repeatCreateAutomation, TypeOfAutomation.TIMER.getName());
 			switch (automationEnum) {
 				case ACTION:
 					stats.put(property, PhilipsConstant.EMPTY_STRING);
@@ -1928,12 +1913,19 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					createAutomationControllableProperties.add(createText(property, PhilipsConstant.EMPTY_STRING));
 					break;
 				case STATUS:
-					stats.put(property, PhilipsConstant.EMPTY_STRING);
+					stats.put(property, String.valueOf(PhilipsConstant.NUMBER_ONE));
 					createAutomationControllableProperties.add(controlSwitch(stats, property, String.valueOf(PhilipsConstant.NUMBER_ONE), PhilipsConstant.OFFLINE, PhilipsConstant.ONLINE));
 					break;
 				case TYPE:
-					String[] typeDropdown = EnumTypeHandler.getEnumNames(TypeOfDeviceEnum.class);
-					AdvancedControllableProperty typeControlProperty = controlDropdown(stats, typeDropdown, property, TypeOfDeviceEnum.DEVICE.getName());
+					List<String> typeDropdown = new LinkedList<>();
+					typeDropdown.add(TypeOfDeviceEnum.DEVICE.getName());
+					if (roomNameAndIdMap.size() > 1) {
+						typeDropdown.add(TypeOfDeviceEnum.ROOM.getName());
+					}
+					if (zoneNameAndIdMap.size() > 1) {
+						typeDropdown.add(TypeOfDeviceEnum.ZONE.getName());
+					}
+					AdvancedControllableProperty typeControlProperty = controlDropdown(stats, typeDropdown.toArray(new String[0]), property, TypeOfDeviceEnum.DEVICE.getName());
 					addOrUpdateAdvanceControlProperties(createAutomationControllableProperties, typeControlProperty);
 					updateDeviceTypeForCreateAutomationByType(property, stats, createAutomationControllableProperties, TypeOfDeviceEnum.DEVICE, typeAndMapOfDeviceAndValue);
 					break;
@@ -1949,7 +1941,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					break;
 				case FADE_DURATION_MINUTE:
 					String[] timeMinuteDropdown = EnumTypeHandler.getEnumNames(TimeMinuteEnum.class);
-					AdvancedControllableProperty timeMinuteControlProperty = controlDropdown(stats, timeMinuteDropdown, property, TimeMinuteEnum.MINUTE_00.getName());
+					AdvancedControllableProperty timeMinuteControlProperty = controlDropdown(stats, timeMinuteDropdown, property, TimeMinuteEnum.MINUTE_01.getName());
 					addOrUpdateAdvanceControlProperties(createAutomationControllableProperties, timeMinuteControlProperty);
 					break;
 				case FADE_DURATION:
@@ -1958,10 +1950,6 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				case REPEAT_ADD:
 				case TIME_HOUR:
 				case TIME_MINUTE:
-					if (logger.isDebugEnabled()) {
-						logger.debug(String.format("Controlling create automation by name %s is not supported.", automationEnum.getName()));
-					}
-					break;
 				default:
 					if (logger.isDebugEnabled()) {
 						logger.debug(String.format("Controlling create automation by name %s is not supported.", automationEnum.getName()));
@@ -1969,6 +1957,53 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			}
 		}
 		stats.put(group + PhilipsConstant.EDITED, PhilipsConstant.FALSE);
+	}
+
+	private void initializeRepeatNoneValue(Map<String, String> repeatWakeup) {
+		for (RepeatEnum repeatEnum : RepeatEnum.values()) {
+			if (repeatWakeup.get(repeatEnum.getName()) == null) {
+				repeatWakeup.put(repeatEnum.getName(), String.valueOf(PhilipsConstant.ZERO));
+			}
+		}
+	}
+
+	private void initializeRepeatForAutomation(Map<String, Map<String, String>> mapOfRepeatAutomation, String type) {
+		Map<String, String> repeatWakeup = new HashMap<>();
+		String repeat = AutomationEnum.REPEAT.getName();
+		for (RepeatEnum repeatDayEnum : RepeatEnum.values()) {
+			if (TypeOfAutomation.WAKE_UP_WITH_LIGHT.getName().equalsIgnoreCase(type) && (repeatDayEnum.getName().equals(RepeatEnum.REPEAT_SATURDAY.getName()) || repeatDayEnum.getName()
+					.equals(RepeatEnum.REPEAT_SUNDAY.getName()))) {
+				repeatWakeup.put(repeatDayEnum.getName(), String.valueOf(PhilipsConstant.ZERO));
+				continue;
+			}
+			repeatWakeup.put(repeatDayEnum.getName(), String.valueOf(PhilipsConstant.NUMBER_ONE));
+		}
+		repeatWakeup.put(repeat, String.valueOf(PhilipsConstant.NUMBER_ONE));
+		mapOfRepeatAutomation.put(type, repeatWakeup);
+	}
+
+	private void initializeTimeForAutomation() {
+		String timeCurrent = AutomationEnum.TIME_CURRENT.getName();
+		String timeHour = AutomationEnum.TIME_HOUR.getName();
+		String timeMinute = AutomationEnum.TIME_MINUTE.getName();
+		String fadeDuration = AutomationEnum.FADE_DURATION.getName();
+
+		Map<String, String> goToSleep = new HashMap<>();
+		Map<String, String> wakeUpLight = new HashMap<>();
+
+		goToSleep.put(timeHour, TimerHourEnum.TIME_11.getName());
+		goToSleep.put(timeMinute, TimerHourEnum.TIME_00.getName());
+		goToSleep.put(timeCurrent, String.valueOf(PhilipsConstant.NUMBER_ONE));
+		goToSleep.put(fadeDuration, String.valueOf(PhilipsConstant.DEFAULT_FADE_DURATION));
+
+		wakeUpLight.put(timeHour, TimerHourEnum.TIME_07.getName());
+		wakeUpLight.put(timeMinute, TimerHourEnum.TIME_00.getName());
+		wakeUpLight.put(timeCurrent, String.valueOf(PhilipsConstant.ZERO));
+		wakeUpLight.put(fadeDuration, String.valueOf(PhilipsConstant.DEFAULT_FADE_DURATION_GO_TO_SLEEP));
+
+		timeAndMinuteForCreateAutomation.put(TypeOfAutomation.GO_TO_SLEEP.getName(), goToSleep);
+		timeAndMinuteForCreateAutomation.put(TypeOfAutomation.WAKE_UP_WITH_LIGHT.getName(), wakeUpLight);
+		timeAndMinuteForCreateAutomation.put(TypeOfAutomation.TIMER.getName(), new HashMap<>());
 	}
 
 	/**
@@ -1991,6 +2026,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		if (automationAndTypeMapOfDeviceAndValue != null) {
 			automationAndTypeMapOfDeviceAndValue.clear();
 		}
+		repeatControlForAutomation.clear();
 		roomNameAndIdMap.clear();
 		zoneNameAndIdMap.clear();
 		repeatNameOfAutomationMap.clear();
@@ -2099,25 +2135,26 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					if ((TypeOfAutomation.GO_TO_SLEEP.getName().equalsIgnoreCase(type.getName()) || TypeOfAutomation.WAKE_UP_WITH_LIGHT.getName().equalsIgnoreCase(type.getName()))
 							&& automationData.getConfigurations().getTimeAndRepeats() != null) {
 						String[] days = new String[0];
+						Map<String, String> dayMap = new HashMap<>();
+						Map<String, Map<String, String>> typeOfDayMap = new HashMap<>();
 						if (automationData.getConfigurations().getTimeAndRepeats().getDays() != null) {
-							Map<String, String> dayMap = new HashMap<>();
-							initializeDeviceDropdown(dayMap, PhilipsConstant.REPEAT, RepeatDayEnum.values().length);
-							int dayIndex = 0;
 							days = automationData.getConfigurations().getTimeAndRepeats().getDays();
 							for (String day : days) {
 								day = day.substring(0, 1).toUpperCase(Locale.ROOT) + day.substring(1);
-								dayMap.put(PhilipsConstant.REPEAT + dayIndex, day);
-								dayIndex++;
+								dayMap.put(PhilipsConstant.REPEAT + day, String.valueOf(PhilipsConstant.NUMBER_ONE));
 							}
-							repeatNameOfAutomationMap.put(groupName, dayMap);
-							List<String> dayDropdown = Arrays.stream(RepeatDayEnum.values()).map(RepeatDayEnum::getName).collect(Collectors.toList());
-							addRepeatDayForCreateAutomation(property, stats, advancedControllableProperties, dayDropdown, dayMap, PhilipsConstant.REPEAT);
-
-							String repeatAdd = groupName + PhilipsConstant.HASH + AutomationEnum.REPEAT_ADD.getName();
-							stats.put(repeatAdd, PhilipsConstant.EMPTY_STRING);
-							advancedControllableProperties.add(createButton(repeatAdd, PhilipsConstant.ADD, PhilipsConstant.ADDING, 0));
+							dayMap.put(PhilipsConstant.REPEAT, String.valueOf(PhilipsConstant.NUMBER_ONE));
+							if (dayMap.size() < 8) {
+								initializeRepeatNoneValue(dayMap);
+							}
+							typeOfDayMap.put(type.getName(), dayMap);
+							repeatControlForAutomation.put(groupName, typeOfDayMap);
+							populateControlOfRepeatForAutomation(groupName, stats, advancedControllableProperties, dayMap);
+						} else {
+							initializeRepeatForAutomation(typeOfDayMap, type.getName());
+							typeOfDayMap.get(type.getName()).put(PhilipsConstant.REPEAT, String.valueOf(PhilipsConstant.ZERO));
+							repeatControlForAutomation.put(groupName, typeOfDayMap);
 						}
-
 						int repeatValue = PhilipsConstant.ZERO;
 						if (days.length > 0) {
 							repeatValue = PhilipsConstant.NUMBER_ONE;
@@ -2216,16 +2253,23 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 							fadeDuration = automationData.getConfigurations().getDuration().getSeconds();
 							int fadeDurationHour = Integer.parseInt(fadeDuration);
 							int hour = fadeDurationHour / 3600;
-							int minute = fadeDurationHour % 60;
+							int minute = (fadeDurationHour % 3600) / 60;
 							hourDropdown = EnumTypeHandler.getEnumNames(TimerHourEnum.class);
 							String[] timeMinuteDropdown = EnumTypeHandler.getEnumNames(TimeMinuteEnum.class);
 							String fadeDurationHourKey = groupName + PhilipsConstant.HASH + AutomationEnum.FADE_DURATION_HOUR.getName();
 							String fadeDurationMinuteKey = groupName + PhilipsConstant.HASH + AutomationEnum.FADE_DURATION_MINUTE.getName();
-
-							hourControlProperty = controlDropdown(stats, hourDropdown, fadeDurationHourKey, convertTimeFormat(hour));
+							hourValue = String.valueOf(hour);
+							if (hour < 10) {
+								hourValue = PhilipsConstant.ZERO + hourValue;
+							}
+							hourControlProperty = controlDropdown(stats, hourDropdown, fadeDurationHourKey, hourValue);
 							addOrUpdateAdvanceControlProperties(advancedControllableProperties, hourControlProperty);
 
-							AdvancedControllableProperty timeMinuteControlProperty = controlDropdown(stats, timeMinuteDropdown, fadeDurationMinuteKey, convertTimeFormat(minute));
+							String minuteValue = String.valueOf(minute);
+							if (minute < 10) {
+								minuteValue = PhilipsConstant.ZERO + minuteValue;
+							}
+							AdvancedControllableProperty timeMinuteControlProperty = controlDropdown(stats, timeMinuteDropdown, fadeDurationMinuteKey, minuteValue);
 							addOrUpdateAdvanceControlProperties(advancedControllableProperties, timeMinuteControlProperty);
 							break;
 						default:
@@ -2292,7 +2336,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				}
 				automationAndTypeMapOfDeviceAndValue.put(groupName, typeDevice);
 				List<String> deviceOfMap = deviceNameAndDeviceIdZoneMap.keySet().stream().collect(Collectors.toList());
-				addRepeatDayForCreateAutomation(property, stats, advancedControllableProperties, deviceOfMap, device, PhilipsConstant.DEVICE);
+				addControllableForAutomationByType(property, stats, advancedControllableProperties, deviceOfMap, device, PhilipsConstant.DEVICE);
 
 				String deviceAdd = groupName + PhilipsConstant.HASH + AutomationEnum.DEVICE_ADD.getName();
 				stats.put(deviceAdd, PhilipsConstant.EMPTY_STRING);
@@ -2319,7 +2363,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					stats.put(deviceAdd, PhilipsConstant.EMPTY_STRING);
 					advancedControllableProperties.add(createButton(deviceAdd, PhilipsConstant.ADD, PhilipsConstant.ADDING, 0));
 					List<String> deviceOfMap = deviceNameAndDeviceIdZoneMap.keySet().stream().collect(Collectors.toList());
-					addRepeatDayForCreateAutomation(property, stats, advancedControllableProperties, deviceOfMap, device, PhilipsConstant.DEVICE);
+					addControllableForAutomationByType(property, stats, advancedControllableProperties, deviceOfMap, device, PhilipsConstant.DEVICE);
 
 					String[] typeDropdown = EnumTypeHandler.getEnumNames(TypeOfDeviceEnum.class);
 					AdvancedControllableProperty typeControlProperty = controlDropdown(stats, typeDropdown, property, PhilipsConstant.DEVICE);
@@ -2354,7 +2398,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					}
 					typeDevice.put(PhilipsConstant.ROOM, device);
 					automationAndTypeMapOfDeviceAndValue.put(groupName, typeDevice);
-					addRepeatDayForCreateAutomation(property, stats, advancedControllableProperties, deviceOfRoomMapCopy, device, PhilipsConstant.ROOM);
+					addControllableForAutomationByType(property, stats, advancedControllableProperties, deviceOfRoomMapCopy, device, PhilipsConstant.ROOM);
 
 					String roomAdd = groupName + PhilipsConstant.HASH + AutomationEnum.ROOM_ADD.getName();
 					stats.put(roomAdd, PhilipsConstant.EMPTY_STRING);
@@ -2385,7 +2429,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					}
 					typeDevice.put(PhilipsConstant.ZONE, device);
 					automationAndTypeMapOfDeviceAndValue.put(groupName, typeDevice);
-					addRepeatDayForCreateAutomation(property, stats, advancedControllableProperties, deviceOfZoneMapCopy, device, PhilipsConstant.ZONE);
+					addControllableForAutomationByType(property, stats, advancedControllableProperties, deviceOfZoneMapCopy, device, PhilipsConstant.ZONE);
 
 					String zoneAdd = groupName + PhilipsConstant.HASH + AutomationEnum.ZONE_ADD.getName();
 					stats.put(zoneAdd, PhilipsConstant.EMPTY_STRING);
@@ -2699,10 +2743,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		String key = propertyList[1];
 		isCreateAutomation = true;
 
-		if (!PhilipsConstant.REPEAT.equalsIgnoreCase(key) && key.contains(PhilipsConstant.REPEAT) && !AutomationEnum.REPEAT_ADD.getName().equals(key)) {
-			List<String> repeatDayDropdown = Arrays.stream(RepeatDayEnum.values()).map(RepeatDayEnum::getName).collect(Collectors.toList());
-			updateDeviceDropdownList(property, value, stats, advancedControllableProperties, repeatDayDropdown, repeatNameOfCreateAutomationMap, PhilipsConstant.REPEAT_0);
-		} else if (!PhilipsConstant.DEVICE.equalsIgnoreCase(key) && key.contains(PhilipsConstant.DEVICE) && !AutomationEnum.DEVICE_ADD.getName().equals(key)) {
+		if (!PhilipsConstant.DEVICE.equalsIgnoreCase(key) && key.contains(PhilipsConstant.DEVICE) && !AutomationEnum.DEVICE_ADD.getName().equals(key)) {
 			List<String> deviceDropdown = deviceNameAndDeviceIdZoneMap.keySet().stream().collect(Collectors.toList());
 			Map<String, String> mapOfDevice = typeAndMapOfDeviceAndValue.get(PhilipsConstant.DEVICE);
 			updateDeviceDropdownList(property, value, stats, advancedControllableProperties, deviceDropdown, mapOfDevice, PhilipsConstant.DEVICE_0);
@@ -2719,9 +2760,6 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			switch (automationEnum) {
 				case NAME:
 				case STATUS:
-				case TIME_HOUR:
-				case TIME_CURRENT:
-				case TIME_MINUTE:
 				case END_BRIGHTNESS:
 				case END_WITH:
 				case STYLE:
@@ -2729,27 +2767,42 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				case FADE_DURATION_MINUTE:
 					updateValueForTheControllableProperty(property, value, stats, advancedControllableProperties);
 					break;
+				case TIME_HOUR:
+				case TIME_CURRENT:
+				case TIME_MINUTE:
+					updateValueForTheControllableProperty(property, value, stats, advancedControllableProperties);
+					String typeOfAutomation = localCreateAutomationStats.get(propertyGroup + PhilipsConstant.HASH + AutomationEnum.TYPE_OF_AUTOMATION.getName());
+					timeAndMinuteForCreateAutomation.get(typeOfAutomation).put(automationEnum.getName(), value);
+					break;
 				case FADE_DURATION:
 					value = String.valueOf(getValueByRange(PhilipsConstant.MIN_FADE_DURATION, PhilipsConstant.MAX_FADE_DURATION, value));
 					updateValueForTheControllableProperty(property, value, stats, advancedControllableProperties);
+					typeOfAutomation = localCreateAutomationStats.get(propertyGroup + PhilipsConstant.HASH + AutomationEnum.TYPE_OF_AUTOMATION.getName());
+					if (!TypeOfAutomation.TIMER.getName().equalsIgnoreCase(typeOfAutomation)) {
+						timeAndMinuteForCreateAutomation.get(typeOfAutomation).put(automationEnum.getName(), value);
+					}
 					break;
 				case REPEAT:
 					updateValueForTheControllableProperty(property, value, stats, advancedControllableProperties);
+					Map<String, String> mapOfRepeat = repeatCreateAutomation.get(stats.get(propertyGroup + PhilipsConstant.HASH + AutomationEnum.TYPE_OF_AUTOMATION.getName()));
 					if (String.valueOf(PhilipsConstant.NUMBER_ONE).equals(value)) {
-						stats.put(propertyGroup + PhilipsConstant.HASH + AutomationEnum.REPEAT_ADD.getName(), PhilipsConstant.EMPTY_STRING);
-						advancedControllableProperties.add(createButton(propertyGroup + PhilipsConstant.HASH + AutomationEnum.REPEAT_ADD.getName(), PhilipsConstant.ADD, PhilipsConstant.ADDING, 0));
-						List<String> dayDropdown = Arrays.stream(RepeatDayEnum.values()).map(RepeatDayEnum::getName).collect(Collectors.toList());
-						addRepeatDayForCreateAutomation(property, stats, advancedControllableProperties, dayDropdown, repeatNameOfCreateAutomationMap, PhilipsConstant.REPEAT);
+						populateControlOfRepeatForAutomation(propertyGroup, stats, advancedControllableProperties, mapOfRepeat);
 					} else {
-						String repeatAdd = propertyGroup + PhilipsConstant.HASH + AutomationEnum.REPEAT_ADD.getName();
-
-						stats.remove(repeatAdd);
-						advancedControllableProperties.removeIf(item -> item.getName().equals(repeatAdd));
-						removeRepeatDayForCreateAutomation(property, stats, advancedControllableProperties, repeatNameOfCreateAutomationMap);
+						removeControlOfRepeatForAutomation(propertyGroup, stats, advancedControllableProperties, mapOfRepeat);
 					}
+					mapOfRepeat.put(AutomationEnum.REPEAT.getName(), value);
 					break;
-				case REPEAT_ADD:
-					addNewRepeatForAutomation(propertyGroup, stats, advancedControllableProperties, repeatNameOfCreateAutomationMap);
+				case REPEAT_MONDAY:
+				case REPEAT_TUESDAY:
+				case REPEAT_WEDNESDAY:
+				case REPEAT_THURSDAY:
+				case REPEAT_FRIDAY:
+				case REPEAT_SATURDAY:
+				case REPEAT_SUNDAY:
+					updateValueForTheControllableProperty(property, value, stats, advancedControllableProperties);
+					mapOfRepeat = repeatCreateAutomation.get(stats.get(propertyGroup + PhilipsConstant.HASH + AutomationEnum.TYPE_OF_AUTOMATION.getName()));
+					mapOfRepeat.put(automationEnum.getName(), value);
+					isDisableRepeat(propertyGroup, stats, advancedControllableProperties, mapOfRepeat);
 					break;
 				case DEVICE_ADD:
 					List<String> deviceDropdown = deviceNameAndDeviceIdZoneMap.keySet().stream().collect(Collectors.toList());
@@ -2796,7 +2849,6 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					break;
 				case CANCEL:
 					isCreateAutomation = false;
-					repeatNameOfCreateAutomationMap.clear();
 					typeAndMapOfDeviceAndValue.clear();
 					break;
 				case TYPE_OF_AUTOMATION:
@@ -2816,7 +2868,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					String endBrightness = propertyGroup + PhilipsConstant.HASH + AutomationEnum.END_BRIGHTNESS.getName();
 					String endBrightnessValue = localCreateAutomationStats.get(endBrightness);
 					if (StringUtils.isNullOrEmpty(endBrightnessValue)) {
-						endBrightnessValue = String.valueOf(PhilipsConstant.NUMBER_ONE);
+						endBrightnessValue = String.valueOf(PhilipsConstant.MAX_END_BRIGHTNESS);
 					}
 					String durationHourName = propertyGroup + PhilipsConstant.HASH + AutomationEnum.FADE_DURATION_HOUR.getName();
 					String durationHourNameValue = localCreateAutomationStats.get(durationHourName);
@@ -2828,35 +2880,28 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					if (StringUtils.isNullOrEmpty(durationMinuteNameValue)) {
 						durationMinuteNameValue = TimeMinuteEnum.MINUTE_01.getName();
 					}
-					String fadeDuration = propertyGroup + PhilipsConstant.HASH + AutomationEnum.FADE_DURATION.getName();
-					String fadeDurationValue = localCreateAutomationStats.get(fadeDuration);
-					if (StringUtils.isNullOrEmpty(fadeDurationValue)) {
-						fadeDurationValue = String.valueOf(PhilipsConstant.DEFAULT_FADE_DURATION);
-					}
+
 					String repeat = propertyGroup + PhilipsConstant.HASH + AutomationEnum.REPEAT.getName();
-					String repeatValue = localCreateAutomationStats.get(repeat);
-					if (StringUtils.isNullOrEmpty(repeatValue)) {
-						repeatValue = String.valueOf(PhilipsConstant.ZERO);
-					}
 					String timeCurrent = propertyGroup + PhilipsConstant.HASH + AutomationEnum.TIME_CURRENT.getName();
-					String timeCurrentValue = localCreateAutomationStats.get(timeCurrent);
-					if (StringUtils.isNullOrEmpty(timeCurrentValue)) {
-						timeCurrentValue = String.valueOf(PhilipsConstant.ZERO);
-					}
 					String timeHour = propertyGroup + PhilipsConstant.HASH + AutomationEnum.TIME_HOUR.getName();
-					String timeHourValue = localCreateAutomationStats.get(timeHour);
-					if (StringUtils.isNullOrEmpty(timeHourValue)) {
-						timeHourValue = TimeHourEnum.TIME_01.getName();
-					}
 					String timeMinute = propertyGroup + PhilipsConstant.HASH + AutomationEnum.TIME_MINUTE.getName();
-					String timeMinuteValue = localCreateAutomationStats.get(timeMinute);
-					if (StringUtils.isNullOrEmpty(timeMinuteValue)) {
-						timeMinuteValue = TimeMinuteEnum.MINUTE_00.getName();
-					}
+					String fadeDuration = propertyGroup + PhilipsConstant.HASH + AutomationEnum.FADE_DURATION.getName();
+					String timeCurrentValue = timeAndMinuteForCreateAutomation.get(typeAutomation.getName()).get(AutomationEnum.TIME_CURRENT.getName());
+					String timeHourValue = timeAndMinuteForCreateAutomation.get(typeAutomation.getName()).get(AutomationEnum.TIME_HOUR.getName());
+					String timeMinuteValue = timeAndMinuteForCreateAutomation.get(typeAutomation.getName()).get(AutomationEnum.TIME_MINUTE.getName());
+					String fadeDurationValue = timeAndMinuteForCreateAutomation.get(typeAutomation.getName()).get(AutomationEnum.FADE_DURATION.getName());
+					String repeatValue = repeatCreateAutomation.get(typeAutomation.getName()).get(AutomationEnum.REPEAT.getName());
+					Map<String, String> mapOfRepeatValue = repeatCreateAutomation.get(typeAutomation.getName());
 					switch (typeAutomation) {
 						case GO_TO_SLEEP:
 							stats.put(repeat, repeatValue);
 							advancedControllableProperties.add(controlSwitch(stats, repeat, repeatValue, PhilipsConstant.DISABLE, PhilipsConstant.ENABLE));
+
+							if (String.valueOf(PhilipsConstant.NUMBER_ONE).equals(repeatValue)) {
+								populateControlOfRepeatForAutomation(propertyGroup, stats, advancedControllableProperties, mapOfRepeatValue);
+							} else {
+								removeControlOfRepeatForAutomation(propertyGroup, stats, advancedControllableProperties, mapOfRepeatValue);
+							}
 							stats.put(timeCurrent, timeCurrentValue);
 							advancedControllableProperties.add(controlSwitch(stats, timeCurrent, timeCurrentValue, PhilipsConstant.TIME_AM, PhilipsConstant.TIME_PM));
 
@@ -2887,7 +2932,11 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 						case WAKE_UP_WITH_LIGHT:
 							stats.put(repeat, repeatValue);
 							advancedControllableProperties.add(controlSwitch(stats, repeat, repeatValue, PhilipsConstant.DISABLE, PhilipsConstant.ENABLE));
-
+							if (String.valueOf(PhilipsConstant.NUMBER_ONE).equals(repeatValue)) {
+								populateControlOfRepeatForAutomation(propertyGroup, stats, advancedControllableProperties, mapOfRepeatValue);
+							} else {
+								removeControlOfRepeatForAutomation(propertyGroup, stats, advancedControllableProperties, mapOfRepeatValue);
+							}
 							stats.put(timeCurrent, timeCurrentValue);
 							advancedControllableProperties.add(controlSwitch(stats, timeCurrent, timeCurrentValue, PhilipsConstant.TIME_AM, PhilipsConstant.TIME_PM));
 
@@ -2918,7 +2967,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 							advancedControllableProperties.removeIf(item -> item.getName().equals(durationMinuteName));
 							break;
 						case TIMER:
-							hourDropdown = EnumTypeHandler.getEnumNames(TimeHourEnum.class);
+							hourDropdown = EnumTypeHandler.getEnumNames(TimerHourEnum.class);
 							hourControlProperty = controlDropdown(stats, hourDropdown, durationHourName, durationHourNameValue);
 							addOrUpdateAdvanceControlProperties(advancedControllableProperties, hourControlProperty);
 							timeMinuteDropdown = EnumTypeHandler.getEnumNames(TimeMinuteEnum.class);
@@ -2947,10 +2996,9 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					}
 					break;
 				case ACTION:
-					AutomationResponse automation = convertAutomationByValues(propertyGroup, stats, typeAndMapOfDeviceAndValue, repeatNameOfCreateAutomationMap);
+					AutomationResponse automation = convertAutomationByValues(propertyGroup, stats, typeAndMapOfDeviceAndValue);
 					sendRequestToCreateAutomation(automation, false);
 					isCreateAutomation = false;
-					repeatNameOfCreateAutomationMap.clear();
 					typeAndMapOfDeviceAndValue.clear();
 					break;
 				default:
@@ -2960,6 +3008,33 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			}
 		}
 		populateCancelChangeButton(stats, advancedControllableProperties, propertyGroup, isCreateAutomation);
+	}
+
+	private void isDisableRepeat(String propertyGroup, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties,
+			Map<String, String> mapOfRepeat) {
+		String property = propertyGroup + PhilipsConstant.HASH + PhilipsConstant.REPEAT;
+		boolean isDisableRepeat = false;
+		for (Entry<String, String> map : mapOfRepeat.entrySet()) {
+			if (PhilipsConstant.REPEAT.equalsIgnoreCase(map.getKey())) {
+				continue;
+			}
+			if (String.valueOf(PhilipsConstant.NUMBER_ONE).equalsIgnoreCase(map.getValue())) {
+				isDisableRepeat = true;
+				break;
+			}
+		}
+		if (!isDisableRepeat) {
+			mapOfRepeat.put(AutomationEnum.REPEAT_MONDAY.getName(), String.valueOf(PhilipsConstant.NUMBER_ONE));
+			for (Entry<String, String> map : mapOfRepeat.entrySet()) {
+				String name = propertyGroup + PhilipsConstant.HASH + map.getKey();
+				if (PhilipsConstant.REPEAT.equalsIgnoreCase(map.getKey())) {
+					updateValueForTheControllableProperty(property, String.valueOf(PhilipsConstant.ZERO), stats, advancedControllableProperties);
+					continue;
+				}
+				stats.remove(name);
+				advancedControllableProperties.removeIf(item -> item.getName().equals(name));
+			}
+		}
 	}
 
 	/**
@@ -3008,10 +3083,10 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				stats.put(deviceAdd, PhilipsConstant.EMPTY_STRING);
 				advancedControllableProperties.add(createButton(deviceAdd, PhilipsConstant.ADD, PhilipsConstant.ADDING, 0));
 				if (deviceOfRoom.size() > 0) {
-					removeRepeatDayForCreateAutomation(property, stats, advancedControllableProperties, deviceOfRoom);
+					removeControllableForAutomationByDeviceType(property, stats, advancedControllableProperties, deviceOfRoom);
 				}
 				if (deviceOfZone.size() > 0) {
-					removeRepeatDayForCreateAutomation(property, stats, advancedControllableProperties, deviceOfZone);
+					removeControllableForAutomationByDeviceType(property, stats, advancedControllableProperties, deviceOfZone);
 				}
 				stats.remove(roomAdd);
 				advancedControllableProperties.removeIf(item -> item.getName().equals(roomAdd));
@@ -3022,10 +3097,10 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				stats.put(roomAdd, PhilipsConstant.EMPTY_STRING);
 				advancedControllableProperties.add(createButton(roomAdd, PhilipsConstant.ADD, PhilipsConstant.ADDING, 0));
 				if (deviceMap.size() > 0) {
-					removeRepeatDayForCreateAutomation(property, stats, advancedControllableProperties, deviceMap);
+					removeControllableForAutomationByDeviceType(property, stats, advancedControllableProperties, deviceMap);
 				}
 				if (deviceOfZone.size() > 0) {
-					removeRepeatDayForCreateAutomation(property, stats, advancedControllableProperties, deviceOfZone);
+					removeControllableForAutomationByDeviceType(property, stats, advancedControllableProperties, deviceOfZone);
 				}
 				stats.remove(deviceAdd);
 				advancedControllableProperties.removeIf(item -> item.getName().equals(deviceAdd));
@@ -3037,10 +3112,10 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				advancedControllableProperties.add(createButton(zoneAdd, PhilipsConstant.ADD, PhilipsConstant.ADDING, 0));
 
 				if (deviceMap.size() > 0) {
-					removeRepeatDayForCreateAutomation(property, stats, advancedControllableProperties, deviceMap);
+					removeControllableForAutomationByDeviceType(property, stats, advancedControllableProperties, deviceMap);
 				}
 				if (deviceOfRoom.size() > 0) {
-					removeRepeatDayForCreateAutomation(property, stats, advancedControllableProperties, deviceOfRoom);
+					removeControllableForAutomationByDeviceType(property, stats, advancedControllableProperties, deviceOfRoom);
 				}
 				stats.remove(deviceAdd);
 				advancedControllableProperties.removeIf(item -> item.getName().equals(deviceAdd));
@@ -3077,7 +3152,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					deviceIndexAndValue.put(PhilipsConstant.DEVICE_0, PhilipsConstant.NONE);
 				} else {
 					List<String> deviceDropdown = deviceNameAndDeviceIdZoneMap.keySet().stream().collect(Collectors.toList());
-					addRepeatDayForCreateAutomation(property, stats, advancedControllableProperties, deviceDropdown, deviceIndexAndValue, PhilipsConstant.DEVICE);
+					addControllableForAutomationByType(property, stats, advancedControllableProperties, deviceDropdown, deviceIndexAndValue, PhilipsConstant.DEVICE);
 				}
 				updateListDeviceForCreateAutomation(property, stats, advancedControllableProperties, type, typeNameOfRepeat);
 				break;
@@ -3090,7 +3165,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					deviceIndexAndValue.put(PhilipsConstant.ROOM_0, PhilipsConstant.NONE);
 				} else {
 					List<String> deviceDropdown = roomNameAndIdMap.keySet().stream().collect(Collectors.toList());
-					addRepeatDayForCreateAutomation(property, stats, advancedControllableProperties, deviceDropdown, deviceIndexAndValue, PhilipsConstant.ROOM);
+					addControllableForAutomationByType(property, stats, advancedControllableProperties, deviceDropdown, deviceIndexAndValue, PhilipsConstant.ROOM);
 				}
 				updateListDeviceForCreateAutomation(property, stats, advancedControllableProperties, type, typeNameOfRepeat);
 				break;
@@ -3103,7 +3178,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					deviceIndexAndValue.put(PhilipsConstant.ZONE_0, PhilipsConstant.NONE);
 				} else {
 					List<String> deviceDropdown = zoneNameAndIdMap.keySet().stream().collect(Collectors.toList());
-					addRepeatDayForCreateAutomation(property, stats, advancedControllableProperties, deviceDropdown, deviceIndexAndValue, PhilipsConstant.ZONE);
+					addControllableForAutomationByType(property, stats, advancedControllableProperties, deviceDropdown, deviceIndexAndValue, PhilipsConstant.ZONE);
 				}
 				updateListDeviceForCreateAutomation(property, stats, advancedControllableProperties, type, typeNameOfRepeat);
 				break;
@@ -3115,34 +3190,76 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	}
 
 	/**
-	 * Populate remove repeat day for create automation
+	 * Remove the controllable of automation by device type
 	 *
 	 * @param property the property is property name with format {CreateAutomationBehaviorInstance#{key}}
 	 * @param stats the stats are list of statistics
 	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
+	 * @param deviceMap the deviceMap is map of device name and value of the device
 	 */
-	private void removeRepeatDayForCreateAutomation(String property, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties, Map<String, String> deviceMap) {
+	private void removeControllableForAutomationByDeviceType(String property, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties,
+			Map<String, String> deviceMap) {
 		String propertyGroup = property.split(PhilipsConstant.HASH)[0];
 		if (deviceMap != null) {
-			for (Entry<String, String> repeatEntry : deviceMap.entrySet()) {
-				String value = repeatEntry.getValue();
-				String repeatName = propertyGroup + PhilipsConstant.HASH + repeatEntry.getKey();
+			for (Entry<String, String> deviceItem : deviceMap.entrySet()) {
+				String value = deviceItem.getValue();
+				String propertyName = propertyGroup + PhilipsConstant.HASH + deviceItem.getKey();
 				if (!StringUtils.isNullOrEmpty(value)) {
-					stats.remove(repeatName);
-					advancedControllableProperties.removeIf(item -> item.getName().equals(repeatName));
+					stats.remove(propertyName);
+					advancedControllableProperties.removeIf(item -> item.getName().equals(propertyName));
 				}
 			}
 		}
 	}
 
 	/**
-	 * Add new repeat for automation
+	 * populate default repeat for automation
+	 *
+	 * @param propertyName the propertyName is name of automation
+	 * @param stats the stats are list of statistics
+	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
+	 * @param mapOfRepeat the mapOfRepeat is map of repeat name and value of it
+	 */
+	private void populateControlOfRepeatForAutomation(String propertyName, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties,
+			Map<String, String> mapOfRepeat) {
+		for (Entry<String, String> repeatEntry : mapOfRepeat.entrySet()) {
+			if (PhilipsConstant.REPEAT.equalsIgnoreCase(repeatEntry.getKey())) {
+				continue;
+			}
+			AdvancedControllableProperty repeatDaysControlProperty = controlSwitch(stats, propertyName + PhilipsConstant.HASH + repeatEntry.getKey(), repeatEntry.getValue(), PhilipsConstant.DISABLE,
+					PhilipsConstant.ENABLE);
+			addOrUpdateAdvanceControlProperties(advancedControllableProperties, repeatDaysControlProperty);
+		}
+	}
+
+	/**
+	 * populate default repeat for automation
+	 *
+	 * @param propertyName the propertyName is name of automation
+	 * @param stats the stats are list of statistics
+	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
+	 * @param mapOfRepeat the mapOfRepeat is map of repeat name and value of it
+	 */
+	private void removeControlOfRepeatForAutomation(String propertyName, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties, Map<String, String> mapOfRepeat) {
+		for (Entry<String, String> repeatEntry : mapOfRepeat.entrySet()) {
+			if (PhilipsConstant.REPEAT.equalsIgnoreCase(repeatEntry.getKey())) {
+				continue;
+			}
+			stats.remove(propertyName + PhilipsConstant.HASH + repeatEntry.getKey());
+			advancedControllableProperties.removeIf(item -> item.getName().equals(propertyName + PhilipsConstant.HASH + repeatEntry.getKey()));
+		}
+	}
+
+	/**
+	 * Add new control for automation by type of device
 	 *
 	 * @param property the property is property name with format {CreateAutomationBehaviorInstance#{key}}
 	 * @param stats the stats are list of statistics
 	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
+	 * @param dropdownList the dropdownList are list device name
+	 * @param deviceMap the deviceMap are map of device and value of it
 	 */
-	private void addRepeatDayForCreateAutomation(String property, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties, List<String> dropdownList,
+	private void addControllableForAutomationByType(String property, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties, List<String> dropdownList,
 			Map<String, String> deviceMap, String name) {
 		String[] propertyList = property.split(PhilipsConstant.HASH);
 		String propertyGroup = propertyList[0];
@@ -3151,11 +3268,11 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			deviceMap = new HashMap<>();
 		}
 		if (deviceMap.size() < 1) {
-			initializeDeviceDropdown(deviceMap, name, RepeatDayEnum.values().length - 1);
+			initializeDeviceDropdown(deviceMap, name, DayEnum.values().length - 1);
 
 			AdvancedControllableProperty repeatDaysControlProperty = controlDropdown(stats, repeatDaysDropdown, propertyGroup + PhilipsConstant.HASH + name + PhilipsConstant.ZERO, PhilipsConstant.NONE);
 			addOrUpdateAdvanceControlProperties(advancedControllableProperties, repeatDaysControlProperty);
-			deviceMap.putIfAbsent(name + PhilipsConstant.ZERO, PhilipsConstant.NONE);
+			deviceMap.put(name + PhilipsConstant.ZERO, PhilipsConstant.NONE);
 		} else {
 			for (Entry<String, String> repeatEntry : deviceMap.entrySet()) {
 				String value = repeatEntry.getValue();
@@ -3207,52 +3324,6 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				break;
 			}
 		}
-	}
-
-	/**
-	 * Add new repeat for automation
-	 *
-	 * @param propertyGroup the propertyGroup is group name of property
-	 * @param stats the stats are list of statistics
-	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
-	 * @param repeatMap are map of repeat
-	 */
-	private void addNewRepeatForAutomation(String propertyGroup, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties, Map<String, String> repeatMap) {
-
-		String[] repeatDayDropdown = EnumTypeHandler.getEnumNames(RepeatDayEnum.class);
-		String prefixName = propertyGroup + PhilipsConstant.HASH;
-		//Check list repeat day added
-		int countDevice = 0;
-		for (Map.Entry<String, String> entry : repeatMap.entrySet()) {
-			if (entry.getValue() != null) {
-				//count the number of day
-				countDevice++;
-			}
-		}
-
-		//Maximum for repeat day is 7. with index RepeatDay0-RepeatDay6
-		// if countSource >= 7 throw exception
-		if (countDevice >= PhilipsConstant.MAXIMUM_REPEAT_DAY) {
-			throw new ResourceNotReachableException("Total day is 7, you have added enough day and cannot add new day. Please remove the repeat and try again");
-		}
-		Map<String, String> mapCopy = new TreeMap<>();
-		mapCopy.putAll(repeatMap);
-
-		for (Map.Entry<String, String> repeatDayEntry : mapCopy.entrySet()) {
-			String defaultName = PhilipsConstant.NONE;
-			for (RepeatDayEnum repeatDayEnum : RepeatDayEnum.values()) {
-				if (!repeatMap.containsValue(repeatDayEnum.getName())) {
-					defaultName = repeatDayEnum.getName();
-					break;
-				}
-			}
-			if (repeatDayEntry.getValue() == null) {
-				advancedControllableProperties.add(controlDropdown(stats, repeatDayDropdown, prefixName + repeatDayEntry.getKey(), defaultName));
-				repeatDayEntry.setValue(defaultName);
-				break;
-			}
-		}
-		repeatMap.putAll(mapCopy);
 	}
 
 	/**
@@ -3531,8 +3602,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 * @param typeAndMapOfDeviceAndValues are map with key is type and value is map of device and value
 	 * @return AutomationResponse DTO
 	 */
-	private AutomationResponse convertAutomationByValues(String property, Map<String, String> stats, Map<String, Map<String, String>> typeAndMapOfDeviceAndValues,
-			Map<String, String> repeatNameOfAutomationMap) {
+	private AutomationResponse convertAutomationByValues(String property, Map<String, String> stats, Map<String, Map<String, String>> typeAndMapOfDeviceAndValues) {
 		AutomationResponse automationRequest = new AutomationResponse();
 		String name = stats.get(property + PhilipsConstant.HASH + AutomationEnum.NAME.getName());
 		String fadeDuration = stats.get(property + PhilipsConstant.HASH + AutomationEnum.FADE_DURATION.getName());
@@ -3564,10 +3634,17 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		TimeAndRepeat timeAndRepeat = new TimeAndRepeat();
 		List<String> days = new LinkedList<>();
 		if (String.valueOf(PhilipsConstant.NUMBER_ONE).equals(repeat)) {
-			for (Entry<String, String> day : repeatNameOfAutomationMap.entrySet()) {
-				String dayValue = day.getValue();
-				if (!StringUtils.isNullOrEmpty(dayValue) && !PhilipsConstant.NONE.equals(dayValue) && !days.contains(dayValue.toLowerCase(Locale.ROOT))) {
-					days.add(dayValue.toLowerCase(Locale.ROOT));
+			Map<String, String> mapOfRepeat;
+			if (PhilipsConstant.CREATE_AUTOMATION.equals(property)) {
+				mapOfRepeat = repeatCreateAutomation.get(typeOfAutomation);
+			} else {
+				mapOfRepeat = repeatControlForAutomation.get(property).get(typeOfAutomation);
+			}
+			for (Entry<String, String> day : mapOfRepeat.entrySet()) {
+				String dayValue = day.getKey();
+				String currentDay = day.getValue();
+				if (!PhilipsConstant.REPEAT.equalsIgnoreCase(dayValue) && !String.valueOf(PhilipsConstant.ZERO).equals(currentDay)) {
+					days.add(dayValue.substring(PhilipsConstant.REPEAT.length()).toLowerCase(Locale.ROOT));
 				}
 			}
 		}
@@ -3584,7 +3661,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			if (durationHour == 0 && durationMinute == 0) {
 				throw new ResourceNotReachableException("Error while creating automation, When FadeDurationHour = 0 then the FadeDurationMinute cannot be 0");
 			}
-			//Parsing fade duration hurationHour * 3600 + durationMinute * 60
+			//Parsing fade duration durationHour * 3600 + durationMinute * 60
 			int duration = durationHour * 3600 + durationMinute * 60;
 			fadeDurationDTO.setSeconds(String.valueOf(duration));
 			config.setDuration(fadeDurationDTO);
@@ -3599,6 +3676,11 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			timeAndRepeat.setDays(dayArrays);
 			TimePoint timePoint = new TimePoint();
 			CurrentTime currentTime = new CurrentTime();
+			if (PhilipsConstant.CREATE_AUTOMATION.equalsIgnoreCase(property)) {
+				timeCurrent = timeAndMinuteForCreateAutomation.get(typeOfAutomation).get(AutomationEnum.TIME_CURRENT.getName());
+				timeHour = timeAndMinuteForCreateAutomation.get(typeOfAutomation).get(AutomationEnum.TIME_HOUR.getName());
+				timeMinute = timeAndMinuteForCreateAutomation.get(typeOfAutomation).get(AutomationEnum.TIME_MINUTE.getName());
+			}
 			if (String.valueOf(PhilipsConstant.NUMBER_ONE).equals(timeCurrent)) {
 				int time = Integer.parseInt(timeHour);
 				timeHour = String.valueOf(time);
@@ -3627,6 +3709,11 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			timeAndRepeat.setDays(dayArrays);
 			TimePoint timePoint = new TimePoint();
 			CurrentTime currentTime = new CurrentTime();
+			if (PhilipsConstant.CREATE_AUTOMATION.equalsIgnoreCase(property)) {
+				timeCurrent = timeAndMinuteForCreateAutomation.get(typeOfAutomation).get(AutomationEnum.TIME_CURRENT.getName());
+				timeHour = timeAndMinuteForCreateAutomation.get(typeOfAutomation).get(AutomationEnum.TIME_HOUR.getName());
+				timeMinute = timeAndMinuteForCreateAutomation.get(typeOfAutomation).get(AutomationEnum.TIME_MINUTE.getName());
+			}
 			if (String.valueOf(PhilipsConstant.NUMBER_ONE).equals(timeCurrent)) {
 				int time = Integer.parseInt(timeHour);
 				timeHour = String.valueOf(time);
@@ -3653,13 +3740,15 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			Optional<AutomationResponse> automationResponse = automationList.stream().filter(item -> item.getMetaData().getName().equals(nameValue)).findFirst();
 			automationResponse.ifPresent(response -> automationRequest.setId(response.getId()));
 			if (!name.equals(nameValue)) {
-				isAutomationNameExisting(name);
+				String newName = PhilipsConstant.AUTOMATION + typeOfAutomation + PhilipsConstant.DASH + name.trim();
+				isAutomationNameExisting(newName);
 			}
 		} else {
 			String finalScriptName = scriptName;
 			Optional<ScriptAutomationResponse> timer = scriptAutomationList.stream().filter(item -> item.getMetadata().getName().equalsIgnoreCase(finalScriptName)).findFirst();
 			timer.ifPresent(scriptAutomationResponse -> automationRequest.setScriptId(scriptAutomationResponse.getId()));
-			isAutomationNameExisting(name);
+			String nameValue = PhilipsConstant.AUTOMATION + typeOfAutomation + PhilipsConstant.DASH + name.trim();
+			isAutomationNameExisting(nameValue);
 		}
 		return automationRequest;
 	}
@@ -3680,6 +3769,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				Map<String, Map<Group, List<Group>>> nameOfGroupMap = new HashMap<>();
 				List<Group> newItems = new LinkedList<>();
 				List<Group> oldItems = new LinkedList<>();
+				boolean isBridgeHome = false;
 				for (Entry<String, String> deviceEntry : mapOfDevice.entrySet()) {
 					Group group = new Group();
 					Map<Group, List<Group>> roomAndListChildren = new HashMap<>();
@@ -3702,20 +3792,23 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 							item.setId(idLightDevice);
 							item.setType(PhilipsConstant.LIGHT);
 							if (!oldItems.stream().map(Group::getId).collect(Collectors.toList()).contains(item.getId())) {
-								oldItems.add(item);
-								roomAndListChildren.put(group, oldItems);
 								String name = roomAndZoneResponse.getMetaData().getName();
 								if (nameOfGroupMap.size() == 0) {
+									oldItems.add(item);
+									roomAndListChildren.put(group, oldItems);
 									nameOfGroupMap.put(name, roomAndListChildren);
 								} else {
 									Map<Group, List<Group>> groupAndDevice = nameOfGroupMap.get(name);
 									if (groupAndDevice == null) {
+										List<Group> newGroupValue = new LinkedList<>();
+										newGroupValue.add(item);
+										roomAndListChildren.put(group, newGroupValue);
 										nameOfGroupMap.put(name, roomAndListChildren);
 									} else {
 										if (groupAndDevice.entrySet().stream().map(groupListEntry -> groupListEntry.getKey().getId()).collect(Collectors.toList()).contains(group.getId())) {
 											for (Entry<Group, List<Group>> groupListEntry : groupAndDevice.entrySet()) {
 												if (groupListEntry.getKey().getId().equals(group.getId())) {
-													groupAndDevice.putIfAbsent(groupListEntry.getKey(), oldItems);
+													groupAndDevice.put(groupListEntry.getKey(), oldItems);
 													break;
 												}
 											}
@@ -3728,7 +3821,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 						} else {
 							//device can't be assigned in room with type bridge hơm
 							GroupLightResponse bridgeId = groupLightList.stream().filter(item -> item.getOwner().getType().equals(PhilipsConstant.BRIDGE_HOME)).findFirst().orElse(null);
-
+							isBridgeHome = true;
 							//bridge Id always exists, so no need to check for null
 							String id = bridgeId.getOwner().getRid();
 							if (nameOfGroupMap.size() == 0) {
@@ -3778,7 +3871,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 											if (groupListEntry.getKey().getId().equals(group.getId())) {
 												oldItems.add(item);
 												roomAndListChildren.put(group, oldItems);
-												groupAndDevice.putIfAbsent(groupListEntry.getKey(), oldItems);
+												groupAndDevice.put(groupListEntry.getKey(), oldItems);
 												break;
 											}
 										}
@@ -3790,12 +3883,30 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 						}
 					}
 				}
-				for (Entry<String, Map<Group, List<Group>>> deviceList : nameOfGroupMap.entrySet()) {
-					for (Entry<Group, List<Group>> deviceDetail : deviceList.getValue().entrySet()) {
-						Location location = new Location();
-						location.setGroup(deviceDetail.getKey());
-						location.setItems(deviceDetail.getValue().toArray(new Group[0]));
-						locationList.add(location);
+
+				// handle case add device for bridge home
+				if (isBridgeHome && nameOfGroupMap.size() >= 2) {
+					Location location = new Location();
+					List<Group> newListItem = new LinkedList<>();
+					for (Entry<String, Map<Group, List<Group>>> deviceList : nameOfGroupMap.entrySet()) {
+						for (Entry<Group, List<Group>> deviceDetail : deviceList.getValue().entrySet()) {
+							if (PhilipsConstant.BRIDGE_HOME.equalsIgnoreCase(deviceDetail.getKey().getType())) {
+								location.setGroup(deviceDetail.getKey());
+							}
+							newListItem.addAll(deviceDetail.getValue());
+						}
+					}
+					newListItem = newListItem.stream().distinct().collect(Collectors.toList());
+					location.setItems(newListItem.toArray(new Group[0]));
+					locationList.add(location);
+				} else {
+					for (Entry<String, Map<Group, List<Group>>> deviceList : nameOfGroupMap.entrySet()) {
+						for (Entry<Group, List<Group>> deviceDetail : deviceList.getValue().entrySet()) {
+							Location location = new Location();
+							location.setGroup(deviceDetail.getKey());
+							location.setItems(deviceDetail.getValue().toArray(new Group[0]));
+							locationList.add(location);
+						}
 					}
 				}
 			}
@@ -3997,18 +4108,29 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	}
 
 	/**
-	 * Check Name exits for room and zone
+	 * Check Name exits for automation
 	 *
-	 * @param name the name is name of room/zone
+	 * @param name the name is name of automation
 	 */
 	private void isAutomationNameExisting(String name) {
 		try {
 			AutomationWrapper automationWrapper = this.doGet(PhilipsUtil.getMonitorURL(PhilipsURL.AUTOMATION), AutomationWrapper.class);
-			if (automationWrapper != null && automationWrapper.getData() != null && Arrays.stream(automationWrapper.getData()).anyMatch(item -> item.getMetaData().getName().equals(name.trim()))) {
-				throw new ResourceNotReachableException(String.format("The name: %s already exists", name));
+			for (AutomationResponse auto : automationWrapper.getData()) {
+				String nameType = idAndNameOfAutomationMap.get(auto.getScriptId());
+				TypeOfAutomation typeName = TypeOfAutomation.TIMER;
+				if (PhilipsConstant.WAKE_UP_WITH_LIGHT.equals(nameType)) {
+					typeName = TypeOfAutomation.WAKE_UP_WITH_LIGHT;
+				}
+				if (PhilipsConstant.GO_TO_SLEEPS.equals(nameType)) {
+					typeName = TypeOfAutomation.GO_TO_SLEEP;
+				}
+				String newName = PhilipsConstant.AUTOMATION + typeName.getName() + PhilipsConstant.DASH + auto.getMetaData().getName();
+				if (name.equalsIgnoreCase(newName)) {
+					throw new ResourceNotReachableException(String.format("The name: %s already exists", name));
+				}
 			}
 		} catch (Exception e) {
-			throw new ResourceNotReachableException(String.format("Error when create isAutomationNameExisting: %s", e.getMessage()), e);
+			throw new ResourceNotReachableException(String.format("Error when create/edit automation: %s", e.getMessage()), e);
 		}
 	}
 
@@ -4300,8 +4422,8 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			}
 		} else {
 			Map<String, String> serviceAndDeviceId = retrieveLights();
-			for (String s : listRidInZone) {
-				String deviceId = serviceAndDeviceId.get(s);
+			for (String childrenId : listRidInZone) {
+				String deviceId = serviceAndDeviceId.get(childrenId);
 				if (deviceId != null) {
 					listOfDeviceAfterFiltered.put(deviceId, aggregatedDeviceList.get(deviceId));
 				}
@@ -4466,7 +4588,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					String deviceKey = device.getKey();
 					AggregatedDevice deviceValue = device.getValue();
 					String deviceType = deviceValue.getDeviceType();
-					if (!deviceType.equalsIgnoreCase(PhilipsConstant.BRIDGE) && deviceType.equals(type.trim())) {
+					if (!deviceType.equalsIgnoreCase(PhilipsConstant.BRIDGE) && deviceType.equalsIgnoreCase(type.trim())) {
 						listOfDeviceAfterFilteredType.put(deviceKey, deviceValue);
 					}
 				}
