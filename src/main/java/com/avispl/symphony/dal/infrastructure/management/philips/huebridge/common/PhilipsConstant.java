@@ -100,6 +100,7 @@ public class PhilipsConstant {
 	public static String COLOR_CONTROL_VALUE = "ColorControlValue";
 	public static String COLOR_CONTROL_CURRENT_COLOR = "ColorControlCurrentColor";
 	public static String COLOR_CONTROL = "ColorControl";
+	public static String CURRENT_ZONE_FILTER = "CurrentZoneFilter";
 	public static int MAXIMUM_REPEAT_DAY = 7;
 	public static int NUMBER_ONE = 1;
 	public static int ZERO = 0;
