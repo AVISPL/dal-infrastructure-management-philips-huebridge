@@ -298,10 +298,10 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 */
 	private volatile int deviceStatisticsCollectionThreads;
 	// Adapter properties
-	private String zoneName;
-	private String roomNames;
-	private String deviceTypes;
-	private String deviceNames;
+	private String zoneNameFilter;
+	private String roomNameFilter;
+	private String deviceTypeFilter;
+	private String deviceNameFilter;
 	private String configManagement;
 	private String pollingInterval;
 
@@ -349,75 +349,75 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	private PhilipsHueDeviceDataLoader deviceDataLoader;
 
 	/**
-	 * Retrieves {@link #zoneName}
+	 * Retrieves {@link #zoneNameFilter}
 	 *
-	 * @return value of {@link #zoneName}
+	 * @return value of {@link #zoneNameFilter}
 	 */
-	public String getZoneName() {
-		return zoneName;
+	public String getZoneNameFilter() {
+		return zoneNameFilter;
 	}
 
 	/**
-	 * Sets {@link #zoneName} value
+	 * Sets {@link #zoneNameFilter} value
 	 *
-	 * @param zoneName new value of {@link #zoneName}
+	 * @param zoneNameFilter new value of {@link #zoneNameFilter}
 	 */
-	public void setZoneName(String zoneName) {
-		this.zoneName = zoneName;
+	public void setZoneNameFilter(String zoneNameFilter) {
+		this.zoneNameFilter = zoneNameFilter;
 	}
 
 	/**
-	 * Retrieves {@link #roomNames}
+	 * Retrieves {@link #roomNameFilter}
 	 *
-	 * @return value of {@link #roomNames}
+	 * @return value of {@link #roomNameFilter}
 	 */
-	public String getRoomNames() {
-		return roomNames;
+	public String getRoomNameFilter() {
+		return roomNameFilter;
 	}
 
 	/**
-	 * Sets {@link #roomNames} value
+	 * Sets {@link #roomNameFilter} value
 	 *
-	 * @param roomNames new value of {@link #roomNames}
+	 * @param roomNameFilter new value of {@link #roomNameFilter}
 	 */
-	public void setRoomNames(String roomNames) {
-		this.roomNames = roomNames;
+	public void setRoomNameFilter(String roomNameFilter) {
+		this.roomNameFilter = roomNameFilter;
 	}
 
 	/**
-	 * Retrieves {@link #deviceTypes}
+	 * Retrieves {@link #deviceTypeFilter}
 	 *
-	 * @return value of {@link #deviceTypes}
+	 * @return value of {@link #deviceTypeFilter}
 	 */
-	public String getDeviceTypes() {
-		return deviceTypes;
+	public String getDeviceTypeFilter() {
+		return deviceTypeFilter;
 	}
 
 	/**
-	 * Sets {@link #deviceTypes} value
+	 * Sets {@link #deviceTypeFilter} value
 	 *
-	 * @param deviceTypes new value of {@link #deviceTypes}
+	 * @param deviceTypeFilter new value of {@link #deviceTypeFilter}
 	 */
-	public void setDeviceTypes(String deviceTypes) {
-		this.deviceTypes = deviceTypes;
+	public void setDeviceTypeFilter(String deviceTypeFilter) {
+		this.deviceTypeFilter = deviceTypeFilter;
 	}
 
 	/**
-	 * Retrieves {@link #deviceNames}
+	 * Retrieves {@link #deviceNameFilter}
 	 *
-	 * @return value of {@link #deviceNames}
+	 * @return value of {@link #deviceNameFilter}
 	 */
-	public String getDeviceNames() {
-		return deviceNames;
+	public String getDeviceNameFilter() {
+		return deviceNameFilter;
 	}
 
 	/**
-	 * Sets {@link #deviceNames} value
+	 * Sets {@link #deviceNameFilter} value
 	 *
-	 * @param deviceNames new value of {@link #deviceNames}
+	 * @param deviceNameFilter new value of {@link #deviceNameFilter}
 	 */
-	public void setDeviceNames(String deviceNames) {
-		this.deviceNames = deviceNames;
+	public void setDeviceNameFilter(String deviceNameFilter) {
+		this.deviceNameFilter = deviceNameFilter;
 	}
 
 	/**
@@ -1410,7 +1410,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			if (motionSensorWrapper != null) {
 				MotionDevice motionDevice = motionSensorWrapper.getData()[0];
 				Map<String, String> oldProperties = aggregatedDeviceList.get(deviceID).getProperties();
-				oldProperties.put(PhilipsConstant.MOTION_DETECTED, String.valueOf(motionDevice.getMotion().isMotionDetected()));
+				oldProperties.put(PhilipsConstant.MOTION_DETECTED, String.valueOf(motionDevice.getMotion().isMotionDetected()).toLowerCase(Locale.ROOT));
 				List<AdvancedControllableProperty> advancedControllableProperties = aggregatedDeviceList.get(deviceID).getControllableProperties();
 				if (advancedControllableProperties == null) {
 					advancedControllableProperties = new LinkedList<>();
@@ -1739,7 +1739,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					updateValueForTheControllableProperty(property, value, stats, advancedControllableProperties);
 					mapOfRepeat = repeatControlForAutomation.get(propertyGroup).get(stats.get(propertyGroup + PhilipsConstant.HASH + AutomationEnum.TYPE_OF_AUTOMATION.getName()));
 					mapOfRepeat.put(automationEnum.getName(), value);
-					isDisableRepeat(propertyGroup, stats, advancedControllableProperties, mapOfRepeat);
+					isDisableControlRepeatValue(propertyGroup, stats, advancedControllableProperties, mapOfRepeat);
 					break;
 				case FADE_DURATION:
 					value = String.valueOf(getValueByRange(PhilipsConstant.MIN_FADE_DURATION, PhilipsConstant.MAX_FADE_DURATION, value));
@@ -1964,14 +1964,25 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		stats.put(group + PhilipsConstant.EDITED, PhilipsConstant.FALSE);
 	}
 
-	private void initializeRepeatNoneValue(Map<String, String> repeatWakeup) {
+	/**
+	 *Initialize reqeat none value
+	 *
+	 * @param nameAndValueOfRepeat the nameAndValueOfRepeat is name and value of repeat map
+	 */
+	private void initializeRepeatNoneValue(Map<String, String> nameAndValueOfRepeat) {
 		for (RepeatEnum repeatEnum : RepeatEnum.values()) {
-			if (repeatWakeup.get(repeatEnum.getName()) == null) {
-				repeatWakeup.put(repeatEnum.getName(), String.valueOf(PhilipsConstant.ZERO));
+			if (nameAndValueOfRepeat.get(repeatEnum.getName()) == null) {
+				nameAndValueOfRepeat.put(repeatEnum.getName(), String.valueOf(PhilipsConstant.ZERO));
 			}
 		}
 	}
 
+	/**
+	 * Intialize repeat for automaion
+	 *
+	 * @param mapOfRepeatAutomation are map of name repeat and value
+	 * @param type the type is tupe of TypeOfDevice
+	 */
 	private void initializeRepeatForAutomation(Map<String, Map<String, String>> mapOfRepeatAutomation, String type) {
 		Map<String, String> repeatWakeup = new HashMap<>();
 		String repeat = AutomationEnum.REPEAT.getName();
@@ -1987,6 +1998,9 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		mapOfRepeatAutomation.put(type, repeatWakeup);
 	}
 
+	/**
+	 * Initilize time for Automation
+	 */
 	private void initializeTimeForAutomation() {
 		String timeCurrent = AutomationEnum.TIME_CURRENT.getName();
 		String timeHour = AutomationEnum.TIME_HOUR.getName();
@@ -2040,11 +2054,12 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	private void populateControlForAggregator(Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties) {
 		if (isConfigManagement) {
 			List<RoomAndZoneResponse> newListRoom = roomList;
-			if (StringUtils.isNotNullOrEmpty(roomNames)) {
-				newListRoom = roomListAfterFilter;
-			}
 			List<RoomAndZoneResponse> newListZone = zoneList;
-			if (StringUtils.isNotNullOrEmpty(zoneName)) {
+			if (StringUtils.isNotNullOrEmpty(roomNameFilter)) {
+				newListRoom = roomListAfterFilter;
+				newListZone = zoneListAfterFilter;
+			}
+			if (StringUtils.isNotNullOrEmpty(zoneNameFilter)) {
 				newListZone = zoneListAfterFilter;
 				newListRoom = roomListAfterFilter;
 			}
@@ -2894,7 +2909,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					updateValueForTheControllableProperty(property, value, stats, advancedControllableProperties);
 					mapOfRepeat = repeatCreateAutomation.get(stats.get(propertyGroup + PhilipsConstant.HASH + AutomationEnum.TYPE_OF_AUTOMATION.getName()));
 					mapOfRepeat.put(automationEnum.getName(), value);
-					isDisableRepeat(propertyGroup, stats, advancedControllableProperties, mapOfRepeat);
+					isDisableControlRepeatValue(propertyGroup, stats, advancedControllableProperties, mapOfRepeat);
 					break;
 				case DEVICE_ADD:
 					List<String> deviceDropdown = deviceNameAndDeviceIdZoneMap.keySet().stream().collect(Collectors.toList());
@@ -3102,7 +3117,15 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		populateCancelChangeButton(stats, advancedControllableProperties, propertyGroup, isCreateAutomation);
 	}
 
-	private void isDisableRepeat(String propertyGroup, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties,
+	/**
+	 * Populate disable repeat value
+	 *
+	 * @param propertyGroup the propertyGroup is name of group
+	 * @param stats the stats are list of statistics
+	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
+	 * @param mapOfRepeat the mapOfRepeat are name and value of repeat
+	 */
+	private void isDisableControlRepeatValue(String propertyGroup, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties,
 			Map<String, String> mapOfRepeat) {
 		String property = propertyGroup + PhilipsConstant.HASH + PhilipsConstant.REPEAT;
 		boolean isDisableRepeat = false;
@@ -4497,6 +4520,8 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 
 	/**
 	 * Filter By Ids device
+	 *
+	 * @param stats the stats are list of statistics
 	 */
 	private void filterDeviceIds(Map<String, String> stats) {
 		ConcurrentHashMap<String, AggregatedDevice> listOfDeviceAfterFiltered = new ConcurrentHashMap<>();
@@ -4508,11 +4533,10 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				listOfDeviceAfterFiltered.put(device.getKey(), device.getValue());
 			}
 		}
-
 		if (listOfDeviceInsideZone == null || listOfDeviceInsideZone.length == 0) {
 			roomListAfterFilter = new ArrayList<>();
 			zoneListAfterFilter = new ArrayList<>();
-			RoomAndZoneResponse response = zoneList.stream().filter(item -> item.getMetaData().getName().equalsIgnoreCase(zoneName)).findFirst().orElse(null);
+			RoomAndZoneResponse response = zoneList.stream().filter(item -> item.getMetaData().getName().equalsIgnoreCase(zoneNameFilter)).findFirst().orElse(null);
 			if (response != null) {
 				zoneListAfterFilter.add(response);
 			}
@@ -4528,7 +4552,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			listRidInZone.add(serviceId);
 		}
 		// Filter by Zone Case roomNames is specified:
-		if (StringUtils.isNotNullOrEmpty(roomNames)) {
+		if (StringUtils.isNotNullOrEmpty(roomNameFilter)) {
 			listOfDeviceAfterFiltered.putAll(filterByZone(listRidInZone));
 			if (listOfDeviceAfterFiltered.isEmpty()) {
 				aggregatedDeviceList = new ConcurrentHashMap<>();
@@ -4551,17 +4575,22 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		}
 		// Filter by Room
 		try {
-			if (StringUtils.isNotNullOrEmpty(roomNames)) {
-				String[] handledRoomName = roomNames.split(PhilipsConstant.COMMA);
+			if (StringUtils.isNotNullOrEmpty(roomNameFilter)) {
+				String[] handledRoomName = roomNameFilter.split(PhilipsConstant.COMMA);
 				List<String> listOfChildrenNodeInsideRoom = new ArrayList<>();
 				for (String roomNameItem : handledRoomName) {
 					for (RoomAndZoneResponse roomAndZoneResponse : roomList) {
 						String roomName = roomAndZoneResponse.getMetaData().getName();
-						if (roomNameItem.trim().equals(roomName)) {
-							roomListAfterFilter.add(roomAndZoneResponse);
+						if (roomNameItem.trim().equalsIgnoreCase(roomName)) {
 							Children[] tempList = roomAndZoneResponse.getChildren();
 							for (Children children : tempList) {
 								listOfChildrenNodeInsideRoom.add(children.getRid());
+								AggregatedDeviceResponse aggregatedDeviceResponse = listMetadataDevice.get(children.getRid());
+								for (String childrenId : listRidInZone) {
+									if(Arrays.stream(aggregatedDeviceResponse.getServices()).map(ServicesResponse::getId).collect(Collectors.toList()).contains(childrenId)){
+										roomListAfterFilter.add(roomAndZoneResponse);
+									}
+								}
 							}
 						}
 					}
@@ -4593,10 +4622,10 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		}
 
 		// filter by type
-		if (StringUtils.isNotNullOrEmpty(deviceTypes)) {
+		if (StringUtils.isNotNullOrEmpty(deviceTypeFilter)) {
 			listOfDeviceAfterFiltered = filterByDeviceType(listOfDeviceAfterFiltered);
 		}
-		if (StringUtils.isNotNullOrEmpty(deviceNames)) {
+		if (StringUtils.isNotNullOrEmpty(deviceNameFilter)) {
 			// filter by name
 			listOfDeviceAfterFiltered = filterByDeviceName(listOfDeviceAfterFiltered);
 		}
@@ -4609,6 +4638,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	/**
 	 * Filter device by zone
 	 *
+	 * @param listRidInZone the listRidInZone are list id of Zone
 	 * @return Filtered list of device by zone.
 	 */
 	private ConcurrentHashMap<String, AggregatedDevice> filterByZone(List<String> listRidInZone) {
@@ -4634,6 +4664,8 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 
 	/**
 	 * Get list of service ids inside zone
+	 *
+	 * @param stats the stats are list of statistics
 	 */
 	private Children[] listServiceIdInZone(Map<String, String> stats) {
 		int indexOfZoneToBeUse = -1;
@@ -4642,20 +4674,25 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				stats.put(PhilipsConstant.CURRENT_ZONE_FILTER, PhilipsConstant.EMPTY_STRING);
 				return null;
 			}
-			for (int indexZone = 0; indexZone < zoneList.size(); indexZone++) {
-				if (zoneList.get(indexZone).getMetaData().getName().equalsIgnoreCase(zoneName)) {
-					indexOfZoneToBeUse = indexZone;
-					break;
+			if(StringUtils.isNullOrEmpty(zoneNameFilter)){
+				indexOfZoneToBeUse = 0;
+			}
+			else{
+				for (int indexZone = 0; indexZone < zoneList.size(); indexZone++) {
+					if (zoneList.get(indexZone).getMetaData().getName().equalsIgnoreCase(zoneNameFilter)) {
+						indexOfZoneToBeUse = indexZone;
+						break;
+					}
 				}
 			}
 		} catch (Exception e) {
 			indexOfZoneToBeUse = 0;
-			logger.error(String.format("Error while handling zoneName adapter property with value: %s. Using first index of zoneList instead.", zoneName), e);
+			logger.error(String.format("Error while handling zoneName adapter property with value: %s. Using first index of zoneList instead.", zoneNameFilter), e);
 		}
 		// return services of zone list
 		Children[] children = new Children[0];
 		if (indexOfZoneToBeUse == -1) {
-			stats.put(PhilipsConstant.CURRENT_ZONE_FILTER, zoneName);
+			stats.put(PhilipsConstant.CURRENT_ZONE_FILTER, zoneNameFilter);
 			zoneListAfterFilter = new LinkedList<>();
 			roomListAfterFilter = new LinkedList<>();
 		} else {
@@ -4674,7 +4711,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	private ConcurrentHashMap<String, AggregatedDevice> filterByDeviceName(ConcurrentHashMap<String, AggregatedDevice> listOfDeviceAfterFiltered) {
 		ConcurrentHashMap<String, AggregatedDevice> listOfDeviceAfterFilteredName = new ConcurrentHashMap<>();
 		try {
-			String[] names = deviceNames.split(PhilipsConstant.COMMA);
+			String[] names = deviceNameFilter.split(PhilipsConstant.COMMA);
 			for (String name : names) {
 				for (Entry<String, AggregatedDevice> device : listOfDeviceAfterFiltered.entrySet()
 				) {
@@ -4701,7 +4738,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	private ConcurrentHashMap<String, AggregatedDevice> filterByDeviceType(ConcurrentHashMap<String, AggregatedDevice> listOfDeviceAfterFiltered) {
 		ConcurrentHashMap<String, AggregatedDevice> listOfDeviceAfterFilteredType = new ConcurrentHashMap<>();
 		try {
-			String[] types = deviceTypes.split(PhilipsConstant.COMMA);
+			String[] types = deviceTypeFilter.split(PhilipsConstant.COMMA);
 			for (String type : types) {
 				for (Entry<String, AggregatedDevice> device : listOfDeviceAfterFiltered.entrySet()
 				) {

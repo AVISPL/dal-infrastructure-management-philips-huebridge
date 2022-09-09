@@ -26,7 +26,6 @@ import com.avispl.symphony.api.dal.error.ResourceNotReachableException;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.NetworkInfoEnum;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.PhilipsURL;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.PhilipsUtil;
-import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.DayEnum;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.common.SystemInfoEnum;
 
 /**
@@ -1090,12 +1089,17 @@ public class PhilipsHueDeviceCommunicatorTest {
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		Assert.assertEquals("False", stats.get("CreateAutomationBehaviorInstance#Edited"));
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "CreateAutomationBehaviorInstance#Repeat";
-		String value = "1";
+		String property = "CreateAutomationBehaviorInstance#TypeOfDevice";
+		String value = "GoToSleep";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
-		property = "CreateAutomationBehaviorInstance#RepeatAdd";
+		property = "CreateAutomationBehaviorInstance#Repeat";
+		value = "1";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+		property = "CreateAutomationBehaviorInstance#RepeatMonday";
 		value = "1";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
@@ -1103,7 +1107,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
-		Assert.assertEquals("Monday", stats.get("CreateAutomationBehaviorInstance#Repeat1"));
+		Assert.assertEquals("1", stats.get("CreateAutomationBehaviorInstance#RepeatMonday"));
 		Assert.assertEquals("True", stats.get("CreateAutomationBehaviorInstance#Edited"));
 	}
 
@@ -1275,7 +1279,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 		Assert.assertEquals("True", stats.get("CreateAutomationBehaviorInstance#Edited"));
 	}
 
-
 	/**
 	 * Test create automation with property Type is Zone add new Zone
 	 *
@@ -1284,7 +1287,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	@Test
 	void testCreateAutomationWithTypeIsZoneAddNewZone() throws Exception {
 		testCreateAutomationWithTypeIsDevice();
-		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.ZONES)).thenReturn(PhilipsURL.ZONES.getUrl() + "-automation");
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		ControllableProperty controllableProperty = new ControllableProperty();
@@ -1293,15 +1295,9 @@ public class PhilipsHueDeviceCommunicatorTest {
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
-		property = "CreateAutomationBehaviorInstance#ZoneAdd";
-		value = "1";
-		controllableProperty.setProperty(property);
-		controllableProperty.setValue(value);
-		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
-
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
-		Assert.assertNotNull(stats.get("CreateAutomationBehaviorInstance#Zone1"));
+		Assert.assertNotNull(stats.get("CreateAutomationBehaviorInstance#Zone0"));
 		Assert.assertEquals("True", stats.get("CreateAutomationBehaviorInstance#Edited"));
 	}
 
@@ -1314,7 +1310,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 	@Test
 	void testCreateAutomationWithTypeIsRoomAddNewDeviceThrowException() throws Exception {
 		testCreateAutomationWithTypeIsDevice();
-		mock.when(() -> PhilipsUtil.getMonitorURL(PhilipsURL.ZONES)).thenReturn(PhilipsURL.ZONES.getUrl() + "-automation");
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		ControllableProperty controllableProperty = new ControllableProperty();
@@ -1327,10 +1322,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 		value = "1";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
-		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
-		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
-		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
-		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 		Assert.assertThrows("Expect error because user added enough Zone and cannot add new Zone", ResourceNotReachableException.class,
 				() -> philipsHueDeviceCommunicator.controlProperty(controllableProperty));
 	}
@@ -1427,8 +1418,8 @@ public class PhilipsHueDeviceCommunicatorTest {
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 
-		property = "CreateAutomationBehaviorInstance#Repeat0";
-		value = DayEnum.MONDAY.getName();
+		property = "CreateAutomationBehaviorInstance#RepeatMonday";
+		value = "1";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 
@@ -1490,8 +1481,8 @@ public class PhilipsHueDeviceCommunicatorTest {
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 
-		property = "CreateAutomationBehaviorInstance#Repeat0";
-		value = DayEnum.MONDAY.getName();
+		property = "CreateAutomationBehaviorInstance#RepeatMonday";
+		value = "1";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 
@@ -1780,20 +1771,15 @@ public class PhilipsHueDeviceCommunicatorTest {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "AutomationGoToSleep-Go to sleep1#Repeat6";
-		String value = "None";
-		controllableProperty.setProperty(property);
-		controllableProperty.setValue(value);
-		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
-		property = "AutomationGoToSleep-Go to sleep1#RepeatAdd";
-		value = "1";
+		String property = "AutomationGoToSleep-Go to sleep1#RepeatMonday";
+		String value = "1";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
 		Assert.assertEquals("True", stats.get("AutomationGoToSleep-Go to sleep1#Edited"));
-		Assert.assertNotNull(stats.get("AutomationGoToSleep-Go to sleep1#Repeat6"));
+		Assert.assertEquals("1", stats.get("AutomationGoToSleep-Go to sleep1#RepeatMonday"));
 	}
 
 	/**
@@ -1859,7 +1845,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 	void testFilterDeviceByZoneCaseSuccessFilter() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
 		philipsHueDeviceCommunicator.destroy();
-		philipsHueDeviceCommunicator.setZoneName("Zone 01");
+		philipsHueDeviceCommunicator.setZoneNameFilter("Zone 01");
 		// With roomNames, deviceTypes, deviceNames are empty
 		philipsHueDeviceCommunicator.init();
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -1890,7 +1876,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 	void testFilterDeviceByZoneCaseEmptyZoneName() throws Exception {
 		// Test filter when zone is specified but its value is empty. In that case we will take first index of zoneList
 		philipsHueDeviceCommunicator.destroy();
-		philipsHueDeviceCommunicator.setZoneName("");
+		philipsHueDeviceCommunicator.setZoneNameFilter("");
 		// With roomNames, deviceTypes, deviceNames are empty
 		philipsHueDeviceCommunicator.init();
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -1906,11 +1892,11 @@ public class PhilipsHueDeviceCommunicatorTest {
 	void testFilterDeviceByZoneCaseInvalidZoneName() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
 		philipsHueDeviceCommunicator.destroy();
-		philipsHueDeviceCommunicator.setZoneName("$$###");
+		philipsHueDeviceCommunicator.setZoneNameFilter("$$###");
 		// With roomNames, deviceTypes, deviceNames are empty
 		philipsHueDeviceCommunicator.init();
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
-		Assert.assertTrue(extendedStatistics.getStatistics().containsKey("Zone-Zone 01#Name"));
+		Assert.assertFalse(extendedStatistics.getStatistics().containsKey("Room-Living Room 01#Name"));
 	}
 
 	/**
@@ -1922,7 +1908,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 	void testFilterDeviceByRoomNameCaseSuccessFilter() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
 		philipsHueDeviceCommunicator.destroy();
-		philipsHueDeviceCommunicator.setRoomNames("Living Room 01");
+		philipsHueDeviceCommunicator.setRoomNameFilter("Living Room 01");
 		// With roomNames, deviceTypes, deviceNames are empty
 		philipsHueDeviceCommunicator.init();
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
@@ -1938,11 +1924,11 @@ public class PhilipsHueDeviceCommunicatorTest {
 	@Test
 	void testFilterDeviceByRoomNameCaseSuccessFilterTwo() throws Exception {
 		philipsHueDeviceCommunicator.destroy();
-		philipsHueDeviceCommunicator.setRoomNames("New room 3");
+		philipsHueDeviceCommunicator.setRoomNameFilter("New room 3");
 		philipsHueDeviceCommunicator.init();
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
-		Assert.assertTrue(stats.containsKey("Room-New room 3#Type") && !stats.containsKey("Room-Living Room 01#Type"));
+		Assert.assertTrue(!stats.containsKey("Room-New room 3#Type") && !stats.containsKey("Room-Living Room 01#Type"));
 	}
 
 	/**
@@ -1953,11 +1939,13 @@ public class PhilipsHueDeviceCommunicatorTest {
 	@Test
 	void testFilterDeviceByRoomNameCaseSuccessFilterThree() throws Exception {
 		philipsHueDeviceCommunicator.destroy();
-		philipsHueDeviceCommunicator.setRoomNames("New room 3, Living Room 01");
+		philipsHueDeviceCommunicator.setRoomNameFilter("New room 3, Living Room 01");
 		philipsHueDeviceCommunicator.init();
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		Thread.sleep(10000);
 		Map<String, String> stats = extendedStatistics.getStatistics();
-		Assert.assertTrue(stats.containsKey("Room-New room 3#Type") && stats.containsKey("Room-Living Room 01#Type"));
+		Assert.assertTrue(stats.containsKey("Room-Living Room 01#Type"));
+		Assert.assertFalse(stats.containsKey("Room-New room 3#Type"));
 	}
 
 	/**
@@ -1968,11 +1956,11 @@ public class PhilipsHueDeviceCommunicatorTest {
 	@Test
 	void testFilterDeviceByRoomNameCaseSuccessFilterFour() throws Exception {
 		philipsHueDeviceCommunicator.destroy();
-		philipsHueDeviceCommunicator.setRoomNames("New room 3, NotExistRoom, Not Exist Room 123@@@");
+		philipsHueDeviceCommunicator.setRoomNameFilter("New room 3, NotExistRoom, Not Exist Room 123@@@");
 		philipsHueDeviceCommunicator.init();
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
-		Assert.assertTrue(stats.containsKey("Room-New room 3#Type") && !stats.containsKey("Room-NotExistRoom#Type") && !stats.containsKey("Room-Not Exist Room 123@@@#Type"));
+		Assert.assertTrue(!stats.containsKey("Room-New room 3#Type") && !stats.containsKey("Room-NotExistRoom#Type") && !stats.containsKey("Room-Not Exist Room 123@@@#Type"));
 	}
 
 	/**
@@ -1983,7 +1971,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 	@Test
 	void testFilterDeviceByRoomNameCaseInvalidRoomName() throws Exception {
 		philipsHueDeviceCommunicator.destroy();
-		philipsHueDeviceCommunicator.setRoomNames("NotExistRoom");
+		philipsHueDeviceCommunicator.setRoomNameFilter("NotExistRoom");
 		philipsHueDeviceCommunicator.init();
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
@@ -1998,7 +1986,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 	@Test
 	void testFilterDeviceByRoomNameCaseInvalidFormat() throws Exception {
 		philipsHueDeviceCommunicator.destroy();
-		philipsHueDeviceCommunicator.setRoomNames("#@@#@#!@#!,");
+		philipsHueDeviceCommunicator.setRoomNameFilter("#@@#@#!@#!,");
 		philipsHueDeviceCommunicator.init();
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
@@ -2014,7 +2002,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 	void testFilterDeviceByDeviceTypeCaseSuccessFilter() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
 		philipsHueDeviceCommunicator.destroy();
-		philipsHueDeviceCommunicator.setDeviceTypes("light");
+		philipsHueDeviceCommunicator.setDeviceTypeFilter("light");
 		// With roomNames, deviceTypes, deviceNames are empty
 		philipsHueDeviceCommunicator.init();
 		philipsHueDeviceCommunicator.getMultipleStatistics();
@@ -2034,7 +2022,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 	void testFilterDeviceByDeviceTypeCaseSuccessFilterTwo() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
 		philipsHueDeviceCommunicator.destroy();
-		philipsHueDeviceCommunicator.setDeviceTypes("light, button");
+		philipsHueDeviceCommunicator.setDeviceTypeFilter("light, button");
 		// With roomNames, deviceTypes, deviceNames are empty
 		philipsHueDeviceCommunicator.init();
 		philipsHueDeviceCommunicator.getMultipleStatistics();
@@ -2054,7 +2042,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 	void testFilterDeviceByDeviceTypeCaseSuccessFilterThree() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
 		philipsHueDeviceCommunicator.destroy();
-		philipsHueDeviceCommunicator.setDeviceTypes("button");
+		philipsHueDeviceCommunicator.setDeviceTypeFilter("button");
 		// With roomNames, deviceTypes, deviceNames are empty
 		philipsHueDeviceCommunicator.init();
 		philipsHueDeviceCommunicator.getMultipleStatistics();
@@ -2074,7 +2062,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 	void testFilterDeviceByDeviceTypeFailCaseTypeNotExists() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
 		philipsHueDeviceCommunicator.destroy();
-		philipsHueDeviceCommunicator.setDeviceTypes("NotExistType");
+		philipsHueDeviceCommunicator.setDeviceTypeFilter("NotExistType");
 		// With roomNames, deviceTypes, deviceNames are empty
 		philipsHueDeviceCommunicator.init();
 		philipsHueDeviceCommunicator.getMultipleStatistics();
@@ -2091,7 +2079,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 	void testFilterDeviceByDeviceNameCaseSuccessFilter() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
 		philipsHueDeviceCommunicator.destroy();
-		philipsHueDeviceCommunicator.setDeviceNames("Hue ambiance lamp");
+		philipsHueDeviceCommunicator.setDeviceNameFilter("Hue ambiance lamp");
 		// With roomNames, deviceTypes, deviceNames are empty
 		philipsHueDeviceCommunicator.init();
 		philipsHueDeviceCommunicator.getMultipleStatistics();
@@ -2111,7 +2099,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 	void testFilterDeviceByDeviceNameCaseSuccessFilterTwo() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
 		philipsHueDeviceCommunicator.destroy();
-		philipsHueDeviceCommunicator.setDeviceNames("Hue dimmer switch, Hue ambiance lamp");
+		philipsHueDeviceCommunicator.setDeviceNameFilter("Hue dimmer switch, Hue ambiance lamp");
 		// With roomNames, deviceTypes, deviceNames are empty
 		philipsHueDeviceCommunicator.init();
 		philipsHueDeviceCommunicator.getMultipleStatistics();
@@ -2131,7 +2119,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 	void testFilterDeviceByDeviceNameCaseSuccessFilterThree() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
 		philipsHueDeviceCommunicator.destroy();
-		philipsHueDeviceCommunicator.setDeviceNames("Hue dimmer switch");
+		philipsHueDeviceCommunicator.setDeviceNameFilter("Hue dimmer switch");
 		// With roomNames, deviceTypes, deviceNames are empty
 		philipsHueDeviceCommunicator.init();
 		philipsHueDeviceCommunicator.getMultipleStatistics();
@@ -2151,7 +2139,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 	void testFilterDeviceByDeviceNameFailCaseNameNotExists() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
 		philipsHueDeviceCommunicator.destroy();
-		philipsHueDeviceCommunicator.setDeviceNames("NotExistName");
+		philipsHueDeviceCommunicator.setDeviceNameFilter("NotExistName");
 		// With roomNames, deviceTypes, deviceNames are empty
 		philipsHueDeviceCommunicator.init();
 		philipsHueDeviceCommunicator.getMultipleStatistics();
@@ -2168,10 +2156,10 @@ public class PhilipsHueDeviceCommunicatorTest {
 	void testFilterDeviceOverall() throws Exception {
 		// Test filter when zone is specified but its value is invalid. In that case we will take first index of zoneList
 		philipsHueDeviceCommunicator.destroy();
-		philipsHueDeviceCommunicator.setZoneName("Zone 01");
-		philipsHueDeviceCommunicator.setRoomNames("Living Room 01");
-		philipsHueDeviceCommunicator.setDeviceTypes("light");
-		philipsHueDeviceCommunicator.setDeviceNames("Hue ambiance lamp");
+		philipsHueDeviceCommunicator.setZoneNameFilter("Zone 01");
+		philipsHueDeviceCommunicator.setRoomNameFilter("Living Room 01");
+		philipsHueDeviceCommunicator.setDeviceTypeFilter("light");
+		philipsHueDeviceCommunicator.setDeviceNameFilter("Hue ambiance lamp");
 		// With roomNames, deviceTypes, deviceNames are empty
 		philipsHueDeviceCommunicator.init();
 		philipsHueDeviceCommunicator.getMultipleStatistics();
