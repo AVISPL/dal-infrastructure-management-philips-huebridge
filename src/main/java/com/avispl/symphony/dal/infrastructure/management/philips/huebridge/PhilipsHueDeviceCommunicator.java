@@ -654,12 +654,12 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			for (Entry<String, float[]> cachedDevice : cachedColorLightAggregatedDevice.entrySet()
 			) {
 				AggregatedDevice newDevice = cacheAggregatedDeviceList.get(cachedDevice.getKey());
-				String dropdownValueInNewData = newDevice.getProperties().get(PhilipsConstant.COLOR_CONTROL);
-				if (!dropdownValueInNewData.equals(AggregatedDeviceColorControllingMetric.CUSTOM_COLOR)) {
+				String dropdownValueInNewData = newDevice.getProperties().get(PhilipsConstant.COLOUR_CONTROL);
+				if (!dropdownValueInNewData.equals(AggregatedDeviceColorControllingMetric.CUSTOM_COLOUR)) {
 					float[] hsv = cachedDevice.getValue();
 					Map<String, String> stats = newDevice.getProperties();
 					List<AdvancedControllableProperty> advancedControllableProperties = newDevice.getControllableProperties();
-					String currentColor = AggregatedDeviceColorControllingMetric.CUSTOM_COLOR;
+					String currentColor = AggregatedDeviceColorControllingMetric.CUSTOM_COLOUR;
 					populateControlPropertiesForColorLight(stats, advancedControllableProperties, hsv, currentColor);
 					cacheAggregatedDeviceList.get(cachedDevice.getKey()).setProperties(stats);
 					cacheAggregatedDeviceList.get(cachedDevice.getKey()).setControllableProperties(advancedControllableProperties);
@@ -767,11 +767,11 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 * @param currentColor Current color of the light
 	 */
 	private void populateControlPropertiesForColorLight(Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties, float[] hsv, String currentColor) {
-		String hueControlLabel = PhilipsConstant.COLOR_CONTROL_HUE;
-		String currentHueControlLabel = PhilipsConstant.COLOR_CONTROL_HUE_CURRENT_VALUE;
-		String saturationLabel = PhilipsConstant.COLOR_CONTROL_SATURATION;
-		String currentSaturationControlLabel = PhilipsConstant.COLOR_CONTROL_SATURATION_CURRENT_VALUE;
-		if (AggregatedDeviceColorControllingMetric.CUSTOM_COLOR.equals(currentColor)) {
+		String hueControlLabel = PhilipsConstant.COLOUR_CONTROL_HUE;
+		String currentHueControlLabel = PhilipsConstant.COLOUR_CONTROL_HUE_CURRENT_VALUE;
+		String saturationLabel = PhilipsConstant.COLOUR_CONTROL_SATURATION;
+		String currentSaturationControlLabel = PhilipsConstant.COLOUR_CONTROL_SATURATION_CURRENT_VALUE;
+		if (AggregatedDeviceColorControllingMetric.CUSTOM_COLOUR.equals(currentColor)) {
 			String hueLabelStart = String.valueOf(AggregatedDeviceColorControllingMetric.MIN_HUE);
 			String hueLabelEnd = String.valueOf(AggregatedDeviceColorControllingMetric.MAX_HUE);
 			String saturationLabelStart = String.valueOf(AggregatedDeviceColorControllingMetric.MIN_SATURATION);
@@ -787,8 +787,8 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			addOrUpdateAdvanceControlProperties(advancedControllableProperties, slider2Property);
 			stats.put(currentHueControlLabel, String.valueOf(hsv[0]));
 			stats.put(currentSaturationControlLabel, String.valueOf(hsv[1]));
-			stats.put(PhilipsConstant.COLOR_CONTROL_CURRENT_COLOR, colorName);
-			stats.put(PhilipsConstant.COLOR_CONTROL_VALUE
+			stats.put(PhilipsConstant.COLOUR_CONTROL_CURRENT_COLOR, colorName);
+			stats.put(PhilipsConstant.COLOUR_CONTROL_VALUE
 					, String.valueOf(AggregatedDeviceColorControllingMetric.DEFAULT_BRIGHTNESS * AggregatedDeviceColorControllingMetric.ONE_HUNDRED_PERCENT));
 		} else {
 			Set<String> unusedKeys = new HashSet<>();
@@ -796,8 +796,8 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			unusedKeys.add(saturationLabel);
 			unusedKeys.add(currentHueControlLabel);
 			unusedKeys.add(currentSaturationControlLabel);
-			unusedKeys.add(PhilipsConstant.COLOR_CONTROL_CURRENT_COLOR);
-			unusedKeys.add(PhilipsConstant.COLOR_CONTROL_VALUE);
+			unusedKeys.add(PhilipsConstant.COLOUR_CONTROL_CURRENT_COLOR);
+			unusedKeys.add(PhilipsConstant.COLOUR_CONTROL_VALUE);
 			removeUnusedStatsAndControls(stats, advancedControllableProperties, unusedKeys);
 		}
 	}
@@ -982,7 +982,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					break;
 				case HUE_CONTROL:
 					Float hue = convertHueToValue(Float.parseFloat(value));
-					Float saturationValue = Float.valueOf(localStats.get(PhilipsConstant.COLOR_CONTROL_SATURATION));
+					Float saturationValue = Float.valueOf(localStats.get(PhilipsConstant.COLOUR_CONTROL_SATURATION));
 					int rgbValHueControl = Color.HSBtoRGB(hue, saturationValue, 100.0F);
 					float redHueControl = (rgbValHueControl >> 16) & 0xFF;
 					float greenHueControl = (rgbValHueControl >> 8) & 0xFF;
@@ -992,7 +992,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					break;
 				case SATURATION_CONTROL:
 					Float saturation = Float.parseFloat(value);
-					Float hueValue = Float.valueOf(localStats.get(PhilipsConstant.COLOR_CONTROL_HUE));
+					Float hueValue = Float.valueOf(localStats.get(PhilipsConstant.COLOUR_CONTROL_HUE));
 					int rgbValSaturationControl = Color.HSBtoRGB(hueValue, saturation, 100.0F);
 					float redSaturationControl = (rgbValSaturationControl >> 16) & 0xFF;
 					float greenSaturationControl = (rgbValSaturationControl >> 8) & 0xFF;
@@ -1055,15 +1055,15 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				cachedColorLightAggregatedDevice.remove(deviceId);
 			}
 		} else {
-			String currentHueControlLabel = PhilipsConstant.COLOR_CONTROL_HUE_CURRENT_VALUE;
-			String saturationLabel = PhilipsConstant.COLOR_CONTROL_SATURATION;
+			String currentHueControlLabel = PhilipsConstant.COLOUR_CONTROL_HUE_CURRENT_VALUE;
+			String saturationLabel = PhilipsConstant.COLOUR_CONTROL_SATURATION;
 			String hValue = stats.get(currentHueControlLabel);
 			String sValue = stats.get(saturationLabel);
 			String vValue = String.valueOf(PhilipsConstant.DEFAULT_V_VALUE);
 			hsv[0] = Float.parseFloat(hValue);
 			hsv[1] = Float.parseFloat(sValue);
 			hsv[2] = Float.parseFloat(vValue);
-			currentColor = AggregatedDeviceColorControllingMetric.CUSTOM_COLOR;
+			currentColor = AggregatedDeviceColorControllingMetric.CUSTOM_COLOUR;
 			populateControlPropertiesForColorLight(stats, advancedControllableProperties, hsv, currentColor);
 			updateValueForTheControllableProperty(controllableProperty, value, stats, advancedControllableProperties);
 			cachedColorLightAggregatedDevice.put(deviceId, hsv);
@@ -1102,7 +1102,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		if (color.equals(Color.YELLOW)) {
 			return AggregatedDeviceColorControllingMetric.YELLOW;
 		}
-		return AggregatedDeviceColorControllingMetric.CUSTOM_COLOR;
+		return AggregatedDeviceColorControllingMetric.CUSTOM_COLOUR;
 	}
 
 	/**
@@ -1500,9 +1500,9 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		String currentColor = getDefaultColorNameByHueAndSaturation(hsv[0], hsv[1]);
 		// Color dropdown
 		List<String> colorModes = new ArrayList<>(initializeCommonColors().keySet());
-		colorModes.add(AggregatedDeviceColorControllingMetric.CUSTOM_COLOR);
+		colorModes.add(AggregatedDeviceColorControllingMetric.CUSTOM_COLOUR);
 		String[] colorDropdown = colorModes.toArray(new String[colorModes.size()]);
-		AdvancedControllableProperty dropdownProperty = controlDropdown(stats, colorDropdown, PhilipsConstant.COLOR_CONTROL, currentColor);
+		AdvancedControllableProperty dropdownProperty = controlDropdown(stats, colorDropdown, PhilipsConstant.COLOUR_CONTROL, currentColor);
 		addOrUpdateAdvanceControlProperties(advancedControllableProperties, dropdownProperty);
 		// populate custom HSV color control
 		populateControlPropertiesForColorLight(stats, advancedControllableProperties, hsv, currentColor);
