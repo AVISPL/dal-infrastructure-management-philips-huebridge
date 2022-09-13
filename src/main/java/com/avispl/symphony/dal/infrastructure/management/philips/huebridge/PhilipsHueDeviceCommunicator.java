@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.ResourceAccessException;
 
 import com.google.common.math.IntMath;
 
@@ -478,30 +479,33 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			Map<String, String> createZoneStats = new HashMap<>();
 
 			isValidConfigManagement();
-			clearBeforeFetchingData();
-			retrieveNetworkInfo(stats);
-			retrieveZones();
-			retrieveRooms();
-			retrieveGroupLight();
-			retrieveDeviceDropdownList();
-			// retrieve device and filter devices in first monitoring cycle of polling interval
-			if (currentPhase.get() == localPollingInterval || currentPhase.get() == 0) {
-				retrieveDevices();
-				//Add filter device IDs
-				roomListAfterFilter.clear();
-				zoneListAfterFilter.clear();
-				filterDeviceIds(stats);
-				populatePollingInterval(stats);
-			}
-			retrieveAutomations();
-			retrieveScriptIdForAutomation();
-			retrieveListBridgeId();
-			retrieveSystemInfoByBridgeIdList(stats);
-			populateControlForAggregator(stats, advancedControllableProperties);
+			if (!isEmergencyDelivery) {
+				clearBeforeFetchingData();
+				retrieveZones();
+				retrieveNetworkInfo(stats);
+				retrieveRooms();
+				retrieveGroupLight();
+				retrieveDeviceDropdownList();
+				retrieveAutomations();
+				retrieveScriptIdForAutomation();
+				retrieveListBridgeId();
+				retrieveSystemInfoByBridgeIdList(stats);
+				// retrieve device and filter devices in first monitoring cycle of polling interval
+				if (currentPhase.get() == localPollingInterval || currentPhase.get() == 0) {
+					retrieveDevices();
+					//Add filter device IDs
+					roomListAfterFilter.clear();
+					zoneListAfterFilter.clear();
+					filterDeviceIds(stats);
+					populatePollingInterval(stats);
+				}
+				populateControlForAggregator(stats, advancedControllableProperties);
 
-			extendedStatistics.setStatistics(stats);
-			extendedStatistics.setControllableProperties(advancedControllableProperties);
-			localExtendedStatistics = extendedStatistics;
+				extendedStatistics.setStatistics(stats);
+				extendedStatistics.setControllableProperties(advancedControllableProperties);
+				localExtendedStatistics = extendedStatistics;
+			}
+			isEmergencyDelivery = false;
 			if (isConfigManagement) {
 				if (!isCreateRoom) {
 					createRoom(createRoomStats, createRoomControllableProperties);
@@ -767,10 +771,10 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 * @param currentColor Current color of the light
 	 */
 	private void populateControlPropertiesForColorLight(Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties, float[] hsv, String currentColor) {
-		String hueControlLabel = PhilipsConstant.COLOUR_CONTROL_HUE;
-		String currentHueControlLabel = PhilipsConstant.COLOUR_CONTROL_HUE_CURRENT_VALUE;
-		String saturationLabel = PhilipsConstant.COLOUR_CONTROL_SATURATION;
-		String currentSaturationControlLabel = PhilipsConstant.COLOUR_CONTROL_SATURATION_CURRENT_VALUE;
+		String hueControlLabel = PhilipsConstant.COLOUR_HUE;
+		String currentHueControlLabel = PhilipsConstant.COLOUR_HUE_CURRENT_VALUE;
+		String saturationLabel = PhilipsConstant.COLOUR_SATURATION;
+		String currentSaturationControlLabel = PhilipsConstant.COLOUR_SATURATION_CURRENT_VALUE;
 		if (AggregatedDeviceColorControllingMetric.CUSTOM_COLOUR.equals(currentColor)) {
 			String hueLabelStart = String.valueOf(AggregatedDeviceColorControllingMetric.MIN_HUE);
 			String hueLabelEnd = String.valueOf(AggregatedDeviceColorControllingMetric.MAX_HUE);
@@ -787,8 +791,8 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			addOrUpdateAdvanceControlProperties(advancedControllableProperties, slider2Property);
 			stats.put(currentHueControlLabel, String.valueOf(hsv[0]));
 			stats.put(currentSaturationControlLabel, String.valueOf(hsv[1]));
-			stats.put(PhilipsConstant.COLOUR_CONTROL_CURRENT_COLOR, colorName);
-			stats.put(PhilipsConstant.COLOUR_CONTROL_VALUE
+			stats.put(PhilipsConstant.COLOUR_CURRENT_COLOR, colorName);
+			stats.put(PhilipsConstant.COLOUR_VALUE
 					, String.valueOf(AggregatedDeviceColorControllingMetric.DEFAULT_BRIGHTNESS * AggregatedDeviceColorControllingMetric.ONE_HUNDRED_PERCENT));
 		} else {
 			Set<String> unusedKeys = new HashSet<>();
@@ -796,8 +800,8 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			unusedKeys.add(saturationLabel);
 			unusedKeys.add(currentHueControlLabel);
 			unusedKeys.add(currentSaturationControlLabel);
-			unusedKeys.add(PhilipsConstant.COLOUR_CONTROL_CURRENT_COLOR);
-			unusedKeys.add(PhilipsConstant.COLOUR_CONTROL_VALUE);
+			unusedKeys.add(PhilipsConstant.COLOUR_CURRENT_COLOR);
+			unusedKeys.add(PhilipsConstant.COLOUR_VALUE);
 			removeUnusedStatsAndControls(stats, advancedControllableProperties, unusedKeys);
 		}
 	}
@@ -826,7 +830,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				PhilipsConstant.LEFT_PARENTHESES + color.getRed() + PhilipsConstant.COMMA + color.getGreen() + PhilipsConstant.COMMA + color.getBlue() + PhilipsConstant.RIGHT_PARENTHESES;
 		hue = convertHueToRadianValue(hue);
 		if (hue >= AggregatedDeviceColorControllingMetric.HUE_COORDINATE && hue < AggregatedDeviceColorControllingMetric.REDS_RANGE) {
-			return AggregatedDeviceColorControllingMetric.REDS + colorName;
+			return AggregatedDeviceColorControllingMetric.RED_SECTION + colorName;
 		}
 		if (hue >= AggregatedDeviceColorControllingMetric.REDS_RANGE && hue < AggregatedDeviceColorControllingMetric.ORANGES_RANGE) {
 			return AggregatedDeviceColorControllingMetric.ORANGES + colorName;
@@ -982,7 +986,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					break;
 				case HUE_CONTROL:
 					Float hue = convertHueToValue(Float.parseFloat(value));
-					Float saturationValue = Float.valueOf(localStats.get(PhilipsConstant.COLOUR_CONTROL_SATURATION));
+					Float saturationValue = Float.valueOf(localStats.get(PhilipsConstant.COLOUR_SATURATION));
 					int rgbValHueControl = Color.HSBtoRGB(hue, saturationValue, 100.0F);
 					float redHueControl = (rgbValHueControl >> 16) & 0xFF;
 					float greenHueControl = (rgbValHueControl >> 8) & 0xFF;
@@ -992,7 +996,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					break;
 				case SATURATION_CONTROL:
 					Float saturation = Float.parseFloat(value);
-					Float hueValue = Float.valueOf(localStats.get(PhilipsConstant.COLOUR_CONTROL_HUE));
+					Float hueValue = Float.valueOf(localStats.get(PhilipsConstant.COLOUR_HUE));
 					int rgbValSaturationControl = Color.HSBtoRGB(hueValue, saturation, 100.0F);
 					float redSaturationControl = (rgbValSaturationControl >> 16) & 0xFF;
 					float greenSaturationControl = (rgbValSaturationControl >> 8) & 0xFF;
@@ -1055,8 +1059,8 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				cachedColorLightAggregatedDevice.remove(deviceId);
 			}
 		} else {
-			String currentHueControlLabel = PhilipsConstant.COLOUR_CONTROL_HUE_CURRENT_VALUE;
-			String saturationLabel = PhilipsConstant.COLOUR_CONTROL_SATURATION;
+			String currentHueControlLabel = PhilipsConstant.COLOUR_HUE_CURRENT_VALUE;
+			String saturationLabel = PhilipsConstant.COLOUR_SATURATION;
 			String hValue = stats.get(currentHueControlLabel);
 			String sValue = stats.get(saturationLabel);
 			String vValue = String.valueOf(PhilipsConstant.DEFAULT_V_VALUE);
@@ -3798,18 +3802,8 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				timeHour = timeAndMinuteForCreateAutomation.get(typeOfAutomation).get(AutomationEnum.TIME_HOUR.getName());
 				timeMinute = timeAndMinuteForCreateAutomation.get(typeOfAutomation).get(AutomationEnum.TIME_MINUTE.getName());
 			}
-			if (String.valueOf(PhilipsConstant.NUMBER_ONE).equals(timeCurrent)) {
-				int time = Integer.parseInt(timeHour);
-				timeHour = String.valueOf(time);
-				if (time != 12) {
-					timeHour = String.valueOf(time + 12);
-				}
-			} else {
-				int time = Integer.parseInt(timeHour);
-				if (time == 12) {
-					timeHour = String.valueOf(0);
-				}
-			}
+			timeHour = convertTimeHourByCurrentTime(timeCurrent, timeHour);
+
 			currentTime.setHour(String.valueOf(Integer.valueOf(timeHour)));
 			currentTime.setMinute(String.valueOf(Integer.valueOf(timeMinute)));
 			timePoint.setTimes(currentTime);
@@ -3831,18 +3825,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				timeHour = timeAndMinuteForCreateAutomation.get(typeOfAutomation).get(AutomationEnum.TIME_HOUR.getName());
 				timeMinute = timeAndMinuteForCreateAutomation.get(typeOfAutomation).get(AutomationEnum.TIME_MINUTE.getName());
 			}
-			if (String.valueOf(PhilipsConstant.NUMBER_ONE).equals(timeCurrent)) {
-				int time = Integer.parseInt(timeHour);
-				timeHour = String.valueOf(time);
-				if (time != 12) {
-					timeHour = String.valueOf(time + 12);
-				}
-			} else {
-				int time = Integer.parseInt(timeHour);
-				if (time == 12) {
-					timeHour = String.valueOf(0);
-				}
-			}
+			timeHour = convertTimeHourByCurrentTime(timeCurrent, timeHour);
 			currentTime.setHour(String.valueOf(Integer.valueOf(timeHour)));
 			currentTime.setMinute(String.valueOf(Integer.valueOf(timeMinute)));
 			timePoint.setTimes(currentTime);
@@ -3854,7 +3837,17 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		// check name automation exits
 		if (!PhilipsConstant.CREATE_AUTOMATION.equals(property)) {
 			String nameValue = property.substring(property.indexOf(PhilipsConstant.DASH) + 1);
-			Optional<AutomationResponse> automationResponse = automationList.stream().filter(item -> item.getMetaData().getName().equals(nameValue)).findFirst();
+			String scriptId = PhilipsConstant.EMPTY_STRING;
+			//Handling cases with the same name but different types
+			for (Entry<String, String> entry : idAndNameOfAutomationMap.entrySet()) {
+				if (scriptName.equalsIgnoreCase(entry.getValue())) {
+					scriptId = entry.getKey();
+					break;
+				}
+			}
+			String finalScriptId = scriptId;
+			Optional<AutomationResponse> automationResponse = automationList.stream().filter(item -> item.getMetaData().getName().equals(nameValue) && item.getScriptId().equalsIgnoreCase(finalScriptId))
+					.findFirst();
 			automationResponse.ifPresent(response -> automationRequest.setId(response.getId()));
 			if (!name.equals(nameValue)) {
 				String newName = PhilipsConstant.AUTOMATION + typeOfAutomation + PhilipsConstant.DASH + name.trim();
@@ -3868,6 +3861,37 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			isAutomationNameExisting(nameValue);
 		}
 		return automationRequest;
+	}
+
+	/**
+	 * Convert time hour by current time as AM or PM
+	 *
+	 * @param timeCurrent the timeCurrent is current(AM/PM) value iff timeCurrent = 1 => timeCurrent is AM and timeCurrent = 0 => timeCurrent is PM
+ 	 * @param timeHour the timeHour is hour of automation
+	 * @return String is the hour converted
+	 */
+	private String convertTimeHourByCurrentTime(String timeCurrent, String timeHour) {
+		//Convert time hour by current time case current time is PM
+		//if time hour != 12 convert time hour = time hour + 12
+		//hour = 1h PM => hour = 1 + 12 = 13h
+		//hour = 10h PM => hour = 10 + 12 = 22h
+		// Special case hour = 12h PM (24h) we don't convert time hour, hour will be 12h
+		if (String.valueOf(PhilipsConstant.NUMBER_ONE).equals(timeCurrent)) {
+			int time = Integer.parseInt(timeHour);
+			timeHour = String.valueOf(time);
+			if (time != 12) {
+				timeHour = String.valueOf(time + 12);
+			}
+		} else {
+			//Convert time hour by current time case current time is AM
+			// in this case, the value of hour will be 1,2,3,4,5,6,7,8,9,10,11, and 12h AM
+			//if hour = 12h AM => convert hour = 0h
+			int time = Integer.parseInt(timeHour);
+			if (time == 12) {
+				timeHour = String.valueOf(0);
+			}
+		}
+		return timeHour;
 	}
 
 	/**
@@ -4325,6 +4349,14 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				throw new ResourceNotReachableException("List zones data is empty");
 			}
 		} catch (Exception e) {
+			//Handle case connection time out
+			if (e instanceof ResourceAccessException || e instanceof ResourceNotReachableException) {
+				throw new ResourceNotReachableException("Connection time out", e);
+			}
+			//Handle case invalid token api
+			if (e.getMessage().contains(PhilipsConstant.MESSAGE_UNAUTHORIZED)) {
+				throw new ResourceNotReachableException("Login failed, please check the server address and the personal access token", e);
+			}
 			logger.error(String.format("Error while retrieving list zones %s", e.getMessage()), e);
 		}
 	}
@@ -4475,8 +4507,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			allDeviceIdAndNameMap.put(PhilipsConstant.NONE, PhilipsConstant.NONE);
 			deviceExitsInRoomMap.put(PhilipsConstant.NONE, PhilipsConstant.FALSE);
 		} catch (Exception e) {
-			String errorMessage = String.format("Aggregated device Retrieval-Error: %s with cause: %s", e.getMessage(), e.getCause().getMessage());
-			logger.error(errorMessage, e);
+			logger.error(String.format("Error while retrieving device dropdown list", e.getMessage()), e);
 		}
 	}
 
@@ -4506,8 +4537,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				}
 			}
 		} catch (Exception e) {
-			String errorMessage = String.format("Aggregated device Retrieval-Error: %s with cause: %s", e.getMessage(), e.getCause().getMessage());
-			logger.error(errorMessage, e);
+			logger.error(String.format("Error while retrieving list aggregated device: %s ", e.getMessage()), e);
 		}
 	}
 
@@ -4714,7 +4744,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					String deviceKey = device.getKey();
 					AggregatedDevice deviceValue = device.getValue();
 					String deviceName = deviceValue.getDeviceName();
-					if (deviceName.equals(name.trim())) {
+					if (deviceName.equalsIgnoreCase(name.trim())) {
 						listOfDeviceAfterFilteredName.put(deviceKey, deviceValue);
 					}
 				}

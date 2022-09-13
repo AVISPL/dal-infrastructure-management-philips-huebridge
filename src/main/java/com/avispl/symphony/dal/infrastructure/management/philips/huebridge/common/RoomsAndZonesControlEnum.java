@@ -14,10 +14,10 @@ public enum RoomsAndZonesControlEnum {
 	DEVICE_STATUS("DeviceStatus"),
 	ACTION("Action"),
 	CREATE("Create"),
-	CANCEL("CancelChange"),
+	CANCEL("CancelChanges"),
 	DEVICE("Device"),
 	DELETE("Delete"),
-	APPLY_CHANGE("ApplyChange"),
+	APPLY_CHANGE("ApplyChanges"),
 	DEVICE_ADD("DeviceAdd");
 
 	/**

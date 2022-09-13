@@ -38,7 +38,7 @@ public class AggregatedDeviceColorControllingMetric {
 	public static final String CUSTOM_COLOUR = "CustomColour";
 
 	// Color Sections
-	public static final String REDS = "Reds";
+	public static final String RED_SECTION = "Red";
 	public static final String ORANGES = "Oranges";
 	public static final String YELLOWS = "Yellows";
 	public static final String YELLOW_GREENS = "Yellow Greens";
@@ -67,10 +67,10 @@ public class AggregatedDeviceColorControllingMetric {
 	public static final float PINKS_RANGE = 360;
 
 	// Color limitation values
-	public static final float MAX_HUE = 360;
-	public static final float MIN_HUE = 0;
-	public static final float MAX_SATURATION = 100;
-	public static final float MIN_SATURATION = 0;
-	public static final float ONE_HUNDRED_PERCENT = 100;
-	public static final float DEFAULT_BRIGHTNESS = 1;
+	public static final int MAX_HUE = 360;
+	public static final int MIN_HUE = 0;
+	public static final int MAX_SATURATION = 100;
+	public static final int MIN_SATURATION = 0;
+	public static final int ONE_HUNDRED_PERCENT = 100;
+	public static final int DEFAULT_BRIGHTNESS = 1;
 }

@@ -293,7 +293,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		Assert.assertEquals("True", stats.get("CreateRoom#Edited"));
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "CreateRoom#CancelChange";
+		String property = "CreateRoom#CancelChanges";
 		String value = "New room";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
@@ -538,7 +538,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		Assert.assertEquals("True", stats.get("Room-New room 3#Edited"));
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "Room-New room 3#CancelChange";
+		String property = "Room-New room 3#CancelChanges";
 		String value = "New room";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
@@ -586,7 +586,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		stats = extendedStatistics.getStatistics();
 		Assert.assertEquals("True", stats.get("Room-New room 3#Edited"));
 		controllableProperty = new ControllableProperty();
-		property = "Room-New room 3#ApplyChange";
+		property = "Room-New room 3#ApplyChanges";
 		value = "1";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
@@ -740,7 +740,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		Assert.assertEquals("True", stats.get("CreateZone#Edited"));
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "CreateZone#CancelChange";
+		String property = "CreateZone#CancelChanges";
 		String value = "New Zone";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
@@ -912,7 +912,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		Assert.assertEquals("False", stats.get("Zone-Zone 01#Edited"));
 		Assert.assertEquals("Light 2-Living Room 01", stats.get("Zone-Zone 01#Device0"));
-		Assert.assertEquals(null, stats.get("Zone-Zone 01#Device1"));
+		Assert.assertEquals("Light 1-New room 3", stats.get("Zone-Zone 01#Device1"));
 
 		ControllableProperty controllableProperty = new ControllableProperty();
 
@@ -921,17 +921,10 @@ public class PhilipsHueDeviceCommunicatorTest {
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
-
-		property = "Zone-Zone 01#DeviceAdd";
-		value = "1";
-		controllableProperty.setProperty(property);
-		controllableProperty.setValue(value);
-
-		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 		Assert.assertEquals("True", stats.get("Zone-Zone 01#Edited"));
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
-		Assert.assertEquals("Light 2-Living Room 01", stats.get("Zone-Zone 01#Device1"));
+		Assert.assertEquals("Light 1-New room 3", stats.get("Zone-Zone 01#Device1"));
 	}
 
 	/**
@@ -951,8 +944,6 @@ public class PhilipsHueDeviceCommunicatorTest {
 		String value = "1";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
-		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
-
 		Assert.assertThrows("Expect error because user added enough devices and cannot add new devices", ResourceNotReachableException.class,
 				() -> philipsHueDeviceCommunicator.controlProperty(controllableProperty));
 	}
@@ -994,7 +985,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		Assert.assertEquals("True", stats.get("Zone-Zone 01#Edited"));
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "Zone-Zone 01#CancelChange";
+		String property = "Zone-Zone 01#CancelChanges";
 		String value = "New Zone";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
@@ -1042,7 +1033,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		stats = extendedStatistics.getStatistics();
 		Assert.assertEquals("True", stats.get("Zone-Zone 01#Edited"));
 		controllableProperty = new ControllableProperty();
-		property = "Zone-Zone 01#ApplyChange";
+		property = "Zone-Zone 01#ApplyChanges";
 		value = "1";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
@@ -1824,7 +1815,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
-		property = "AutomationGoToSleep-Go to sleep1#ApplyChange";
+		property = "AutomationGoToSleep-Go to sleep1#ApplyChanges";
 		value = "1";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
@@ -1928,7 +1919,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		philipsHueDeviceCommunicator.init();
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
-		Assert.assertTrue(!stats.containsKey("Room-New room 3#Type") && !stats.containsKey("Room-Living Room 01#Type"));
+		Assert.assertTrue(stats.containsKey("Room-New room 3#Type") && !stats.containsKey("Room-Living Room 01#Type"));
 	}
 
 	/**
@@ -1945,7 +1936,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		Thread.sleep(10000);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		Assert.assertTrue(stats.containsKey("Room-Living Room 01#Type"));
-		Assert.assertFalse(stats.containsKey("Room-New room 3#Type"));
+		Assert.assertTrue(stats.containsKey("Room-New room 3#Type"));
 	}
 
 	/**
@@ -1960,7 +1951,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		philipsHueDeviceCommunicator.init();
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
-		Assert.assertTrue(!stats.containsKey("Room-New room 3#Type") && !stats.containsKey("Room-NotExistRoom#Type") && !stats.containsKey("Room-Not Exist Room 123@@@#Type"));
+		Assert.assertTrue(stats.containsKey("Room-New room 3#Type") && !stats.containsKey("Room-NotExistRoom#Type") && !stats.containsKey("Room-Not Exist Room 123@@@#Type"));
 	}
 
 	/**

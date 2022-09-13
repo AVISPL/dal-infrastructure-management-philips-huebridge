@@ -64,7 +64,7 @@ public class PhilipsConstant {
 	public static String ONLINE = "Online";
 	public static String CANCEL = "Cancel";
 	public static String CANCELING = "Canceling";
-	public static String CANCEL_CHANGE = "CancelChange";
+	public static String CANCEL_CHANGE = "CancelChanges";
 	public static String FORMAT_PERCENT = "\"%s\"";
 	public static String FORMAT_PERCENT_OBJECT = "%s";
 	public static String COLON = ":";
@@ -93,14 +93,17 @@ public class PhilipsConstant {
 	public static String MOTION_DETECTED = "motionDetected";
 	public static String MIN_POLLING_INTERVAL_KEY = "MinPollingInterval";
 	public static String MAX_POLLING_INTERVAL_KEY = "NextPollingInterval";
-	public static String COLOUR_CONTROL_SATURATION = "ColourControlSaturation";
-	public static String COLOUR_CONTROL_SATURATION_CURRENT_VALUE = "ColourControlSaturationCurrentValue";
-	public static String COLOUR_CONTROL_HUE_CURRENT_VALUE = "ColourControlHueCurrentValue";
-	public static String COLOUR_CONTROL_HUE = "ColourControlHue";
-	public static String COLOUR_CONTROL_VALUE = "ColourControlValue";
-	public static String COLOUR_CONTROL_CURRENT_COLOR = "ColourControlCurrentColor";
+	public static String COLOUR_SATURATION = "ColourSaturation(%)";
+	public static String COLOUR_SATURATION_CURRENT_VALUE = "ColourSaturationCurrentValue(%)";
+	public static String COLOUR_HUE_CURRENT_VALUE = "ColourHueCurrentValue";
+	public static String COLOUR_HUE = "ColourHue";
+	public static String COLOUR_VALUE = "ColourValue";
+	public static String COLOUR_CURRENT_COLOR = "ColourCurrentColor";
 	public static String COLOUR_CONTROL = "ColourControl";
 	public static String CURRENT_ZONE_FILTER = "CurrentZoneFilter";
+	public static String MESSAGE_UNAUTHORIZED = "hue personal wireless lighting";
+	public static String MESSAGE_CONNECTION_TIMEOUT = "Cannot reach resource";
+	public static int NUMBER_METRIC_MONITORING = 8;
 	public static int MAXIMUM_REPEAT_DAY = 7;
 	public static int NUMBER_ONE = 1;
 	public static int ZERO = 0;
@@ -112,7 +115,7 @@ public class PhilipsConstant {
 	public static int MAX_END_BRIGHTNESS = 100;
 	public static int MIN_COLOR_TEMPERATURE = 153;
 	public static int MAX_COLOR_TEMPERATURE = 500;
-	public static float DEFAULT_V_VALUE = 100.0F;
+	public static int DEFAULT_V_VALUE = 100;
 
 	// Data loader constants
 	public static int MIN_POLLING_INTERVAL = 1;
