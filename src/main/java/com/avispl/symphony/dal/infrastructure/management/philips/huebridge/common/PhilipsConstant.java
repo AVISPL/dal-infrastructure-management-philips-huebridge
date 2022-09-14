@@ -64,7 +64,7 @@ public class PhilipsConstant {
 	public static String ONLINE = "Online";
 	public static String CANCEL = "Cancel";
 	public static String CANCELING = "Canceling";
-	public static String CANCEL_CHANGE = "CancelChange";
+	public static String CANCEL_CHANGE = "CancelChanges";
 	public static String FORMAT_PERCENT = "\"%s\"";
 	public static String FORMAT_PERCENT_OBJECT = "%s";
 	public static String COLON = ":";
@@ -93,24 +93,29 @@ public class PhilipsConstant {
 	public static String MOTION_DETECTED = "motionDetected";
 	public static String MIN_POLLING_INTERVAL_KEY = "MinPollingInterval";
 	public static String MAX_POLLING_INTERVAL_KEY = "NextPollingInterval";
-	public static String COLOR_CONTROL_SATURATION = "ColorControlSaturation";
-	public static String COLOR_CONTROL_SATURATION_CURRENT_VALUE = "ColorControlSaturationCurrentValue";
-	public static String COLOR_CONTROL_HUE_CURRENT_VALUE = "ColorControlHueCurrentValue";
-	public static String COLOR_CONTROL_HUE = "ColorControlHue";
-	public static String COLOR_CONTROL_VALUE = "ColorControlValue";
-	public static String COLOR_CONTROL_CURRENT_COLOR = "ColorControlCurrentColor";
-	public static String COLOR_CONTROL = "ColorControl";
+	public static String COLOUR_SATURATION = "ColourSaturation(%)";
+	public static String COLOUR_SATURATION_CURRENT_VALUE = "ColourSaturationCurrentValue(%)";
+	public static String COLOUR_HUE_CURRENT_VALUE = "ColourHueCurrentValue";
+	public static String COLOUR_HUE = "ColourHue";
+	public static String COLOUR_VALUE = "ColourValue";
+	public static String COLOUR_CURRENT_COLOR = "ColourCurrentColor";
+	public static String COLOUR_CONTROL = "ColourControl";
+	public static String CURRENT_ZONE_FILTER = "CurrentZoneFilter";
+	public static String MESSAGE_UNAUTHORIZED = "hue personal wireless lighting";
+	public static String MESSAGE_CONNECTION_TIMEOUT = "Cannot reach resource";
+	public static int NUMBER_METRIC_MONITORING = 8;
 	public static int MAXIMUM_REPEAT_DAY = 7;
 	public static int NUMBER_ONE = 1;
 	public static int ZERO = 0;
 	public static int DEFAULT_FADE_DURATION = 900;
+	public static int DEFAULT_FADE_DURATION_GO_TO_SLEEP = 1800;
 	public static int MIN_FADE_DURATION = 10;
 	public static int MAX_FADE_DURATION = 5400;
 	public static int MIN_END_BRIGHTNESS = 1;
 	public static int MAX_END_BRIGHTNESS = 100;
 	public static int MIN_COLOR_TEMPERATURE = 153;
 	public static int MAX_COLOR_TEMPERATURE = 500;
-	public static float DEFAULT_V_VALUE = 100.0F;
+	public static int DEFAULT_V_VALUE = 100;
 
 	// Data loader constants
 	public static int MIN_POLLING_INTERVAL = 1;

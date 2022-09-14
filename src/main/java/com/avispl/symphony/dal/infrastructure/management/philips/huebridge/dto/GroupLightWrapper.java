@@ -3,6 +3,8 @@
  */
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.grouplight.GroupLightResponse;
 
 /**
@@ -12,6 +14,7 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.g
  * Created on 8/3/2022
  * @since 1.0.0
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupLightWrapper {
 
 	private GroupLightResponse[] data;

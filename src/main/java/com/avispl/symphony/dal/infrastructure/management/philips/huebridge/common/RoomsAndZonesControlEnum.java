@@ -14,16 +14,16 @@ public enum RoomsAndZonesControlEnum {
 	DEVICE_STATUS("DeviceStatus"),
 	ACTION("Action"),
 	CREATE("Create"),
-	CANCEL("CancelChange"),
+	CANCEL("CancelChanges"),
 	DEVICE("Device"),
 	DELETE("Delete"),
-	APPLY_CHANGE("ApplyChange"),
+	APPLY_CHANGE("ApplyChanges"),
 	DEVICE_ADD("DeviceAdd");
 
 	/**
 	 * RoomsAndZonesControlEnum instantiation
 	 *
-	 * @param name {@code {@link #name}}
+	 * @param name {@link #name}
 	 */
 	RoomsAndZonesControlEnum(String name) {
 		this.name = name;

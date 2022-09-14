@@ -61,8 +61,8 @@ public enum RoomTypeEnum {
 	/**
 	 * RoomTypeEnum instantiation
 	 *
-	 * @param name {@code {@link #name}}
-	 * @param value {@code {@link #value }}
+	 * @param name {@link #name}
+	 * @param value {@link #value}
 	 */
 	RoomTypeEnum(String name, String value) {
 		this.name = name;

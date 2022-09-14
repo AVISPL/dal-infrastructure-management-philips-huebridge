@@ -16,7 +16,7 @@ public class BridgeListResponse {
 	private OwnerResponse owner;
 
 	/**
-	 * Retrieves {@code {@link #id}}
+	 * Retrieves {@link #id}
 	 *
 	 * @return value of {@link #id}
 	 */
@@ -25,16 +25,16 @@ public class BridgeListResponse {
 	}
 
 	/**
-	 * Sets {@code id}
+	 * Sets {@link #id} value
 	 *
-	 * @param id the {@code java.lang.String} field
+	 * @param id new value of {@link #id}
 	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
 	/**
-	 * Retrieves {@code {@link #owner}}
+	 * Retrieves {@link #owner}
 	 *
 	 * @return value of {@link #owner}
 	 */
@@ -43,9 +43,9 @@ public class BridgeListResponse {
 	}
 
 	/**
-	 * Sets {@code owner}
+	 * Sets {@link #owner} value
 	 *
-	 * @param owner the {@code com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.bridge.OwnerResponse} field
+	 * @param owner new value of {@link #owner}
 	 */
 	public void setOwner(OwnerResponse owner) {
 		this.owner = owner;

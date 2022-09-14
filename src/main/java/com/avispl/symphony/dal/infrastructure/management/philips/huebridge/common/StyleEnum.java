@@ -12,14 +12,14 @@ import com.avispl.symphony.dal.util.StringUtils;
 public enum StyleEnum {
 
 	SUNRISE("Sunrise", "sunrise"),
-	FADE_TO_BRIGHT("Fade To Bright", "fade_to_bright"),
+	FADE_TO_BRIGHT("Fade To Bright", "basic"),
 	;
 
 	/**
 	 * StyleEnum instantiation
 	 *
-	 * @param name {@code {@link #name }}
-	 * @param value {@code {@link #value }}
+	 * @param name {@link #name}
+	 * @param value {@link #value}
 	 */
 	StyleEnum(String name, String value) {
 		this.name = name;
@@ -63,5 +63,23 @@ public enum StyleEnum {
 			}
 		}
 		return value;
+	}
+
+	/**
+	 * Get value of StyleEnum by name
+	 *
+	 * @param name the name is name of StyleEnum
+	 * @return String is StyleEnum name
+	 */
+	public static String getValueOfEnumByName(String name) {
+		if (StringUtils.isNullOrEmpty(name)) {
+			return PhilipsConstant.NONE;
+		}
+		for (StyleEnum style : StyleEnum.values()) {
+			if (style.getName().equalsIgnoreCase(name)) {
+				return style.getValue();
+			}
+		}
+		return name;
 	}
 }

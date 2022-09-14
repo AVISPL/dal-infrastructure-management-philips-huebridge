@@ -22,7 +22,7 @@ public enum ControllingMetric {
 	/**
 	 * ControllingMetric instantiation
 	 *
-	 * @param name {@code {@link #name}}
+	 * @param name {@link #name
 	 */
 	ControllingMetric(String name) {
 		this.name = name;

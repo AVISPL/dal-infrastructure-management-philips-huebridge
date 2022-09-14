@@ -22,7 +22,7 @@ public class OwnerResponse {
 	private String type;
 
 	/**
-	 * Retrieves {@code {@link #rid}}
+	 * Retrieves {@link #rid}
 	 *
 	 * @return value of {@link #rid}
 	 */
@@ -31,16 +31,16 @@ public class OwnerResponse {
 	}
 
 	/**
-	 * Sets {@code rid}
+	 * Sets {@link #rid} value
 	 *
-	 * @param rid the {@code java.lang.String} field
+	 * @param rid new value of {@link #rid}
 	 */
 	public void setRid(String rid) {
 		this.rid = rid;
 	}
 
 	/**
-	 * Retrieves {@code {@link #type}}
+	 * Retrieves {@link #type}
 	 *
 	 * @return value of {@link #type}
 	 */
@@ -49,9 +49,9 @@ public class OwnerResponse {
 	}
 
 	/**
-	 * Sets {@code type}
+	 * Sets {@link #type} value
 	 *
-	 * @param type the {@code java.lang.String} field
+	 * @param type new value of {@link #type}
 	 */
 	public void setType(String type) {
 		this.type = type;

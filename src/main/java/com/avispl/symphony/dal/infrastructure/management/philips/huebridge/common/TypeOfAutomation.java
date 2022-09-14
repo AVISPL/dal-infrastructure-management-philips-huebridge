@@ -20,7 +20,7 @@ public enum TypeOfAutomation {
 	/**
 	 * TypeOfAutomation instantiation
 	 *
-	 * @param name {@code {@link #name}}
+	 * @param name {@link #name
 	 */
 	TypeOfAutomation(String name) {
 		this.name = name;

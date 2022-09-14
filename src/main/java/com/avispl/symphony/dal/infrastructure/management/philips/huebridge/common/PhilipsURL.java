@@ -31,7 +31,7 @@ public enum PhilipsURL {
 	/**
 	 * PhilipsURL instantiation
 	 *
-	 * @param url {@code {@link #url}}
+	 * @param url {@link #url}
 	 */
 	PhilipsURL(String url) {
 		this.url = url;
