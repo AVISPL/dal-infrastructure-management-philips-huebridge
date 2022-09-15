@@ -1543,7 +1543,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "AutomationGoToSleep-Go to sleep1#FadeDuration";
+		String property = "AutomationGoToSleep-Go to sleep1#FadeDuration(s)";
 		String value = "0";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
@@ -1571,7 +1571,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "AutomationGoToSleep-Go to sleep1#FadeDuration";
+		String property = "AutomationGoToSleep-Go to sleep1#FadeDuration(s)";
 		String value = "5401";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);

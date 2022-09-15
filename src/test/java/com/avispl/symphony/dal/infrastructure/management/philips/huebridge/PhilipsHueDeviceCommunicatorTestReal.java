@@ -5,7 +5,9 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge;
 
 
 import java.util.List;
+import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import com.avispl.symphony.api.dal.dto.control.ControllableProperty;
 import com.avispl.symphony.api.dal.dto.monitor.ExtendedStatistics;
 import com.avispl.symphony.api.dal.dto.monitor.aggregator.AggregatedDevice;
+import com.avispl.symphony.api.dal.error.ResourceNotReachableException;
 
 /**
  * Unit test for {@link PhilipsHueDeviceCommunicator}.
@@ -186,5 +189,76 @@ class PhilipsHueDeviceCommunicatorTestReal {
 				Assertions.assertEquals("300", aggregatedDevice.getProperties().get(propertyName));
 			}
 		}
+	}
+
+	/**
+	 * Test update dropdown value of Room when change remove the value
+	 *
+	 * Expect room create failed because the device has been added with a sufficient number of devices
+	 */
+	@Test
+	void testCreateRoomFailedDropdownDeviceNone() throws Exception {
+		philipsHueDeviceCommunicator.getMultipleStatistics();
+		Thread.sleep(10000);
+		ControllableProperty controllableProperty = new ControllableProperty();
+		String property = "CreateRoom#Name";
+		String Value = "New room";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(Value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+		property = "CreateRoom#DeviceAdd";
+		Value = "1";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(Value);
+		Assert.assertThrows("Expect error because user added enough devices and cannot add new devices", ResourceNotReachableException.class,
+				() -> philipsHueDeviceCommunicator.controlProperty(controllableProperty));
+	}
+	/**
+	 * Test update dropdown value of Room when change remove the value
+	 *
+	 * Expect create room with new device successfully
+	 */
+	@Test
+	void testCreateRoomWittNewDeviceAfterUpdatingDropdownListDevice() throws Exception {
+		philipsHueDeviceCommunicator.getMultipleStatistics();
+		Thread.sleep(10000);
+		ControllableProperty controllableProperty = new ControllableProperty();
+		String property = "CreateRoom#Name";
+		String Value = "New room";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(Value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+		property = "CreateRoom#Type";
+		Value = "Home";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(Value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+		property = "Room-new 5#Device0";
+		Value = "None";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(Value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+		property = "Room-new 5#ApplyChanges";
+		Value = "1";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(Value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+		philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		property = "CreateRoom#Device0";
+		Value = "Light1";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(Value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		Map<String, String> stats = extendedStatistics.getStatistics();
+		Assertions.assertEquals("True", stats.get("CreateRoom#Edited"));
+		property = "CreateRoom#Create";
+		Value = "1";
+		controllableProperty.setProperty(property);
+		controllableProperty.setValue(Value);
+		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
+		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		stats = extendedStatistics.getStatistics();
+		Assertions.assertEquals("False", stats.get("CreateRoom#Edited"));
 	}
 }

@@ -13,7 +13,7 @@ package com.avispl.symphony.dal.infrastructure.management.philips.huebridge.comm
 public enum AutomationEnum {
 
 	ACTION("Action"),
-	FADE_DURATION("FadeDuration"),
+	FADE_DURATION("FadeDuration(s)"),
 	NAME("Name"),
 	REPEAT("Repeat"),
 	REPEAT_MONDAY("RepeatMonday"),
