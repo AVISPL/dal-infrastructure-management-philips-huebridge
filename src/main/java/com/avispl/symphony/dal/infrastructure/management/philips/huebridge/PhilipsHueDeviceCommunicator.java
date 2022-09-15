@@ -782,8 +782,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		if (!StringUtils.isNullOrEmpty(key) && !AutomationEnum.DEVICE_ADD.getName().equals(key) && !RoomsAndZonesControlEnum.DEVICE_STATUS.getName().equals(key)) {
 			//Update zone dropdownList
 			if (PhilipsConstant.ROOM.equals(group.substring(0, PhilipsConstant.ROOM.length())) && key.contains(PhilipsConstant.DEVICE)) {
-				int roomLen = PhilipsConstant.ROOM.length() + 1;
-				String roomNameGroup = group.substring(roomLen);
+				String roomNameGroup = group.substring(PhilipsConstant.ROOM.length() + 1);
 				List<String> deviceDropdown = deviceExitsInRoomMap.entrySet().stream().filter(item -> item.getValue().equals(PhilipsConstant.FALSE)).map(Entry::getKey).collect(Collectors.toList());
 				for (Entry<String, String> mapOfDeviceItem : mapOfDeviceDropdown.entrySet()) {
 					String deviceInRoomName = mapOfDeviceItem.getValue();
