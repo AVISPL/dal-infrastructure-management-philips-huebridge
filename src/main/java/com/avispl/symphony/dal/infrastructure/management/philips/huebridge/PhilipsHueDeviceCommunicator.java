@@ -792,6 +792,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 								RoomAndZoneResponse room = roomList.stream().filter(item -> Arrays.stream(item.getChildren()).map(Children::getRid).collect(Collectors.toList()).contains(deviceName.getKey()))
 										.findFirst().orElse(null);
 								if (room == null || room.getMetaData().getName().equals(roomNameGroup)) {
+									deviceDropdown.remove(deviceInRoomName);
 									deviceDropdown.add(deviceInRoomName);
 								}
 								break;
@@ -799,26 +800,31 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 						}
 					}
 				}
+				if (deviceDropdown.size() == 1) {
+					deviceDropdown = Arrays.stream(roomAndDropdownListControlMap.get(roomNameGroup)).collect(Collectors.toList());
+				}
 				String[] deviceDropdownList = deviceDropdown.toArray(new String[0]);
 				roomAndDropdownListControlMap.put(roomNameGroup, deviceDropdownList);
 				//Update dropdown by value
 				for (Entry<String, String> mapOfDeviceItem : mapOfDeviceDropdown.entrySet()) {
-					String value = mapOfDeviceItem.getValue();
 					String deviceKeyName = mapOfDeviceItem.getKey();
-					String propertyGroup = group + PhilipsConstant.HASH + deviceKeyName;
-					if (PhilipsConstant.DEVICE_0.equals(deviceKeyName)) {
-						if (!deviceDropdown.contains(value)) {
-							value = PhilipsConstant.NONE;
+					if (deviceKeyName.equals(key)) {
+						String value = mapOfDeviceItem.getValue();
+						String propertyGroup = group + PhilipsConstant.HASH + deviceKeyName;
+						if (PhilipsConstant.DEVICE_0.equals(deviceKeyName)) {
+							if (!deviceDropdown.contains(value)) {
+								value = PhilipsConstant.NONE;
+							}
+							AdvancedControllableProperty advancedControllableProperty = controlDropdown(stats, deviceDropdownList, propertyGroup, value);
+							addOrUpdateAdvanceControlProperties(advancedControllableProperties, advancedControllableProperty);
+							continue;
 						}
-						AdvancedControllableProperty advancedControllableProperty = controlDropdown(stats, deviceDropdownList, propertyGroup, value);
-						addOrUpdateAdvanceControlProperties(advancedControllableProperties, advancedControllableProperty);
-						continue;
-					}
-					if (!StringUtils.isNullOrEmpty(value) && deviceDropdown.contains(value)) {
-						AdvancedControllableProperty advancedControllableProperty = controlDropdown(stats, deviceDropdownList, propertyGroup, value);
-						addOrUpdateAdvanceControlProperties(advancedControllableProperties, advancedControllableProperty);
-					} else {
-						mapOfDeviceDropdown.put(deviceKeyName, null);
+						if (!StringUtils.isNullOrEmpty(value) && deviceDropdown.contains(value)) {
+							AdvancedControllableProperty advancedControllableProperty = controlDropdown(stats, deviceDropdownList, propertyGroup, value);
+							addOrUpdateAdvanceControlProperties(advancedControllableProperties, advancedControllableProperty);
+						} else {
+							mapOfDeviceDropdown.put(deviceKeyName, null);
+						}
 					}
 				}
 				isUpdateDropdown = true;

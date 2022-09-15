@@ -221,12 +221,6 @@ class PhilipsHueDeviceCommunicatorTestReal {
 	 */
 	@Test
 	void testCreateRoomWittNewDeviceAfterUpdatingDropdownListDevice() throws Exception {
-		String response ="Light1-new";
-		String value ="Light1";
-		if (response.contains(value) && response.length() >= value.length() && response.startsWith(value)) {
-			value = response;
-		}
-		System.out.println(value);
 		philipsHueDeviceCommunicator.getMultipleStatistics();
 		Thread.sleep(10000);
 		ControllableProperty controllableProperty = new ControllableProperty();
