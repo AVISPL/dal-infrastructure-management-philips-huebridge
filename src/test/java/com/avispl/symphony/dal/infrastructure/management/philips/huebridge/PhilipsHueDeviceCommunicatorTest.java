@@ -671,7 +671,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
 		Assert.assertEquals("True", stats.get("CreateZone#Edited"));
-		Assert.assertEquals("Light 2", stats.get("CreateZone#Device0"));
+		Assert.assertEquals("Light 2-Living Room 01", stats.get("CreateZone#Device0"));
 	}
 
 	/**
@@ -783,7 +783,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
 		Assert.assertEquals("True", stats.get("CreateZone#Edited"));
-		Assert.assertEquals("Light 2", stats.get("CreateZone#Device0"));
+		Assert.assertEquals("Light 2-Living Room 01", stats.get("CreateZone#Device0"));
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
 		Assert.assertEquals("True", stats.get("CreateZone#Edited"));
