@@ -3683,13 +3683,13 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			Map<String, String> deviceMap, String name) {
 		String[] propertyList = property.split(PhilipsConstant.HASH);
 		String propertyGroup = propertyList[0];
-		String[] repeatDaysDropdown = dropdownList.toArray(new String[0]);
+		String[] deviceNameDropdown = dropdownList.toArray(new String[0]);
 		if (deviceMap == null) {
 			deviceMap = new HashMap<>();
 		}
 		if (deviceMap.size() < 1) {
 			initializeDeviceDropdown(deviceMap, name, DayEnum.values().length - 1);
-			AdvancedControllableProperty repeatDaysControlProperty = controlDropdown(stats, repeatDaysDropdown, propertyGroup + PhilipsConstant.HASH + name + PhilipsConstant.ZERO, PhilipsConstant.NONE);
+			AdvancedControllableProperty repeatDaysControlProperty = controlDropdown(stats, deviceNameDropdown, propertyGroup + PhilipsConstant.HASH + name + PhilipsConstant.ZERO, PhilipsConstant.NONE);
 			addOrUpdateAdvanceControlProperties(advancedControllableProperties, repeatDaysControlProperty);
 			deviceMap.put(name + PhilipsConstant.ZERO, PhilipsConstant.NONE);
 		} else {
@@ -3765,9 +3765,9 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 						}
 						dropdownList.remove(value);
 						dropdownList.add(value);
-						repeatDaysDropdown = dropdownList.toArray(new String[0]);
+						deviceNameDropdown = dropdownList.toArray(new String[0]);
 					}
-					AdvancedControllableProperty repeatDaysControlProperty = controlDropdown(stats, repeatDaysDropdown, propertyGroup + PhilipsConstant.HASH + repeatEntry.getKey(), value);
+					AdvancedControllableProperty repeatDaysControlProperty = controlDropdown(stats, deviceNameDropdown, propertyGroup + PhilipsConstant.HASH + repeatEntry.getKey(), value);
 					addOrUpdateAdvanceControlProperties(advancedControllableProperties, repeatDaysControlProperty);
 				}
 			}
