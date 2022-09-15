@@ -2459,10 +2459,9 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 							List<AdvancedControllableProperty> advancedControllablePropertyList = localExtendedStatistics.getControllableProperties();
 							for (Entry<String, String> mapOfNewStats : newStats.entrySet()) {
 								String propertyKey = mapOfNewStats.getKey();
-								String automationNameGroup = propertyKey.substring(0, propertyKey.indexOf(PhilipsConstant.HASH));
-								if (propertyKey.contains(PhilipsConstant.HASH) && automationName.equalsIgnoreCase(automationNameGroup)) {
+								if (propertyKey.contains(PhilipsConstant.HASH) && automationName.equalsIgnoreCase(propertyKey.substring(0, propertyKey.indexOf(PhilipsConstant.HASH)))) {
 									//update dropdown value
-									Map<String, Map<String, String>> typeOfDeviceMapAutomation = automationAndTypeMapOfDeviceAndValue.get(automationNameGroup);
+									Map<String, Map<String, String>> typeOfDeviceMapAutomation = automationAndTypeMapOfDeviceAndValue.get(propertyKey.substring(0, propertyKey.indexOf(PhilipsConstant.HASH)));
 									if (updateDeviceDropdownListForAutomation(propertyKey, stats, advancedControllableProperties, typeOfDeviceMapAutomation)) {
 										continue;
 									}
