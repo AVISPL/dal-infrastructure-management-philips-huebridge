@@ -4,7 +4,6 @@
 package com.avispl.symphony.dal.infrastructure.management.philips.huebridge;
 
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -214,6 +213,7 @@ class PhilipsHueDeviceCommunicatorTestReal {
 		Assert.assertThrows("Expect error because user added enough devices and cannot add new devices", ResourceNotReachableException.class,
 				() -> philipsHueDeviceCommunicator.controlProperty(controllableProperty));
 	}
+
 	/**
 	 * Test update dropdown value of Room when change remove the value
 	 *
