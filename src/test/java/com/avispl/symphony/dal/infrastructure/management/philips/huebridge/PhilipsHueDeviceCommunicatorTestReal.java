@@ -66,7 +66,6 @@ class PhilipsHueDeviceCommunicatorTestReal {
 		philipsHueDeviceCommunicator.setRoomNameFilter("Room 2,AVI");
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Thread.sleep(10000);
-		System.out.println(philipsHueDeviceCommunicator.retrieveMultipleStatistics());
 		String property = "brightness";
 		String value = "100.0";
 		String deviceID = "bd22ceb5-e7b4-4ec3-90f4-3e362de7c2b5";
@@ -77,7 +76,6 @@ class PhilipsHueDeviceCommunicatorTestReal {
 		philipsHueDeviceCommunicator.controlProperty(controllableProperty);
 		philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		List<AggregatedDevice> deviceList = philipsHueDeviceCommunicator.retrieveMultipleStatistics();
-		System.out.println(deviceList);
 		for (AggregatedDevice aggregatedDevice : deviceList) {
 			if (aggregatedDevice.getDeviceId().equals(deviceID)) {
 				Assertions.assertEquals("100.0", aggregatedDevice.getProperties().get("brightness"));
