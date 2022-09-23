@@ -499,6 +499,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					//Add filter device IDs
 					roomListAfterFilter.clear();
 					zoneListAfterFilter.clear();
+					deviceIds.clear();
 					filterDeviceIds(stats);
 					populatePollingInterval(stats);
 					if (!aggregatedDeviceList.isEmpty()) {
@@ -852,17 +853,22 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	/**
 	 * Update dropdown value by device type
 	 *
+	 * @param value the value is value of property
 	 * @param property the property is property name with format GroupName#KeyName
 	 * @param stats the stats are list of statistics
 	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
 	 * @param typeOfDeviceMapAutomation is map of name automation and value
 	 * @return boolean value is true if dropdown is updated and false is dropdown is not updated
 	 */
-	private boolean updateDeviceDropdownListForAutomation(String property, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties,
+	private boolean updateDeviceDropdownListForAutomation(String value, String property, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties,
 			Map<String, Map<String, String>> typeOfDeviceMapAutomation) {
 		String[] propertyList = property.split(PhilipsConstant.HASH);
 		String key = propertyList[1];
 		boolean isUpdateDropdown = false;
+		if (AutomationEnum.TYPE.getName().equals(key)) {
+			updateDropdownOfTypeDeviceByValue(stats, advancedControllableProperties, property, value);
+			return true;
+		}
 		if (!AutomationEnum.DEVICE_ADD.getName().equals(key) && !AutomationEnum.ROOM_ADD.getName().equals(key) && !AutomationEnum.ZONE_ADD.getName().equals(key)) {
 			//Update dropdown value with device type
 			if (key.contains(PhilipsConstant.DEVICE)) {
@@ -1039,7 +1045,8 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		//update dropdown list for create automation
 		for (Entry<String, String> mapOfNewStats : createAutomationStats.entrySet()) {
 			String key = mapOfNewStats.getKey();
-			updateDeviceDropdownListForAutomation(key, createAutomationStats, createAutomationControllableProperties, typeAndMapOfDeviceAndValue);
+			String value = mapOfNewStats.getValue();
+			updateDeviceDropdownListForAutomation(value, key, createAutomationStats, createAutomationControllableProperties, typeAndMapOfDeviceAndValue);
 		}
 	}
 
@@ -2108,7 +2115,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					automationAndTypeMapOfDeviceAndValue.put(propertyGroup, typeAndMapOfDevice);
 					break;
 				case TYPE:
-					updateValueForTheControllableProperty(property, value, stats, advancedControllableProperties);
+					updateDropdownOfTypeDeviceByValue(stats, advancedControllableProperties, property, value);
 					TypeOfDeviceEnum type = EnumTypeHandler.getMetricOfEnumByName(TypeOfDeviceEnum.class, value);
 					switch (type) {
 						case DEVICE:
@@ -2243,16 +2250,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					createAutomationControllableProperties.add(controlSwitch(stats, property, String.valueOf(PhilipsConstant.NUMBER_ONE), PhilipsConstant.OFFLINE, PhilipsConstant.ONLINE));
 					break;
 				case TYPE:
-					List<String> typeDropdown = new LinkedList<>();
-					typeDropdown.add(TypeOfDeviceEnum.DEVICE.getName());
-					if (roomNameAndIdMap.size() > 1) {
-						typeDropdown.add(TypeOfDeviceEnum.ROOM.getName());
-					}
-					if (zoneNameAndIdMap.size() > 1) {
-						typeDropdown.add(TypeOfDeviceEnum.ZONE.getName());
-					}
-					AdvancedControllableProperty typeControlProperty = controlDropdown(stats, typeDropdown.toArray(new String[0]), property, TypeOfDeviceEnum.DEVICE.getName());
-					addOrUpdateAdvanceControlProperties(createAutomationControllableProperties, typeControlProperty);
+					updateDropdownOfTypeDeviceByValue(stats, createAutomationControllableProperties, property, TypeOfDeviceEnum.DEVICE.getName());
 					updateDeviceTypeForCreateAutomationByType(property, stats, createAutomationControllableProperties, TypeOfDeviceEnum.DEVICE, typeAndMapOfDeviceAndValue);
 					break;
 				case TYPE_OF_AUTOMATION:
@@ -2501,10 +2499,11 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 							List<AdvancedControllableProperty> advancedControllablePropertyList = localExtendedStatistics.getControllableProperties();
 							for (Entry<String, String> mapOfNewStats : newStats.entrySet()) {
 								String propertyKey = mapOfNewStats.getKey();
+								String value = mapOfNewStats.getValue();
 								if (propertyKey.contains(PhilipsConstant.HASH) && automationName.equalsIgnoreCase(propertyKey.substring(0, propertyKey.indexOf(PhilipsConstant.HASH)))) {
 									//update dropdown value
 									Map<String, Map<String, String>> typeOfDeviceMapAutomation = automationAndTypeMapOfDeviceAndValue.get(propertyKey.substring(0, propertyKey.indexOf(PhilipsConstant.HASH)));
-									if (updateDeviceDropdownListForAutomation(propertyKey, stats, advancedControllableProperties, typeOfDeviceMapAutomation)) {
+									if (updateDeviceDropdownListForAutomation(value, propertyKey, stats, advancedControllableProperties, typeOfDeviceMapAutomation)) {
 										continue;
 									}
 									stats.put(propertyKey, mapOfNewStats.getValue());
@@ -2756,6 +2755,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		typeDevice.put(PhilipsConstant.DEVICE, new HashMap<>());
 		typeDevice.put(PhilipsConstant.ROOM, new HashMap<>());
 		typeDevice.put(PhilipsConstant.ZONE, new HashMap<>());
+		List<String> deviceDropdownList = new ArrayList<>();
 		automationAndTypeMapOfDeviceAndValue.remove(groupName);
 		for (Location locationItem : locationArray) {
 			Map<String, String> device = new HashMap<>();
@@ -2792,10 +2792,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				String deviceAdd = groupName + PhilipsConstant.HASH + AutomationEnum.DEVICE_ADD.getName();
 				stats.put(deviceAdd, PhilipsConstant.EMPTY_STRING);
 				advancedControllableProperties.add(createButton(deviceAdd, PhilipsConstant.ADD, PhilipsConstant.ADDING, 0));
-
-				String[] typeDropdown = EnumTypeHandler.getEnumNames(TypeOfDeviceEnum.class);
-				AdvancedControllableProperty typeControlProperty = controlDropdown(stats, typeDropdown, property, PhilipsConstant.DEVICE);
-				addOrUpdateAdvanceControlProperties(advancedControllableProperties, typeControlProperty);
+				updateDropdownOfTypeDeviceByValue(stats, advancedControllableProperties, property, TypeOfDeviceEnum.DEVICE.getName());
 			} else if (locationItem.getGroup() != null && locationItem.getItems() == null) {
 
 				//Handle case value is bridge home
@@ -2815,10 +2812,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					advancedControllableProperties.add(createButton(deviceAdd, PhilipsConstant.ADD, PhilipsConstant.ADDING, 0));
 					List<String> deviceOfMap = deviceNameAndDeviceIdZoneMap.keySet().stream().collect(Collectors.toList());
 					addControllableForAutomationByType(property, stats, advancedControllableProperties, deviceOfMap, device, PhilipsConstant.DEVICE);
-
-					String[] typeDropdown = EnumTypeHandler.getEnumNames(TypeOfDeviceEnum.class);
-					AdvancedControllableProperty typeControlProperty = controlDropdown(stats, typeDropdown, property, PhilipsConstant.DEVICE);
-					addOrUpdateAdvanceControlProperties(advancedControllableProperties, typeControlProperty);
+					updateDropdownOfTypeDeviceByValue(stats, advancedControllableProperties, property, TypeOfDeviceEnum.DEVICE.getName());
 				}
 				//handle case value is room
 				if (PhilipsConstant.ROOM.equalsIgnoreCase(locationItem.getGroup().getType())) {
@@ -2855,8 +2849,12 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					String roomAdd = groupName + PhilipsConstant.HASH + AutomationEnum.ROOM_ADD.getName();
 					stats.put(roomAdd, PhilipsConstant.EMPTY_STRING);
 					advancedControllableProperties.add(createButton(roomAdd, PhilipsConstant.ADD, PhilipsConstant.ADDING, 0));
-					String[] typeDropdown = EnumTypeHandler.getEnumNames(TypeOfDeviceEnum.class);
-					AdvancedControllableProperty typeControlProperty = controlDropdown(stats, typeDropdown, property, PhilipsConstant.ROOM);
+					if (zoneNameAndIdMap.size() > 1) {
+						deviceDropdownList.add(TypeOfDeviceEnum.ZONE.getName());
+					}
+					deviceDropdownList.add(TypeOfDeviceEnum.ROOM.getName());
+					deviceDropdownList.add(TypeOfDeviceEnum.DEVICE.getName());
+					AdvancedControllableProperty typeControlProperty = controlDropdown(stats, deviceDropdownList.toArray(new String[0]), property, PhilipsConstant.ROOM);
 					addOrUpdateAdvanceControlProperties(advancedControllableProperties, typeControlProperty);
 				}
 
@@ -2887,13 +2885,37 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					String zoneAdd = groupName + PhilipsConstant.HASH + AutomationEnum.ZONE_ADD.getName();
 					stats.put(zoneAdd, PhilipsConstant.EMPTY_STRING);
 					advancedControllableProperties.add(createButton(zoneAdd, PhilipsConstant.ADD, PhilipsConstant.ADDING, 0));
-
-					String[] typeDropdown = EnumTypeHandler.getEnumNames(TypeOfDeviceEnum.class);
-					AdvancedControllableProperty typeControlProperty = controlDropdown(stats, typeDropdown, property, PhilipsConstant.ZONE);
+					if (roomNameAndIdMap.size() > 1) {
+						deviceDropdownList.add(TypeOfDeviceEnum.ROOM.getName());
+					}
+					deviceDropdownList.add(TypeOfDeviceEnum.ZONE.getName());
+					deviceDropdownList.add(TypeOfDeviceEnum.DEVICE.getName());
+					AdvancedControllableProperty typeControlProperty = controlDropdown(stats, deviceDropdownList.toArray(new String[0]), property, PhilipsConstant.ZONE);
 					addOrUpdateAdvanceControlProperties(advancedControllableProperties, typeControlProperty);
 				}
 			}
 		}
+	}
+
+	/**
+	 * Update dropdown value of TypeOfDevice by value
+	 *
+	 * @param stats the stats are list of statistics
+	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
+	 * @param property the property is property names
+	 * @param value the value is value of property
+	 */
+	private void updateDropdownOfTypeDeviceByValue(Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties, String property, String value) {
+		List<String> deviceDropdownList = new ArrayList<>();
+		if (roomNameAndIdMap.size() > 1) {
+			deviceDropdownList.add(TypeOfDeviceEnum.ROOM.getName());
+		}
+		if (zoneNameAndIdMap.size() > 1) {
+			deviceDropdownList.add(TypeOfDeviceEnum.ZONE.getName());
+		}
+		deviceDropdownList.add(value);
+		AdvancedControllableProperty typeControlProperty = controlDropdown(stats, deviceDropdownList.toArray(new String[0]), property, value);
+		addOrUpdateAdvanceControlProperties(advancedControllableProperties, typeControlProperty);
 	}
 
 	/**
@@ -3288,7 +3310,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					addRoomAndZoneForAutomation(propertyGroup, stats, advancedControllableProperties, zoneNameAndIdMap, mapOfZone);
 					break;
 				case TYPE:
-					updateValueForTheControllableProperty(property, value, stats, advancedControllableProperties);
+					updateDropdownOfTypeDeviceByValue(stats, advancedControllableProperties, property, value);
 					TypeOfDeviceEnum type = EnumTypeHandler.getMetricOfEnumByName(TypeOfDeviceEnum.class, value);
 					switch (type) {
 						case DEVICE:

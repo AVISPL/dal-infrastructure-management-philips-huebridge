@@ -46,7 +46,7 @@ class PhilipsHueDeviceCommunicatorTestReal {
 		philipsHueDeviceCommunicator.setPort(443);
 		philipsHueDeviceCommunicator.setHost(HOST_NAME);
 		philipsHueDeviceCommunicator.setContentType("application/json");
-		philipsHueDeviceCommunicator.setPassword("QKRlUW-Zty5sfoagCf6BOqi9RXdS0qWcJDESnaiM");
+		philipsHueDeviceCommunicator.setPassword("3cDL01NM13VCP3KvJ-8iSO4Zsu5Tb0x7VNv2xl6z");
 		philipsHueDeviceCommunicator.init();
 		philipsHueDeviceCommunicator.authenticate();
 	}
