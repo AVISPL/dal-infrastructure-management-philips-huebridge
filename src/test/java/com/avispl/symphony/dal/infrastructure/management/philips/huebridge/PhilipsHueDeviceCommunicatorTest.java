@@ -671,7 +671,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
 		Assert.assertEquals("True", stats.get("CreateZone#Edited"));
-		Assert.assertEquals("Light 2", stats.get("CreateZone#Device0"));
+		Assert.assertEquals("Light 2-Living Room 01", stats.get("CreateZone#Device0"));
 	}
 
 	/**
@@ -783,7 +783,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
 		Assert.assertEquals("True", stats.get("CreateZone#Edited"));
-		Assert.assertEquals("Light 2", stats.get("CreateZone#Device0"));
+		Assert.assertEquals("Light 2-Living Room 01", stats.get("CreateZone#Device0"));
 		extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		stats = extendedStatistics.getStatistics();
 		Assert.assertEquals("True", stats.get("CreateZone#Edited"));
@@ -1543,7 +1543,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "AutomationGoToSleep-Go to sleep1#FadeDuration";
+		String property = "AutomationGoToSleep-Go to sleep1#FadeDuration(s)";
 		String value = "0";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);
@@ -1571,7 +1571,7 @@ public class PhilipsHueDeviceCommunicatorTest {
 		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
 		Map<String, String> stats = extendedStatistics.getStatistics();
 		ControllableProperty controllableProperty = new ControllableProperty();
-		String property = "AutomationGoToSleep-Go to sleep1#FadeDuration";
+		String property = "AutomationGoToSleep-Go to sleep1#FadeDuration(s)";
 		String value = "5401";
 		controllableProperty.setProperty(property);
 		controllableProperty.setValue(value);

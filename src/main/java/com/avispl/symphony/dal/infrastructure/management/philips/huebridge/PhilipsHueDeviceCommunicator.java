@@ -82,11 +82,13 @@ import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.R
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.RoomAndZoneWrapper;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.ScriptAutomationWrapper;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.SystemWrapper;
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.TemperatureWrapper;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.ZigbeeConnectivityWrapper;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.aggregateddevice.AggregatedDeviceResponse;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.aggregateddevice.MotionDevice;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.aggregateddevice.PowerDevice;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.aggregateddevice.ProductData;
+import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.aggregateddevice.TemperatureDevice;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation.AutoConfiguration;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation.AutomationResponse;
 import com.avispl.symphony.dal.infrastructure.management.philips.huebridge.dto.automation.CurrentTime;
@@ -491,13 +493,38 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				retrieveListBridgeId();
 				retrieveSystemInfoByBridgeIdList(stats);
 				// retrieve device and filter devices in first monitoring cycle of polling interval
+
 				if (currentPhase.get() == localPollingInterval || currentPhase.get() == 0) {
 					retrieveDevices();
 					//Add filter device IDs
 					roomListAfterFilter.clear();
 					zoneListAfterFilter.clear();
+					deviceIds.clear();
 					filterDeviceIds(stats);
 					populatePollingInterval(stats);
+					if (!aggregatedDeviceList.isEmpty()) {
+						// calculating polling interval and threads quantity
+						if (currentPhase.get() == PhilipsConstant.FIRST_MONITORING_CYCLE_OF_POLLING_INTERVAL) {
+							localPollingInterval = calculatingLocalPollingInterval();
+							deviceStatisticsCollectionThreads = calculatingThreadQuantity();
+							pushFailedMonitoringDevicesIDToPriority();
+						}
+
+						if (currentPhase.get() == localPollingInterval) {
+							currentPhase.set(0);
+						}
+						currentPhase.incrementAndGet();
+
+						if (executorService == null) {
+							executorService = Executors.newFixedThreadPool(deviceStatisticsCollectionThreads);
+						}
+						for (int threadNumber = 0; threadNumber < deviceStatisticsCollectionThreads; threadNumber++) {
+							executorService.submit(new PhilipsHueDeviceDataLoader(threadNumber));
+						}
+					}
+				} else {
+					applyFilterBeforePollingInterval();
+					stats.put(PhilipsConstant.CURRENT_ZONE_FILTER, localExtendedStatistics.getStatistics().get(PhilipsConstant.CURRENT_ZONE_FILTER));
 				}
 				populateControlForAggregator(stats, advancedControllableProperties);
 
@@ -536,31 +563,10 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			Map<String, String> localStats = localExtendedStatistics.getStatistics();
 			List<AdvancedControllableProperty> localAdvancedControl = localExtendedStatistics.getControllableProperties();
 
+			updateValueForDeviceDropdownList();
 			updateLocalExtendedByValue(localStats, localAdvancedControl, localCreateRoom, localCreateRoomStats, isCreateRoom);
 			updateLocalExtendedByValue(localStats, localAdvancedControl, localCreateZone, localCreateZoneStats, isCreateZone);
 			updateLocalExtendedByValue(localStats, localAdvancedControl, localCreateAutomation, localCreateAutomationStats, isCreateAutomation);
-
-			if (!aggregatedDeviceList.isEmpty()) {
-
-				// calculating polling interval and threads quantity
-				if (currentPhase.get() == PhilipsConstant.FIRST_MONITORING_CYCLE_OF_POLLING_INTERVAL) {
-					localPollingInterval = calculatingLocalPollingInterval();
-					deviceStatisticsCollectionThreads = calculatingThreadQuantity();
-					pushFailedMonitoringDevicesIDToPriority();
-				}
-
-				if (currentPhase.get() == localPollingInterval) {
-					currentPhase.set(0);
-				}
-				currentPhase.incrementAndGet();
-
-				if (executorService == null) {
-					executorService = Executors.newFixedThreadPool(deviceStatisticsCollectionThreads);
-				}
-				for (int threadNumber = 0; threadNumber < deviceStatisticsCollectionThreads; threadNumber++) {
-					executorService.submit(new PhilipsHueDeviceDataLoader(threadNumber));
-				}
-			}
 		} finally {
 			reentrantLock.unlock();
 		}
@@ -611,6 +617,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		listMetadataDevice.clear();
 		roomListAfterFilter.clear();
 		zoneListAfterFilter.clear();
+		automationAndTypeMapOfDeviceAndValue.clear();
 		currentPhase.set(0);
 		deviceIds.clear();
 		if (localExtendedStatistics != null && localExtendedStatistics.getStatistics() != null && localExtendedStatistics.getControllableProperties() != null) {
@@ -763,6 +770,287 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	}
 
 	/**
+	 * Update dropdown value by device type
+	 *
+	 * @param property the property is property name with format GroupName#KeyName
+	 * @param stats the stats are list of statistics
+	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
+	 * @param mapOfDeviceDropdown is map name of device and value of it in zone
+	 * @return boolean value is true if dropdown is updated and false is dropdown is not updated
+	 */
+	private boolean updateDeviceDropdownListForRoomAndZone(String property, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties,
+			Map<String, String> mapOfDeviceDropdown) {
+		String[] propertyList = property.split(PhilipsConstant.HASH);
+		String key = propertyList[1];
+		String group = propertyList[0];
+		boolean isUpdateDropdown = false;
+		if (!StringUtils.isNullOrEmpty(key) && !AutomationEnum.DEVICE_ADD.getName().equals(key)) {
+			//Update room dropdownList
+			if (PhilipsConstant.ROOM.equals(group.substring(0, PhilipsConstant.ROOM.length())) && key.contains(PhilipsConstant.DEVICE)) {
+				String roomNameGroup = group.substring(PhilipsConstant.ROOM.length() + 1);
+
+				List<String> currentDeviceDropdown = Arrays.stream(roomAndDropdownListControlMap.get(roomNameGroup)).collect(Collectors.toList());
+				List<String> newDeviceDropdown = new LinkedList<>();
+				newDeviceDropdown.addAll(Arrays.stream(roomAndDropdownListControlMap.get(roomNameGroup)).collect(Collectors.toList()));
+				for (String deviceName : currentDeviceDropdown) {
+					Entry<String, String> deviceId = allDeviceIdAndNameMap.entrySet().stream().filter(item -> item.getValue().equals(deviceName)).findFirst().orElse(null);
+					if (deviceId != null) {
+						RoomAndZoneResponse room = roomList.stream().filter(item -> Arrays.stream(item.getChildren()).map(Children::getRid).collect(Collectors.toList()).contains(deviceId.getKey()))
+								.findFirst().orElse(null);
+						newDeviceDropdown.remove(deviceName);
+						//put add device no assigned device in room to the dropdown list
+						if (room == null || room.getMetaData().getName().equals(roomNameGroup)) {
+							newDeviceDropdown.add(deviceName);
+						}
+					}
+				}
+				List<String> deviceList = deviceExitsInRoomMap.entrySet().stream().filter(item -> item.getValue().equals(PhilipsConstant.FALSE)).map(Entry::getKey).collect(Collectors.toList());
+				for (String name : deviceList) {
+					newDeviceDropdown.remove(name);
+					newDeviceDropdown.add(name);
+				}
+				String[] deviceDropdownList = newDeviceDropdown.toArray(new String[0]);
+				roomAndDropdownListControlMap.put(roomNameGroup, deviceDropdownList);
+				//Update dropdown by value
+				for (Entry<String, String> mapOfDeviceItem : mapOfDeviceDropdown.entrySet()) {
+					String deviceKeyName = mapOfDeviceItem.getKey();
+					if (deviceKeyName.equals(key)) {
+						String value = mapOfDeviceItem.getValue();
+						String propertyGroup = group + PhilipsConstant.HASH + deviceKeyName;
+						if (PhilipsConstant.DEVICE_0.equals(deviceKeyName)) {
+							if (!newDeviceDropdown.contains(value)) {
+								value = PhilipsConstant.NONE;
+							}
+							AdvancedControllableProperty advancedControllableProperty = controlDropdown(stats, deviceDropdownList, propertyGroup, value);
+							addOrUpdateAdvanceControlProperties(advancedControllableProperties, advancedControllableProperty);
+							mapOfDeviceDropdown.put(deviceKeyName, value);
+							continue;
+						}
+						if (!StringUtils.isNullOrEmpty(value) && newDeviceDropdown.contains(value)) {
+							AdvancedControllableProperty advancedControllableProperty = controlDropdown(stats, deviceDropdownList, propertyGroup, value);
+							addOrUpdateAdvanceControlProperties(advancedControllableProperties, advancedControllableProperty);
+							mapOfDeviceDropdown.put(deviceKeyName, value);
+						} else {
+							mapOfDeviceDropdown.put(deviceKeyName, null);
+						}
+					}
+				}
+				isUpdateDropdown = true;
+			}
+
+			//Update zone dropdownList
+			if (PhilipsConstant.ZONE.equals(group.substring(0, PhilipsConstant.ZONE.length())) && key.contains(PhilipsConstant.DEVICE)) {
+				//update dropdown list for create zone
+				List<String> zoneDropdownList = deviceNameAndDeviceIdZoneMap.keySet().stream().collect(Collectors.toList());
+				String value = mapOfDeviceDropdown.get(key);
+				populateUpdateDeviceDropdownDetails(property, stats, advancedControllableProperties, zoneDropdownList, value, mapOfDeviceDropdown);
+				isUpdateDropdown = true;
+			}
+		}
+		return isUpdateDropdown;
+	}
+
+	/**
+	 * Update dropdown value by device type
+	 *
+	 * @param value the value is value of property
+	 * @param property the property is property name with format GroupName#KeyName
+	 * @param stats the stats are list of statistics
+	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
+	 * @param typeOfDeviceMapAutomation is map of name automation and value
+	 * @return boolean value is true if dropdown is updated and false is dropdown is not updated
+	 */
+	private boolean updateDeviceDropdownListForAutomation(String value, String property, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties,
+			Map<String, Map<String, String>> typeOfDeviceMapAutomation) {
+		String[] propertyList = property.split(PhilipsConstant.HASH);
+		String key = propertyList[1];
+		boolean isUpdateDropdown = false;
+		if (AutomationEnum.TYPE.getName().equals(key)) {
+			updateDropdownOfTypeDeviceByValue(stats, advancedControllableProperties, property, value);
+			return true;
+		}
+		if (!AutomationEnum.DEVICE_ADD.getName().equals(key) && !AutomationEnum.ROOM_ADD.getName().equals(key) && !AutomationEnum.ZONE_ADD.getName().equals(key)) {
+			//Update dropdown value with device type
+			if (key.contains(PhilipsConstant.DEVICE)) {
+				Map<String, String> deviceMap = typeOfDeviceMapAutomation.get(PhilipsConstant.DEVICE);
+				List<String> deviceDropdown = deviceNameAndDeviceIdZoneMap.keySet().stream().collect(Collectors.toList());
+				String deviceValue = deviceMap.get(key);
+				populateUpdateDeviceDropdownDetails(property, stats, advancedControllableProperties, deviceDropdown, deviceValue, deviceMap);
+				typeOfDeviceMapAutomation.put(PhilipsConstant.DEVICE, deviceMap);
+				isUpdateDropdown = true;
+			}
+			//Update dropdown value with room type
+			if (key.contains(PhilipsConstant.ROOM)) {
+				Map<String, String> roomMap = typeOfDeviceMapAutomation.get(PhilipsConstant.ROOM);
+				List<String> roomDropdownList = roomNameAndIdMap.keySet().stream().collect(Collectors.toList());
+				String roomValue = roomMap.get(key);
+				if (!StringUtils.isNullOrEmpty(roomValue)) {
+					if (roomValue.contains(PhilipsConstant.ROOM_NO_ASSIGNED_DEVICE)) {
+						String roomName = roomValue.substring(PhilipsConstant.ROOM_NO_ASSIGNED_DEVICE.length() + 1);
+						RoomAndZoneResponse roomAndZoneResponse = roomList.stream().filter(room -> room.getMetaData().getName().equals(roomName)).findFirst().orElse(null);
+						roomValue = PhilipsConstant.NONE;
+						if (roomAndZoneResponse != null) {
+							//The room has no device
+							roomValue = PhilipsConstant.ROOM_NO_ASSIGNED_DEVICE + PhilipsConstant.DASH + roomName;
+							//The room assigned device
+							if (roomAndZoneResponse.getChildren().length > 0) {
+								roomValue = PhilipsConstant.ALL_DEVICE_IN_ROOM + PhilipsConstant.DASH + roomName;
+							}
+						}
+					} else {
+						String finalValueOfRoom = roomValue;
+						if (!PhilipsConstant.NONE.equals(roomValue)) {
+							String newRoomValue = roomNameAndIdMap.keySet().stream().filter(item -> item.contains(finalValueOfRoom)).findFirst().orElse(null);
+							//the room exits but no assigned device
+							String roomName = roomValue.substring(PhilipsConstant.ALL_DEVICE_IN_ROOM.length() + 1);
+							roomValue = PhilipsConstant.ROOM_NO_ASSIGNED_DEVICE + PhilipsConstant.DASH + roomName;
+							if (!StringUtils.isNullOrEmpty(newRoomValue)) {
+								roomValue = newRoomValue;
+							}
+						}
+					}
+					roomDropdownList.remove(roomValue);
+					roomDropdownList.add(roomValue);
+					AdvancedControllableProperty advancedControllableProperty = controlDropdown(stats, roomDropdownList.toArray(new String[0]), property, roomValue);
+					addOrUpdateAdvanceControlProperties(advancedControllableProperties, advancedControllableProperty);
+				}
+				isUpdateDropdown = true;
+			}
+			//Update dropdown value with zone type
+			if (key.contains(PhilipsConstant.ZONE)) {
+				Map<String, String> zoneMap = typeOfDeviceMapAutomation.get(PhilipsConstant.ZONE);
+				List<String> zoneDropdownList = zoneNameAndIdMap.keySet().stream().collect(Collectors.toList());
+				String zoneValue = zoneMap.get(key);
+				if (!StringUtils.isNullOrEmpty(zoneValue)) {
+					if (zoneValue.contains(PhilipsConstant.ZONE_NO_ASSIGNED_DEVICE)) {
+						String zoneName = zoneValue.substring(PhilipsConstant.ZONE_NO_ASSIGNED_DEVICE.length() + 1);
+						RoomAndZoneResponse roomAndZoneResponse = zoneList.stream().filter(room -> room.getMetaData().getName().equals(zoneName)).findFirst().orElse(null);
+						zoneValue = PhilipsConstant.NONE;
+						if (roomAndZoneResponse != null) {
+							zoneValue = PhilipsConstant.ZONE_NO_ASSIGNED_DEVICE + PhilipsConstant.DASH + zoneName;
+							if (roomAndZoneResponse.getChildren().length > 0) {
+								zoneValue = PhilipsConstant.ALL_DEVICE_IN_ZONE + PhilipsConstant.DASH + zoneName;
+							}
+						}
+					} else {
+						String finalZoneValue = zoneValue;
+						if (!PhilipsConstant.NONE.equals(finalZoneValue)) {
+							String newZoneValue = zoneNameAndIdMap.keySet().stream().filter(item -> item.contains(finalZoneValue)).findFirst().orElse(null);
+							String zoneName = zoneValue.substring(PhilipsConstant.ALL_DEVICE_IN_ZONE.length() + 1);
+							zoneValue = PhilipsConstant.NONE;
+							if (zoneList.stream().filter(item -> item.getMetaData().getName().equals(zoneName)).findFirst().isPresent()) {
+								zoneValue = PhilipsConstant.ZONE_NO_ASSIGNED_DEVICE + PhilipsConstant.DASH + zoneName;
+								if (!StringUtils.isNullOrEmpty(newZoneValue)) {
+									zoneValue = newZoneValue;
+								}
+							}
+						}
+					}
+					zoneDropdownList.remove(zoneValue);
+					zoneDropdownList.add(zoneValue);
+					AdvancedControllableProperty advancedControllableProperty = controlDropdown(stats, zoneDropdownList.toArray(new String[0]), property, zoneValue);
+					addOrUpdateAdvanceControlProperties(advancedControllableProperties, advancedControllableProperty);
+				}
+				isUpdateDropdown = true;
+			}
+		}
+		return isUpdateDropdown;
+	}
+
+	/**
+	 * Populate update dropdown list by type of device
+	 *
+	 * @param property the property is property name with format GroupName#KeyName
+	 * @param stats the stats are list of statistics
+	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
+	 * @param deviceList the device list is list device name
+	 * @param valueOfDevice the valueOfDevice is current value of the device
+	 * @param deviceMap the deviceMap are map of device and current value of it
+	 */
+	private void populateUpdateDeviceDropdownDetails(String property, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties, List<String> deviceList,
+			String valueOfDevice, Map<String, String> deviceMap) {
+		String[] propertyList = property.split(PhilipsConstant.HASH);
+		String key = propertyList[1];
+		if (!StringUtils.isNullOrEmpty(valueOfDevice)) {
+			boolean isDeviceExitsInRoom = false;
+			if (!deviceList.contains(valueOfDevice)) {
+				//device exits in room
+				for (RoomAndZoneResponse response : roomList) {
+					String name = response.getMetaData().getName();
+					if (valueOfDevice.contains(name) && valueOfDevice.length() >= name.length() && valueOfDevice.substring(valueOfDevice.lastIndexOf(name)).equals(name)) {
+						valueOfDevice = valueOfDevice.substring(0, valueOfDevice.lastIndexOf(name) - 1);
+						isDeviceExitsInRoom = true;
+						break;
+					}
+				}
+				//the room has no device get the name of the device by room name
+				if (!isDeviceExitsInRoom) {
+					for (String deviceName : deviceNameAndDeviceIdZoneMap.keySet()) {
+						if (deviceName.contains(valueOfDevice) && deviceName.length() >= valueOfDevice.length() && deviceName.startsWith(valueOfDevice)) {
+							valueOfDevice = deviceName;
+							break;
+						}
+					}
+				}
+			}
+			if (StringUtils.isNullOrEmpty(valueOfDevice)) {
+				valueOfDevice = PhilipsConstant.NONE;
+			}
+			AdvancedControllableProperty advancedControllableProperty = controlDropdown(stats, deviceList.toArray(new String[0]), property, valueOfDevice);
+			addOrUpdateAdvanceControlProperties(advancedControllableProperties, advancedControllableProperty);
+			deviceMap.put(key, valueOfDevice);
+		}
+	}
+
+	/**
+	 * update dropdown value for create room, zone, and automation
+	 */
+	private void updateValueForDeviceDropdownList() {
+		List<AdvancedControllableProperty> createRoomControllableProperties = localCreateRoom.getControllableProperties();
+		List<AdvancedControllableProperty> createZoneControllableProperties = localCreateZone.getControllableProperties();
+		List<AdvancedControllableProperty> createAutomationControllableProperties = localCreateAutomation.getControllableProperties();
+		Map<String, String> createRoomStats = localCreateRoom.getStatistics();
+		Map<String, String> createZoneStats = localCreateZone.getStatistics();
+		Map<String, String> createAutomationStats = localCreateAutomation.getStatistics();
+		List<String> deviceList = deviceExitsInRoomMap.entrySet().stream().filter(item -> item.getValue().equals(PhilipsConstant.FALSE)).map(Entry::getKey).collect(Collectors.toList());
+		String[] deviceDropdown = deviceList.toArray(new String[0]);
+		//update dropdown list for create room
+		for (Entry<String, String> device : deviceRoomMap.entrySet()) {
+			String deviceKeyName = device.getKey();
+			String key = PhilipsConstant.CREATE_ROOM + PhilipsConstant.HASH + device.getKey();
+			String value = createRoomStats.get(key);
+			if (!StringUtils.isNullOrEmpty(value)) {
+				if (PhilipsConstant.DEVICE_0.equals(deviceKeyName)) {
+					if (!deviceList.contains(value)) {
+						value = PhilipsConstant.NONE;
+					}
+					AdvancedControllableProperty advancedControllableProperty = controlDropdown(createRoomStats, deviceDropdown, key, value);
+					addOrUpdateAdvanceControlProperties(createRoomControllableProperties, advancedControllableProperty);
+					deviceRoomMap.put(deviceKeyName, value);
+					continue;
+				}
+				AdvancedControllableProperty advancedControllableProperty = controlDropdown(createRoomStats, deviceDropdown, key, value);
+				addOrUpdateAdvanceControlProperties(createRoomControllableProperties, advancedControllableProperty);
+				deviceRoomMap.put(deviceKeyName, value);
+			}
+		}
+		//update dropdown list for create zone
+		List<String> zoneDropdownList = deviceNameAndDeviceIdZoneMap.keySet().stream().collect(Collectors.toList());
+		for (Entry<String, String> device : deviceZoneMap.entrySet()) {
+			String key = PhilipsConstant.CREATE_ZONE + PhilipsConstant.HASH + device.getKey();
+			String value = createZoneStats.get(key);
+			populateUpdateDeviceDropdownDetails(key, createZoneStats, createZoneControllableProperties, zoneDropdownList, value, deviceZoneMap);
+		}
+
+		//update dropdown list for create automation
+		for (Entry<String, String> mapOfNewStats : createAutomationStats.entrySet()) {
+			String key = mapOfNewStats.getKey();
+			String value = mapOfNewStats.getValue();
+			updateDeviceDropdownListForAutomation(value, key, createAutomationStats, createAutomationControllableProperties, typeAndMapOfDeviceAndValue);
+		}
+	}
+
+	/**
 	 * Populate control properties for controlling color light.
 	 *
 	 * @param stats Map of aggregated device statistics
@@ -792,8 +1080,6 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			stats.put(currentHueControlLabel, String.valueOf(hsv[0]));
 			stats.put(currentSaturationControlLabel, String.valueOf(hsv[1]));
 			stats.put(PhilipsConstant.COLOUR_CURRENT_COLOR, colorName);
-			stats.put(PhilipsConstant.COLOUR_VALUE
-					, String.valueOf(AggregatedDeviceColorControllingMetric.DEFAULT_BRIGHTNESS * AggregatedDeviceColorControllingMetric.ONE_HUNDRED_PERCENT));
 		} else {
 			Set<String> unusedKeys = new HashSet<>();
 			unusedKeys.add(hueControlLabel);
@@ -801,7 +1087,6 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			unusedKeys.add(currentHueControlLabel);
 			unusedKeys.add(currentSaturationControlLabel);
 			unusedKeys.add(PhilipsConstant.COLOUR_CURRENT_COLOR);
-			unusedKeys.add(PhilipsConstant.COLOUR_VALUE);
 			removeUnusedStatsAndControls(stats, advancedControllableProperties, unusedKeys);
 		}
 	}
@@ -1290,7 +1575,6 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		}
 	}
 
-
 	/**
 	 * Send request to control aggregated device
 	 *
@@ -1345,10 +1629,13 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					retrieveDeviceWhereTypeIsLight(listMetadataDevice.get(deviceId));
 				} else if (PhilipsConstant.MOTION_SENSOR.equalsIgnoreCase(type)) {
 					retrieveDeviceWhereTypeIsMotionSensor(listMetadataDevice.get(deviceId));
+				} else if (PhilipsConstant.TEMPERATURE_TYPE.equalsIgnoreCase(type)) {
+					retrieveDeviceWhereTypeIsTemperature(listMetadataDevice.get(deviceId));
 				} else {
 					for (ServicesResponse serviceType : listMetadataDevice.get(deviceId).getServices()) {
-						if (PhilipsConstant.BUTTON.equalsIgnoreCase(serviceType.getType())) {
+						if (PhilipsConstant.DEVICE_POWER.equalsIgnoreCase(serviceType.getType())) {
 							retrieveDeviceWhereTypeIsButton(listMetadataDevice.get(deviceId));
+							break;
 						}
 					}
 				}
@@ -1396,7 +1683,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	}
 
 	/**
-	 * Retrieve device with type is motion sensor
+	 * Retrieve device where type is motion sensor
 	 *
 	 * @param aggregatedDeviceResponse instance in AggregatedDeviceResponse DTO
 	 */
@@ -1425,6 +1712,43 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				aggregatedDeviceList.get(deviceID).setControllableProperties(advancedControllableProperties);
 			} else {
 				logger.error(String.format("%s button device type is empty", aggregatedDeviceList.get(deviceID).getDeviceName()));
+			}
+		} catch (Exception e) {
+			logger.error(String.format("Error while retrieve %s device detail info: %s ", aggregatedDeviceList.get(deviceID).getDeviceName(), e.getMessage()), e);
+		}
+	}
+
+	/**
+	 * Retrieve device with type is motion sensor
+	 *
+	 * @param aggregatedDeviceResponse instance in AggregatedDeviceResponse DTO
+	 */
+	private void retrieveDeviceWhereTypeIsTemperature(AggregatedDeviceResponse aggregatedDeviceResponse) {
+		String deviceID = aggregatedDeviceResponse.getId();
+		String temperatureID = PhilipsConstant.EMPTY_STRING;
+		Optional<ServicesResponse> servicesResponseStream = Arrays.stream(aggregatedDeviceResponse.getServices()).filter(item -> item.getType().equalsIgnoreCase(PhilipsConstant.TEMPERATURE_TYPE))
+				.findFirst();
+		if (servicesResponseStream.isPresent()) {
+			temperatureID = servicesResponseStream.get().getId();
+		}
+		String request = PhilipsURL.TEMPERATURE.getUrl().concat(temperatureID);
+		try {
+			TemperatureWrapper temperatureWrapper = doGet(request, TemperatureWrapper.class);
+			if (temperatureWrapper != null) {
+				TemperatureDevice temperatureDevice = temperatureWrapper.getData()[0];
+				Map<String, String> oldProperties = aggregatedDeviceList.get(deviceID).getProperties();
+				oldProperties.put(PhilipsConstant.TEMPERATURE, String.valueOf(temperatureDevice.getTemperature().getTemperature()).toLowerCase(Locale.ROOT));
+				oldProperties.put(PhilipsConstant.TEMPERATURE_VALID, String.valueOf(temperatureDevice.getTemperature().isTemperatureValue()).toLowerCase(Locale.ROOT));
+				List<AdvancedControllableProperty> advancedControllableProperties = aggregatedDeviceList.get(deviceID).getControllableProperties();
+				if (advancedControllableProperties == null) {
+					advancedControllableProperties = new LinkedList<>();
+				}
+				String status = temperatureDevice.isStatus() ? PhilipsConstant.ONLINE : PhilipsConstant.OFFLINE;
+				AdvancedControllableProperty statusControl = controlSwitch(oldProperties, PhilipsConstant.STATUS, status, PhilipsConstant.OFFLINE, PhilipsConstant.ONLINE);
+				advancedControllableProperties.add(statusControl);
+				aggregatedDeviceList.get(deviceID).setControllableProperties(advancedControllableProperties);
+			} else {
+				logger.error(String.format("%s temperature device type is empty", aggregatedDeviceList.get(deviceID).getDeviceName()));
 			}
 		} catch (Exception e) {
 			logger.error(String.format("Error while retrieve %s device detail info: %s ", aggregatedDeviceList.get(deviceID).getDeviceName(), e.getMessage()), e);
@@ -1703,7 +2027,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		String propertyGroup = propertyList[0];
 		String key = propertyList[1];
 		boolean isCurrentEmergencyDelivery = false;
-		if (isEmergencyDelivery) {
+		if (PhilipsConstant.TRUE.equals(groupNameAndValueOfIsEmergencyDelivery.get(PhilipsConstant.AUTOMATION).get(propertyGroup))) {
 			isCurrentEmergencyDelivery = true;
 		}
 		isEmergencyDelivery = true;
@@ -1791,7 +2115,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					automationAndTypeMapOfDeviceAndValue.put(propertyGroup, typeAndMapOfDevice);
 					break;
 				case TYPE:
-					updateValueForTheControllableProperty(property, value, stats, advancedControllableProperties);
+					updateDropdownOfTypeDeviceByValue(stats, advancedControllableProperties, property, value);
 					TypeOfDeviceEnum type = EnumTypeHandler.getMetricOfEnumByName(TypeOfDeviceEnum.class, value);
 					switch (type) {
 						case DEVICE:
@@ -1926,16 +2250,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					createAutomationControllableProperties.add(controlSwitch(stats, property, String.valueOf(PhilipsConstant.NUMBER_ONE), PhilipsConstant.OFFLINE, PhilipsConstant.ONLINE));
 					break;
 				case TYPE:
-					List<String> typeDropdown = new LinkedList<>();
-					typeDropdown.add(TypeOfDeviceEnum.DEVICE.getName());
-					if (roomNameAndIdMap.size() > 1) {
-						typeDropdown.add(TypeOfDeviceEnum.ROOM.getName());
-					}
-					if (zoneNameAndIdMap.size() > 1) {
-						typeDropdown.add(TypeOfDeviceEnum.ZONE.getName());
-					}
-					AdvancedControllableProperty typeControlProperty = controlDropdown(stats, typeDropdown.toArray(new String[0]), property, TypeOfDeviceEnum.DEVICE.getName());
-					addOrUpdateAdvanceControlProperties(createAutomationControllableProperties, typeControlProperty);
+					updateDropdownOfTypeDeviceByValue(stats, createAutomationControllableProperties, property, TypeOfDeviceEnum.DEVICE.getName());
 					updateDeviceTypeForCreateAutomationByType(property, stats, createAutomationControllableProperties, TypeOfDeviceEnum.DEVICE, typeAndMapOfDeviceAndValue);
 					break;
 				case TYPE_OF_AUTOMATION:
@@ -2089,11 +2404,24 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 						List<AdvancedControllableProperty> advancedControllablePropertyList = localExtendedStatistics.getControllableProperties();
 						for (Entry<String, String> mapNewStats : newStats.entrySet()) {
 							String name = mapNewStats.getKey();
-							if (name.indexOf(PhilipsConstant.HASH) > -1 && groupName.equalsIgnoreCase(name.substring(0, name.indexOf(PhilipsConstant.HASH)))) {
-								stats.put(mapNewStats.getKey(), mapNewStats.getValue());
-								AdvancedControllableProperty newAdvancedControllableProperty = advancedControllablePropertyList.stream().filter(item -> item.getName().equals(name)).findFirst().orElse(null);
-								if (newAdvancedControllableProperty != null) {
-									advancedControllableProperties.add(newAdvancedControllableProperty);
+							if (name.contains(PhilipsConstant.HASH) && groupName.equalsIgnoreCase(name.substring(0, name.indexOf(PhilipsConstant.HASH)))) {
+								Map<String, String> mapOfDeviceDropdown = deviceRoomControlMap.get(groupName.substring(PhilipsConstant.ROOM.length() + 1));
+								if (RoomsAndZonesControlEnum.DEVICE_STATUS.getName().equals(name.split(PhilipsConstant.HASH)[1])) {
+									if (groupLightMap.get(roomItem.getId()) != null) {
+										String status = groupLightMap.get(roomItem.getId()).getStatusLight().isOn() ? String.valueOf(PhilipsConstant.NUMBER_ONE) : String.valueOf(PhilipsConstant.ZERO);
+										AdvancedControllableProperty statusControllableProperty = controlSwitch(stats, name, status, PhilipsConstant.OFFLINE, PhilipsConstant.ONLINE);
+										addOrUpdateAdvanceControlProperties(advancedControllableProperties, statusControllableProperty);
+									} else {
+										stats.put(name, PhilipsConstant.NONE);
+									}
+									continue;
+								}
+								if (!updateDeviceDropdownListForRoomAndZone(name, stats, advancedControllableProperties, mapOfDeviceDropdown)) {
+									stats.put(name, mapNewStats.getValue());
+									AdvancedControllableProperty newAdvancedControllableProperty = advancedControllablePropertyList.stream().filter(item -> item.getName().equals(name)).findFirst().orElse(null);
+									if (newAdvancedControllableProperty != null) {
+										advancedControllableProperties.add(newAdvancedControllableProperty);
+									}
 								}
 							}
 						}
@@ -2113,11 +2441,24 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 						List<AdvancedControllableProperty> advancedControllablePropertyList = localExtendedStatistics.getControllableProperties();
 						for (Entry<String, String> mapOfStats : newStats.entrySet()) {
 							String name = mapOfStats.getKey();
-							if (name.indexOf(PhilipsConstant.HASH) > -1 && groupName.equalsIgnoreCase(name.substring(0, name.indexOf(PhilipsConstant.HASH)))) {
-								stats.put(name, mapOfStats.getValue());
-								AdvancedControllableProperty newAdvancedControllableProperty = advancedControllablePropertyList.stream().filter(item -> item.getName().equals(name)).findFirst().orElse(null);
-								if (newAdvancedControllableProperty != null) {
-									advancedControllableProperties.add(newAdvancedControllableProperty);
+							if (name.contains(PhilipsConstant.HASH) && groupName.equalsIgnoreCase(name.substring(0, name.indexOf(PhilipsConstant.HASH)))) {
+								Map<String, String> mapOfDeviceDropdown = zoneNameAndMapZoneDeviceControl.get(zoneItem.getMetaData().getName());
+								if (RoomsAndZonesControlEnum.DEVICE_STATUS.getName().equals(name.split(PhilipsConstant.HASH)[1])) {
+									if (groupLightMap.get(zoneItem.getId()) != null) {
+										String status = groupLightMap.get(zoneItem.getId()).getStatusLight().isOn() ? String.valueOf(PhilipsConstant.NUMBER_ONE) : String.valueOf(PhilipsConstant.ZERO);
+										AdvancedControllableProperty statusControllableProperty = controlSwitch(stats, name, status, PhilipsConstant.OFFLINE, PhilipsConstant.ONLINE);
+										addOrUpdateAdvanceControlProperties(advancedControllableProperties, statusControllableProperty);
+									} else {
+										stats.put(name, PhilipsConstant.NONE);
+									}
+									continue;
+								}
+								if (!updateDeviceDropdownListForRoomAndZone(name, stats, advancedControllableProperties, mapOfDeviceDropdown)) {
+									stats.put(name, mapOfStats.getValue());
+									AdvancedControllableProperty newAdvancedControllableProperty = advancedControllablePropertyList.stream().filter(item -> item.getName().equals(name)).findFirst().orElse(null);
+									if (newAdvancedControllableProperty != null) {
+										advancedControllableProperties.add(newAdvancedControllableProperty);
+									}
 								}
 							}
 						}
@@ -2157,10 +2498,16 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 							Map<String, String> newStats = localExtendedStatistics.getStatistics();
 							List<AdvancedControllableProperty> advancedControllablePropertyList = localExtendedStatistics.getControllableProperties();
 							for (Entry<String, String> mapOfNewStats : newStats.entrySet()) {
-								String mapKey = mapOfNewStats.getKey();
-								if (mapKey.indexOf(PhilipsConstant.HASH) > -1 && automationName.equalsIgnoreCase(mapKey.substring(0, mapKey.indexOf(PhilipsConstant.HASH)))) {
-									stats.put(mapKey, mapOfNewStats.getValue());
-									AdvancedControllableProperty newAdvancedControllableProperty = advancedControllablePropertyList.stream().filter(item -> item.getName().equals(mapKey)).findFirst().orElse(null);
+								String propertyKey = mapOfNewStats.getKey();
+								String value = mapOfNewStats.getValue();
+								if (propertyKey.contains(PhilipsConstant.HASH) && automationName.equalsIgnoreCase(propertyKey.substring(0, propertyKey.indexOf(PhilipsConstant.HASH)))) {
+									//update dropdown value
+									Map<String, Map<String, String>> typeOfDeviceMapAutomation = automationAndTypeMapOfDeviceAndValue.get(propertyKey.substring(0, propertyKey.indexOf(PhilipsConstant.HASH)));
+									if (updateDeviceDropdownListForAutomation(value, propertyKey, stats, advancedControllableProperties, typeOfDeviceMapAutomation)) {
+										continue;
+									}
+									stats.put(propertyKey, mapOfNewStats.getValue());
+									AdvancedControllableProperty newAdvancedControllableProperty = advancedControllablePropertyList.stream().filter(item -> item.getName().equals(propertyKey)).findFirst().orElse(null);
 									if (newAdvancedControllableProperty != null) {
 										advancedControllableProperties.add(newAdvancedControllableProperty);
 									}
@@ -2322,6 +2669,9 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 
 							String endBrightness = groupName + PhilipsConstant.HASH + AutomationEnum.END_BRIGHTNESS.getName();
 							value = automationData.getConfigurations().getEndBrightness();
+							if (StringUtils.isNullOrEmpty(value)) {
+								value = String.valueOf(PhilipsConstant.NUMBER_ONE);
+							}
 							AdvancedControllableProperty sliderControlProperty = createControlSlider(endBrightness, value, stats,
 									String.valueOf(PhilipsConstant.MIN_END_BRIGHTNESS), String.valueOf(PhilipsConstant.MAX_END_BRIGHTNESS));
 							addOrUpdateAdvanceControlProperties(advancedControllableProperties, sliderControlProperty);
@@ -2405,6 +2755,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		typeDevice.put(PhilipsConstant.DEVICE, new HashMap<>());
 		typeDevice.put(PhilipsConstant.ROOM, new HashMap<>());
 		typeDevice.put(PhilipsConstant.ZONE, new HashMap<>());
+		List<String> deviceDropdownList = new ArrayList<>();
 		automationAndTypeMapOfDeviceAndValue.remove(groupName);
 		for (Location locationItem : locationArray) {
 			Map<String, String> device = new HashMap<>();
@@ -2441,10 +2792,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 				String deviceAdd = groupName + PhilipsConstant.HASH + AutomationEnum.DEVICE_ADD.getName();
 				stats.put(deviceAdd, PhilipsConstant.EMPTY_STRING);
 				advancedControllableProperties.add(createButton(deviceAdd, PhilipsConstant.ADD, PhilipsConstant.ADDING, 0));
-
-				String[] typeDropdown = EnumTypeHandler.getEnumNames(TypeOfDeviceEnum.class);
-				AdvancedControllableProperty typeControlProperty = controlDropdown(stats, typeDropdown, property, PhilipsConstant.DEVICE);
-				addOrUpdateAdvanceControlProperties(advancedControllableProperties, typeControlProperty);
+				updateDropdownOfTypeDeviceByValue(stats, advancedControllableProperties, property, TypeOfDeviceEnum.DEVICE.getName());
 			} else if (locationItem.getGroup() != null && locationItem.getItems() == null) {
 
 				//Handle case value is bridge home
@@ -2464,10 +2812,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					advancedControllableProperties.add(createButton(deviceAdd, PhilipsConstant.ADD, PhilipsConstant.ADDING, 0));
 					List<String> deviceOfMap = deviceNameAndDeviceIdZoneMap.keySet().stream().collect(Collectors.toList());
 					addControllableForAutomationByType(property, stats, advancedControllableProperties, deviceOfMap, device, PhilipsConstant.DEVICE);
-
-					String[] typeDropdown = EnumTypeHandler.getEnumNames(TypeOfDeviceEnum.class);
-					AdvancedControllableProperty typeControlProperty = controlDropdown(stats, typeDropdown, property, PhilipsConstant.DEVICE);
-					addOrUpdateAdvanceControlProperties(advancedControllableProperties, typeControlProperty);
+					updateDropdownOfTypeDeviceByValue(stats, advancedControllableProperties, property, TypeOfDeviceEnum.DEVICE.getName());
 				}
 				//handle case value is room
 				if (PhilipsConstant.ROOM.equalsIgnoreCase(locationItem.getGroup().getType())) {
@@ -2504,8 +2849,12 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					String roomAdd = groupName + PhilipsConstant.HASH + AutomationEnum.ROOM_ADD.getName();
 					stats.put(roomAdd, PhilipsConstant.EMPTY_STRING);
 					advancedControllableProperties.add(createButton(roomAdd, PhilipsConstant.ADD, PhilipsConstant.ADDING, 0));
-					String[] typeDropdown = EnumTypeHandler.getEnumNames(TypeOfDeviceEnum.class);
-					AdvancedControllableProperty typeControlProperty = controlDropdown(stats, typeDropdown, property, PhilipsConstant.ROOM);
+					if (zoneNameAndIdMap.size() > 1) {
+						deviceDropdownList.add(TypeOfDeviceEnum.ZONE.getName());
+					}
+					deviceDropdownList.add(TypeOfDeviceEnum.ROOM.getName());
+					deviceDropdownList.add(TypeOfDeviceEnum.DEVICE.getName());
+					AdvancedControllableProperty typeControlProperty = controlDropdown(stats, deviceDropdownList.toArray(new String[0]), property, PhilipsConstant.ROOM);
 					addOrUpdateAdvanceControlProperties(advancedControllableProperties, typeControlProperty);
 				}
 
@@ -2536,13 +2885,37 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					String zoneAdd = groupName + PhilipsConstant.HASH + AutomationEnum.ZONE_ADD.getName();
 					stats.put(zoneAdd, PhilipsConstant.EMPTY_STRING);
 					advancedControllableProperties.add(createButton(zoneAdd, PhilipsConstant.ADD, PhilipsConstant.ADDING, 0));
-
-					String[] typeDropdown = EnumTypeHandler.getEnumNames(TypeOfDeviceEnum.class);
-					AdvancedControllableProperty typeControlProperty = controlDropdown(stats, typeDropdown, property, PhilipsConstant.ZONE);
+					if (roomNameAndIdMap.size() > 1) {
+						deviceDropdownList.add(TypeOfDeviceEnum.ROOM.getName());
+					}
+					deviceDropdownList.add(TypeOfDeviceEnum.ZONE.getName());
+					deviceDropdownList.add(TypeOfDeviceEnum.DEVICE.getName());
+					AdvancedControllableProperty typeControlProperty = controlDropdown(stats, deviceDropdownList.toArray(new String[0]), property, PhilipsConstant.ZONE);
 					addOrUpdateAdvanceControlProperties(advancedControllableProperties, typeControlProperty);
 				}
 			}
 		}
+	}
+
+	/**
+	 * Update dropdown value of TypeOfDevice by value
+	 *
+	 * @param stats the stats are list of statistics
+	 * @param advancedControllableProperties advancedControllableProperties is the list that store all controllable properties
+	 * @param property the property is property names
+	 * @param value the value is value of property
+	 */
+	private void updateDropdownOfTypeDeviceByValue(Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties, String property, String value) {
+		List<String> deviceDropdownList = new ArrayList<>();
+		if (roomNameAndIdMap.size() > 1) {
+			deviceDropdownList.add(TypeOfDeviceEnum.ROOM.getName());
+		}
+		if (zoneNameAndIdMap.size() > 1) {
+			deviceDropdownList.add(TypeOfDeviceEnum.ZONE.getName());
+		}
+		deviceDropdownList.add(value);
+		AdvancedControllableProperty typeControlProperty = controlDropdown(stats, deviceDropdownList.toArray(new String[0]), property, value);
+		addOrUpdateAdvanceControlProperties(advancedControllableProperties, typeControlProperty);
 	}
 
 	/**
@@ -2937,7 +3310,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					addRoomAndZoneForAutomation(propertyGroup, stats, advancedControllableProperties, zoneNameAndIdMap, mapOfZone);
 					break;
 				case TYPE:
-					updateValueForTheControllableProperty(property, value, stats, advancedControllableProperties);
+					updateDropdownOfTypeDeviceByValue(stats, advancedControllableProperties, property, value);
 					TypeOfDeviceEnum type = EnumTypeHandler.getMetricOfEnumByName(TypeOfDeviceEnum.class, value);
 					switch (type) {
 						case DEVICE:
@@ -3091,6 +3464,12 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 							advancedControllableProperties.removeIf(item -> item.getName().equals(timeMinute));
 							stats.remove(fadeDuration);
 							advancedControllableProperties.removeIf(item -> item.getName().equals(fadeDuration));
+							Map<String, String> mapOfRepeatByTypeGoToSleep = repeatCreateAutomation.get(TypeOfAutomation.GO_TO_SLEEP.getName());
+							Map<String, String> mapOfRepeatByTypeWakeUpWithLight = repeatCreateAutomation.get(TypeOfAutomation.WAKE_UP_WITH_LIGHT.getName());
+							removeControlOfRepeatForAutomation(propertyGroup, stats, advancedControllableProperties, mapOfRepeatByTypeGoToSleep);
+							removeControlOfRepeatForAutomation(propertyGroup, stats, advancedControllableProperties, mapOfRepeatByTypeWakeUpWithLight);
+							stats.remove(repeat);
+							advancedControllableProperties.removeIf(item -> item.getName().equals(repeat));
 							break;
 						default:
 							if (logger.isDebugEnabled()) {
@@ -3354,11 +3733,12 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 */
 	private void removeControlOfRepeatForAutomation(String propertyName, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties, Map<String, String> mapOfRepeat) {
 		for (Entry<String, String> repeatEntry : mapOfRepeat.entrySet()) {
-			if (PhilipsConstant.REPEAT.equalsIgnoreCase(repeatEntry.getKey())) {
+			String repeatProperty = repeatEntry.getKey();
+			if (PhilipsConstant.REPEAT.equalsIgnoreCase(repeatProperty)) {
 				continue;
 			}
-			stats.remove(propertyName + PhilipsConstant.HASH + repeatEntry.getKey());
-			advancedControllableProperties.removeIf(item -> item.getName().equals(propertyName + PhilipsConstant.HASH + repeatEntry.getKey()));
+			stats.remove(propertyName + PhilipsConstant.HASH + repeatProperty);
+			advancedControllableProperties.removeIf(item -> item.getName().equals(propertyName + PhilipsConstant.HASH + repeatProperty));
 		}
 	}
 
@@ -3375,25 +3755,91 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			Map<String, String> deviceMap, String name) {
 		String[] propertyList = property.split(PhilipsConstant.HASH);
 		String propertyGroup = propertyList[0];
-		String[] repeatDaysDropdown = dropdownList.toArray(new String[0]);
+		String[] deviceNameDropdown = dropdownList.toArray(new String[0]);
 		if (deviceMap == null) {
 			deviceMap = new HashMap<>();
 		}
 		if (deviceMap.size() < 1) {
 			initializeDeviceDropdown(deviceMap, name, DayEnum.values().length - 1);
-
-			AdvancedControllableProperty repeatDaysControlProperty = controlDropdown(stats, repeatDaysDropdown, propertyGroup + PhilipsConstant.HASH + name + PhilipsConstant.ZERO, PhilipsConstant.NONE);
+			AdvancedControllableProperty repeatDaysControlProperty = controlDropdown(stats, deviceNameDropdown, propertyGroup + PhilipsConstant.HASH + name + PhilipsConstant.ZERO, PhilipsConstant.NONE);
 			addOrUpdateAdvanceControlProperties(advancedControllableProperties, repeatDaysControlProperty);
 			deviceMap.put(name + PhilipsConstant.ZERO, PhilipsConstant.NONE);
 		} else {
-			for (Entry<String, String> repeatEntry : deviceMap.entrySet()) {
-				String value = repeatEntry.getValue();
+			for (Entry<String, String> deviceEntry : deviceMap.entrySet()) {
+				String value = deviceEntry.getValue();
+				String currentKey = deviceEntry.getValue();
 				if (!StringUtils.isNullOrEmpty(value)) {
 					if (!dropdownList.contains(value)) {
+						if (currentKey.contains(PhilipsConstant.DEVICE)){
+							for (String deviceValue : dropdownList) {
+								if (deviceValue.contains(value) && deviceValue.startsWith(value)) {
+									value = deviceValue;
+									dropdownList.remove(currentKey);
+									break;
+								} else if (value.contains(deviceValue) && value.startsWith(deviceValue)) {
+									value = deviceValue;
+									dropdownList.remove(currentKey);
+									break;
+								}
+							}
+						}
+						if (currentKey.contains(PhilipsConstant.ROOM)) {
+							if (value.contains(PhilipsConstant.ROOM_NO_ASSIGNED_DEVICE)) {
+								String roomName = value.substring(PhilipsConstant.ROOM_NO_ASSIGNED_DEVICE.length() + 1);
+								RoomAndZoneResponse roomAndZoneResponse = roomList.stream().filter(room -> room.getMetaData().getName().equals(roomName)).findFirst().orElse(null);
+								value = PhilipsConstant.NONE;
+								if (roomAndZoneResponse != null) {
+									value = PhilipsConstant.ROOM_NO_ASSIGNED_DEVICE + PhilipsConstant.DASH + roomName;
+									if (roomAndZoneResponse.getChildren().length > 0) {
+										value = PhilipsConstant.ALL_DEVICE_IN_ROOM + PhilipsConstant.DASH + roomName;
+									}
+									dropdownList.remove(currentKey);
+								}
+							} else {
+								String finalValueOfRoom = value;
+								if (!PhilipsConstant.NONE.equals(value)) {
+									String newRoomValue = roomNameAndIdMap.keySet().stream().filter(item -> item.contains(finalValueOfRoom)).findFirst().orElse(null);
+									//if room name not exits in room
+									String roomName = value.substring(PhilipsConstant.ALL_DEVICE_IN_ROOM.length() + 1);
+									value = PhilipsConstant.ROOM_NO_ASSIGNED_DEVICE + PhilipsConstant.DASH + roomName;
+									if (!StringUtils.isNullOrEmpty(newRoomValue)) {
+										value = newRoomValue;
+										dropdownList.remove(currentKey);
+									}
+									dropdownList.remove(currentKey);
+								}
+							}
+						}
+						if (currentKey.contains(PhilipsConstant.ZONE)) {
+							if (value.contains(PhilipsConstant.ZONE_NO_ASSIGNED_DEVICE)) {
+								String zoneName = value.substring(PhilipsConstant.ZONE_NO_ASSIGNED_DEVICE.length() + 1);
+								RoomAndZoneResponse roomAndZoneResponse = zoneList.stream().filter(room -> room.getMetaData().getName().equals(zoneName)).findFirst().orElse(null);
+								value = PhilipsConstant.NONE;
+								if (roomAndZoneResponse != null) {
+									value = PhilipsConstant.ZONE_NO_ASSIGNED_DEVICE + PhilipsConstant.DASH + zoneName;
+									if (roomAndZoneResponse.getChildren().length > 0) {
+										value = PhilipsConstant.ALL_DEVICE_IN_ZONE + PhilipsConstant.DASH + zoneName;
+									}
+									dropdownList.remove(deviceEntry.getValue());
+								}
+							} else {
+								String finalZoneValue = value;
+								if (!PhilipsConstant.NONE.equals(value)) {
+									String newZoneValue = zoneNameAndIdMap.keySet().stream().filter(item -> item.contains(finalZoneValue)).findFirst().orElse(null);
+									String zoneName = value.substring(PhilipsConstant.ALL_DEVICE_IN_ZONE.length() + 1);
+									value = PhilipsConstant.ZONE_NO_ASSIGNED_DEVICE + PhilipsConstant.DASH + zoneName;
+									if (StringUtils.isNullOrEmpty(newZoneValue)) {
+										value = newZoneValue;
+									}
+									dropdownList.remove(currentKey);
+								}
+							}
+						}
+						dropdownList.remove(value);
 						dropdownList.add(value);
-						repeatDaysDropdown = dropdownList.toArray(new String[0]);
+						deviceNameDropdown = dropdownList.toArray(new String[0]);
 					}
-					AdvancedControllableProperty repeatDaysControlProperty = controlDropdown(stats, repeatDaysDropdown, propertyGroup + PhilipsConstant.HASH + repeatEntry.getKey(), value);
+					AdvancedControllableProperty repeatDaysControlProperty = controlDropdown(stats, deviceNameDropdown, propertyGroup + PhilipsConstant.HASH + currentKey, value);
 					addOrUpdateAdvanceControlProperties(advancedControllableProperties, repeatDaysControlProperty);
 				}
 			}
@@ -3454,16 +3900,20 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			ResponseData responseData = doPut(PhilipsUtil.getMonitorURL(PhilipsURL.GROUP_LIGHT) + PhilipsConstant.SLASH + id, status, ResponseData.class);
 			if (responseData.getErrors().length > 0) {
 				String name = PhilipsConstant.ZONE;
+				String errorMessage;
 				if (isRoomType) {
 					name = PhilipsConstant.ROOM;
-				}
-				String errorMessage;
-				if (PhilipsConstant.ERROR_MESSAGE_STATUS.equals(responseData.getErrors()[0].getDescription())) {
-					errorMessage = String.format("Error while changing status for %s: the status is offline", name);
+					if (PhilipsConstant.ERROR_MESSAGE_STATUS.equals(responseData.getErrors()[0].getDescription())) {
+						errorMessage = String.format("Error while changing status for %s: the status is offline", name);
+					} else {
+						errorMessage = String.format("Error while changing status for %s: %s", name, responseData.getErrors()[0].getDescription());
+					}
+					throw new ResourceNotReachableException(errorMessage);
 				} else {
-					errorMessage = String.format("Error while changing status for %s: %s", name, responseData.getErrors()[0].getDescription());
+					if (!PhilipsConstant.ERROR_MESSAGE_STATUS.equals(responseData.getErrors()[0].getDescription())) {
+						throw new ResourceNotReachableException(String.format("Error while changing status for %s: %s", name, responseData.getErrors()[0].getDescription()));
+					}
 				}
-				throw new ResourceNotReachableException(errorMessage);
 			}
 		} catch (Exception e) {
 			throw new ResourceNotReachableException(String.format("Can't change status: %s", e.getMessage()), e);
@@ -3502,7 +3952,10 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			mapOfDeviceDropdown = zoneNameAndMapZoneDeviceControl.get(group);
 			deviceDropdown = deviceNameAndDeviceIdZoneMap.keySet().stream().collect(Collectors.toList());
 		}
-		boolean isCurrentEmergencyDelivery = isEmergencyDelivery;
+		boolean isCurrentEmergencyDelivery = false;
+		if (PhilipsConstant.TRUE.equals(groupNameAndValueOfIsEmergencyDelivery.get(isEditRoom ? PhilipsConstant.ROOM : PhilipsConstant.ZONE).get(propertyGroup))) {
+			isCurrentEmergencyDelivery = true;
+		}
 		isEmergencyDelivery = true;
 		if (key.contains(PhilipsConstant.DEVICE) && !CreateRoomEnum.DEVICE_ADD.getRoomName().equals(key) && !RoomsAndZonesControlEnum.DEVICE_STATUS.getName().equals(key)) {
 			updateDeviceDropdownList(property, value, stats, advancedControllableProperties, deviceList, mapOfDeviceDropdown, PhilipsConstant.DEVICE_0);
@@ -3515,7 +3968,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 						status = PhilipsConstant.FALSE;
 					}
 					if (roomAndZoneResponse.isPresent()) {
-						sendRequestToChangeStatusForTheDevice(roomAndZoneResponse.get().getServices()[0].getId(), String.format(PhilipsConstant.PARAM_CHANGE_STATUS, status.toLowerCase(Locale.ROOT)), true);
+						sendRequestToChangeStatusForTheDevice(roomAndZoneResponse.get().getServices()[0].getId(), String.format(PhilipsConstant.PARAM_CHANGE_STATUS, status.toLowerCase(Locale.ROOT)), isEditRoom);
 					}
 					updateValueForTheControllableProperty(property, value, stats, advancedControllableProperties);
 					isEmergencyDelivery = isCurrentEmergencyDelivery;
@@ -3560,11 +4013,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			advancedControllableProperties.add(createButton(propertyGroup + PhilipsConstant.HASH + RoomsAndZonesControlEnum.APPLY_CHANGE.getName(), PhilipsConstant.APPLY, PhilipsConstant.APPLYING, 0));
 		}
 		populateCancelChangeButton(stats, advancedControllableProperties, propertyGroup, isEmergencyDelivery);
-		if (isEditRoom) {
-			groupNameAndValueOfIsEmergencyDelivery.get(PhilipsConstant.ROOM).put(propertyGroup, isEmergencyDelivery ? PhilipsConstant.TRUE : PhilipsConstant.FALSE);
-		} else {
-			groupNameAndValueOfIsEmergencyDelivery.get(PhilipsConstant.ZONE).put(propertyGroup, isEmergencyDelivery ? PhilipsConstant.TRUE : PhilipsConstant.FALSE);
-		}
+		groupNameAndValueOfIsEmergencyDelivery.get(isEditRoom ? PhilipsConstant.ROOM : PhilipsConstant.ZONE).put(propertyGroup, isEmergencyDelivery ? PhilipsConstant.TRUE : PhilipsConstant.FALSE);
 	}
 
 	/**
@@ -3867,7 +4316,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 * Convert time hour by current time as AM or PM
 	 *
 	 * @param timeCurrent the timeCurrent is current(AM/PM) value iff timeCurrent = 1 => timeCurrent is AM and timeCurrent = 0 => timeCurrent is PM
- 	 * @param timeHour the timeHour is hour of automation
+	 * @param timeHour the timeHour is hour of automation
 	 * @return String is the hour converted
 	 */
 	private String convertTimeHourByCurrentTime(String timeCurrent, String timeHour) {
@@ -4542,6 +4991,77 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	}
 
 	/**
+	 * Get all room has no device in room
+	 *
+	 * @return List<RoomAndZoneResponse> are list room has no device
+	 */
+	private List<RoomAndZoneResponse> getAllRoomEmpty() {
+		List<RoomAndZoneResponse> roomListAfterFilter = new LinkedList<>();
+		for (RoomAndZoneResponse room : roomList) {
+			if (room.getChildren() != null && room.getChildren().length == 0) {
+				roomListAfterFilter.add(room);
+			}
+		}
+		return roomListAfterFilter;
+	}
+
+	/**
+	 * Filter device when apply pooling interval
+	 */
+	private void applyFilterBeforePollingInterval() {
+		roomListAfterFilter.clear();
+		if (!zoneListAfterFilter.isEmpty() && zoneListAfterFilter.get(0) != null) {
+			RoomAndZoneResponse zone = zoneList.stream().filter(item -> item.getMetaData().getName().equals(zoneListAfterFilter.get(0).getMetaData().getName())).findFirst().orElse(null);
+			if (zone != null) {
+				zoneListAfterFilter.clear();
+				zoneListAfterFilter.add(zone);
+				List<String> listOfChildrenNodeInsideRoom = new ArrayList<>();
+				List<String> listRidInZone = new ArrayList<>();
+				for (Children device : zone.getChildren()) {
+					String serviceId = device.getRid();
+					listRidInZone.add(serviceId);
+				}
+				Map<String, String> serviceAndDeviceId = retrieveLights();
+				for (String childrenId : listRidInZone) {
+					String deviceId = serviceAndDeviceId.get(childrenId);
+					for (RoomAndZoneResponse room : roomList) {
+						if (Arrays.stream(room.getChildren()).map(Children::getRid).collect(Collectors.toList()).contains(deviceId)) {
+							roomListAfterFilter.add(room);
+						}
+					}
+				}
+				roomListAfterFilter.addAll(getAllRoomEmpty());
+				if (StringUtils.isNotNullOrEmpty(roomNameFilter)) {
+					String[] handledRoomName = roomNameFilter.split(PhilipsConstant.COMMA);
+					for (String roomNameItem : handledRoomName) {
+						for (RoomAndZoneResponse roomAndZoneResponse : roomList) {
+							String roomName = roomAndZoneResponse.getMetaData().getName();
+							if (roomNameItem.trim().equalsIgnoreCase(roomName)) {
+								Children[] tempList = roomAndZoneResponse.getChildren();
+								for (Children children : tempList) {
+									listOfChildrenNodeInsideRoom.add(children.getRid());
+									AggregatedDeviceResponse aggregatedDeviceResponse = listMetadataDevice.get(children.getRid());
+									for (String childrenId : listRidInZone) {
+										if (Arrays.stream(aggregatedDeviceResponse.getServices()).map(ServicesResponse::getId).collect(Collectors.toList()).contains(childrenId)) {
+											roomListAfterFilter.add(roomAndZoneResponse);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			} else {
+				zoneListAfterFilter.clear();
+				roomListAfterFilter.addAll(getAllRoomEmpty());
+			}
+		} else {
+			zoneListAfterFilter.clear();
+			roomListAfterFilter.addAll(getAllRoomEmpty());
+		}
+	}
+
+	/**
 	 * Filter By Ids device
 	 *
 	 * @param stats the stats are list of statistics
@@ -4557,7 +5077,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					listOfDeviceAfterFiltered.put(device.getKey(), device.getValue());
 				}
 			}
-			roomListAfterFilter = new ArrayList<>();
+			roomListAfterFilter = getAllRoomEmpty();
 			RoomAndZoneResponse response = zoneList.stream().filter(item -> item.getMetaData().getName().equalsIgnoreCase(zoneNameFilter)).findFirst().orElse(null);
 			if (response != null) {
 				zoneListAfterFilter.add(response);
@@ -4599,10 +5119,12 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 					listOfDeviceAfterFiltered.put(deviceId, aggregatedDeviceList.get(deviceId));
 				}
 			}
+			roomListAfterFilter.addAll(getAllRoomEmpty());
 		}
 		// Filter by Room
 		try {
 			if (StringUtils.isNotNullOrEmpty(roomNameFilter)) {
+				roomListAfterFilter.clear();
 				String[] handledRoomName = roomNameFilter.split(PhilipsConstant.COMMA);
 				List<String> listOfChildrenNodeInsideRoom = new ArrayList<>();
 				for (String roomNameItem : handledRoomName) {
@@ -4611,14 +5133,16 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 						if (roomNameItem.trim().equalsIgnoreCase(roomName)) {
 							Children[] tempList = roomAndZoneResponse.getChildren();
 							for (Children children : tempList) {
-								listOfChildrenNodeInsideRoom.add(children.getRid());
-								AggregatedDeviceResponse aggregatedDeviceResponse = listMetadataDevice.get(children.getRid());
 								for (String childrenId : listRidInZone) {
+									AggregatedDeviceResponse aggregatedDeviceResponse = listMetadataDevice.get(children.getRid());
 									if (Arrays.stream(aggregatedDeviceResponse.getServices()).map(ServicesResponse::getId).collect(Collectors.toList()).contains(childrenId)) {
 										roomListAfterFilter.add(roomAndZoneResponse);
+										listOfChildrenNodeInsideRoom.add(children.getRid());
 									}
 								}
 							}
+							roomListAfterFilter.remove(roomAndZoneResponse);
+							roomListAfterFilter.add(roomAndZoneResponse);
 						}
 					}
 				}

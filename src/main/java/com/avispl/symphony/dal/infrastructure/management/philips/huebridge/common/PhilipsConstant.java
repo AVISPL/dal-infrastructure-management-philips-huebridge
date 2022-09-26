@@ -22,6 +22,7 @@ public class PhilipsConstant {
 	public static String LIGHT = "light";
 	public static String BUTTON = "Button";
 	public static String MOTION_SENSOR = "motion";
+	public static String TEMPERATURE_TYPE = "temperature";
 	public static String DEVICE_POWER = "device_power";
 	public static String STATUS = "status";
 	public static String BRIGHTNESS = "brightness";
@@ -91,13 +92,14 @@ public class PhilipsConstant {
 	public static String SOFTWARE_VERSION = "softwareVersion";
 	public static String BATTERY_LEVEL = "batteryLevel(%)";
 	public static String MOTION_DETECTED = "motionDetected";
+	public static String TEMPERATURE = "temperature";
+	public static String TEMPERATURE_VALID = "temperatureValid";
 	public static String MIN_POLLING_INTERVAL_KEY = "MinPollingInterval";
 	public static String MAX_POLLING_INTERVAL_KEY = "NextPollingInterval";
 	public static String COLOUR_SATURATION = "ColourSaturation(%)";
 	public static String COLOUR_SATURATION_CURRENT_VALUE = "ColourSaturationCurrentValue(%)";
 	public static String COLOUR_HUE_CURRENT_VALUE = "ColourHueCurrentValue";
 	public static String COLOUR_HUE = "ColourHue";
-	public static String COLOUR_VALUE = "ColourValue";
 	public static String COLOUR_CURRENT_COLOR = "ColourCurrentColor";
 	public static String COLOUR_CONTROL = "ColourControl";
 	public static String CURRENT_ZONE_FILTER = "CurrentZoneFilter";
