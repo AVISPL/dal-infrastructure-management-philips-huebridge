@@ -3733,11 +3733,12 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	 */
 	private void removeControlOfRepeatForAutomation(String propertyName, Map<String, String> stats, List<AdvancedControllableProperty> advancedControllableProperties, Map<String, String> mapOfRepeat) {
 		for (Entry<String, String> repeatEntry : mapOfRepeat.entrySet()) {
-			if (PhilipsConstant.REPEAT.equalsIgnoreCase(repeatEntry.getKey())) {
+			String repeatProperty = repeatEntry.getKey();
+			if (PhilipsConstant.REPEAT.equalsIgnoreCase(repeatProperty)) {
 				continue;
 			}
-			stats.remove(propertyName + PhilipsConstant.HASH + repeatEntry.getKey());
-			advancedControllableProperties.removeIf(item -> item.getName().equals(propertyName + PhilipsConstant.HASH + repeatEntry.getKey()));
+			stats.remove(propertyName + PhilipsConstant.HASH + repeatProperty);
+			advancedControllableProperties.removeIf(item -> item.getName().equals(propertyName + PhilipsConstant.HASH + repeatProperty));
 		}
 	}
 
@@ -3764,12 +3765,12 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 			addOrUpdateAdvanceControlProperties(advancedControllableProperties, repeatDaysControlProperty);
 			deviceMap.put(name + PhilipsConstant.ZERO, PhilipsConstant.NONE);
 		} else {
-			for (Entry<String, String> repeatEntry : deviceMap.entrySet()) {
-				String value = repeatEntry.getValue();
-				String currentKey = repeatEntry.getValue();
+			for (Entry<String, String> deviceEntry : deviceMap.entrySet()) {
+				String value = deviceEntry.getValue();
+				String currentKey = deviceEntry.getValue();
 				if (!StringUtils.isNullOrEmpty(value)) {
 					if (!dropdownList.contains(value)) {
-						if (repeatEntry.getKey().contains(PhilipsConstant.DEVICE)) {
+						if (currentKey.contains(PhilipsConstant.DEVICE)){
 							for (String deviceValue : dropdownList) {
 								if (deviceValue.contains(value) && deviceValue.startsWith(value)) {
 									value = deviceValue;
@@ -3782,7 +3783,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 								}
 							}
 						}
-						if (repeatEntry.getKey().contains(PhilipsConstant.ROOM)) {
+						if (currentKey.contains(PhilipsConstant.ROOM)) {
 							if (value.contains(PhilipsConstant.ROOM_NO_ASSIGNED_DEVICE)) {
 								String roomName = value.substring(PhilipsConstant.ROOM_NO_ASSIGNED_DEVICE.length() + 1);
 								RoomAndZoneResponse roomAndZoneResponse = roomList.stream().filter(room -> room.getMetaData().getName().equals(roomName)).findFirst().orElse(null);
@@ -3809,7 +3810,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 								}
 							}
 						}
-						if (repeatEntry.getKey().contains(PhilipsConstant.ZONE)) {
+						if (currentKey.contains(PhilipsConstant.ZONE)) {
 							if (value.contains(PhilipsConstant.ZONE_NO_ASSIGNED_DEVICE)) {
 								String zoneName = value.substring(PhilipsConstant.ZONE_NO_ASSIGNED_DEVICE.length() + 1);
 								RoomAndZoneResponse roomAndZoneResponse = zoneList.stream().filter(room -> room.getMetaData().getName().equals(zoneName)).findFirst().orElse(null);
@@ -3819,7 +3820,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 									if (roomAndZoneResponse.getChildren().length > 0) {
 										value = PhilipsConstant.ALL_DEVICE_IN_ZONE + PhilipsConstant.DASH + zoneName;
 									}
-									dropdownList.remove(repeatEntry.getValue());
+									dropdownList.remove(deviceEntry.getValue());
 								}
 							} else {
 								String finalZoneValue = value;
@@ -3838,7 +3839,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 						dropdownList.add(value);
 						deviceNameDropdown = dropdownList.toArray(new String[0]);
 					}
-					AdvancedControllableProperty repeatDaysControlProperty = controlDropdown(stats, deviceNameDropdown, propertyGroup + PhilipsConstant.HASH + repeatEntry.getKey(), value);
+					AdvancedControllableProperty repeatDaysControlProperty = controlDropdown(stats, deviceNameDropdown, propertyGroup + PhilipsConstant.HASH + currentKey, value);
 					addOrUpdateAdvanceControlProperties(advancedControllableProperties, repeatDaysControlProperty);
 				}
 			}
