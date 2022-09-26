@@ -523,7 +523,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 						}
 					}
 				} else {
-					applyFilterBeforePollingInterVal();
+					applyFilterBeforePollingInterval();
 					stats.put(PhilipsConstant.CURRENT_ZONE_FILTER, localExtendedStatistics.getStatistics().get(PhilipsConstant.CURRENT_ZONE_FILTER));
 				}
 				populateControlForAggregator(stats, advancedControllableProperties);
@@ -1683,7 +1683,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	}
 
 	/**
-	 * Retrieve device with type is motion sensor
+	 * Retrieve device where type is motion sensor
 	 *
 	 * @param aggregatedDeviceResponse instance in AggregatedDeviceResponse DTO
 	 */
@@ -5008,7 +5008,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 	/**
 	 * Filter device when apply pooling interval
 	 */
-	private void applyFilterBeforePollingInterVal() {
+	private void applyFilterBeforePollingInterval() {
 		roomListAfterFilter.clear();
 		if (!zoneListAfterFilter.isEmpty() && zoneListAfterFilter.get(0) != null) {
 			RoomAndZoneResponse zone = zoneList.stream().filter(item -> item.getMetaData().getName().equals(zoneListAfterFilter.get(0).getMetaData().getName())).findFirst().orElse(null);
