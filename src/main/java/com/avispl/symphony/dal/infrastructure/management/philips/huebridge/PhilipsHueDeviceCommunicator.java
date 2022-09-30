@@ -989,6 +989,11 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 							valueOfDevice = deviceName;
 							break;
 						}
+						//case the room is removed and update new value as name of device
+						else if(valueOfDevice.contains(deviceName) && valueOfDevice.length() >= deviceName.length() && valueOfDevice.startsWith(deviceName)){
+							valueOfDevice = deviceName;
+							break;
+						}
 					}
 				}
 			}
