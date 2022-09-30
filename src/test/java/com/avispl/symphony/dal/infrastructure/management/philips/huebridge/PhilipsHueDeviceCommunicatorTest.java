@@ -2270,4 +2270,30 @@ public class PhilipsHueDeviceCommunicatorTest {
 			}
 		}
 	}
+
+	/**
+	 * Test get monitoring data with isConfigManagement is false
+	 *
+	 * Expect get monitoring data with network and system information successfully
+	 */
+	@Test
+	void testConfigManagementIsDisable() throws Exception {
+		philipsHueDeviceCommunicator.setConfigManagement("false");
+		ExtendedStatistics extendedStatistics = (ExtendedStatistics) philipsHueDeviceCommunicator.getMultipleStatistics().get(0);
+		Map<String, String> stats = extendedStatistics.getStatistics();
+		Assert.assertEquals(17, stats.size());
+		Assert.assertEquals("541c699c-4876-494e-ae94-2e57b8f9bc81", stats.get(SystemInfoEnum.ID.getName()));
+		Assert.assertEquals("Signify Netherlands B.V.", stats.get(SystemInfoEnum.MANUFACTURER.getName()));
+		Assert.assertEquals("BSB002", stats.get(SystemInfoEnum.MODEL.getName()));
+		Assert.assertEquals("bridge_v2", stats.get(SystemInfoEnum.ARCHETYPE.getName()));
+		Assert.assertEquals("Philips hue", stats.get(SystemInfoEnum.NAME.getName()));
+		Assert.assertEquals("1.52.1952154030", stats.get(SystemInfoEnum.VERSION.getName()));
+		Assert.assertEquals("bridge", stats.get(SystemInfoEnum.TYPE.getName()));
+		Assert.assertEquals("192.168.159.125", stats.get(NetworkInfoEnum.ADDRESS.getName()));
+		Assert.assertEquals("255.255.255.0", stats.get(NetworkInfoEnum.NETMASK.getName()));
+		Assert.assertEquals("2022-08-03T11:32:23", stats.get(NetworkInfoEnum.LOCATION_TIME.getName()));
+		Assert.assertEquals("Asia/Ho_Chi_Minh", stats.get(NetworkInfoEnum.TIMEZONE.getName()));
+		Assert.assertEquals("2022-08-03T04:32:23", stats.get(NetworkInfoEnum.UTC.getName()));
+		Assert.assertEquals("ec:b5:fa:32:c7:cd", stats.get(NetworkInfoEnum.MAC_ADDRESS.getName()));
+	}
 }
