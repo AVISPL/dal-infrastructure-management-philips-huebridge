@@ -990,7 +990,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 							break;
 						}
 						//case the room is removed and update new value as name of device
-						else if(valueOfDevice.contains(deviceName) && valueOfDevice.length() >= deviceName.length() && valueOfDevice.startsWith(deviceName)){
+						else if (valueOfDevice.contains(deviceName) && valueOfDevice.length() >= deviceName.length() && valueOfDevice.startsWith(deviceName)) {
 							valueOfDevice = deviceName;
 							break;
 						}
@@ -2475,7 +2475,7 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 
 		//Populate automation
 		Map<String, String> automationNameMap = groupNameAndValueOfIsEmergencyDelivery.get(PhilipsConstant.AUTOMATION);
-		if (localExtendedStatistics == null || localExtendedStatistics.getStatistics() == null) {
+		if (localExtendedStatistics == null || localExtendedStatistics.getStatistics() == null || automationNameMap == null) {
 			automationNameMap = new HashMap<>();
 		}
 		for (AutomationResponse automationResponse : automationList) {
@@ -2919,7 +2919,10 @@ public class PhilipsHueDeviceCommunicator extends RestCommunicator implements Ag
 		if (zoneNameAndIdMap.size() > 1) {
 			deviceDropdownList.add(TypeOfDeviceEnum.ZONE.getName());
 		}
+		deviceDropdownList.remove(value);
 		deviceDropdownList.add(value);
+		deviceDropdownList.remove(PhilipsConstant.DEVICE);
+		deviceDropdownList.add(PhilipsConstant.DEVICE);
 		AdvancedControllableProperty typeControlProperty = controlDropdown(stats, deviceDropdownList.toArray(new String[0]), property, value);
 		addOrUpdateAdvanceControlProperties(advancedControllableProperties, typeControlProperty);
 	}
