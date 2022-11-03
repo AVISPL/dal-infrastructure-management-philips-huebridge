@@ -105,6 +105,8 @@ public class PhilipsConstant {
 	public static String CURRENT_ZONE_FILTER = "CurrentZoneFilter";
 	public static String MESSAGE_UNAUTHORIZED = "hue personal wireless lighting";
 	public static String MESSAGE_CONNECTION_TIMEOUT = "Cannot reach resource";
+	public static String ZONE_LIST = "ZoneList#Zone";
+	public static String ROOM_LIST = "RoomList#Room";
 	public static int NUMBER_METRIC_MONITORING = 8;
 	public static int MAXIMUM_REPEAT_DAY = 7;
 	public static int NUMBER_ONE = 1;
