@@ -1,2 +1,2 @@
 # dal-infrastructure-management-philips-huebridge
-DAL adapter for Phillips Hue Bridge
+DAL adapter for Philips Hue Bridge
